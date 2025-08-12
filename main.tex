@@ -68,17 +68,56 @@
 % General overview of the project
 % Describe the interaction between different parts of the project, including the backend (Spring Boot, MVC, Spring AI) and the frontend (React).
 % Mention the use of AI agents (GitHub Copilot, Claude 3.5, ChatGPT 4.0) in code development.
-% Include subsections for:
-% - Technologies used and their selection rationale
-% - How the UI works and its use cases
-% - Interaction between backend and frontend
+
+\section{Technologies Used}
+% Tecnologías utilizadas
+% Technologies used
+% [ ] Explain why Spring Boot, MVC, Spring AI, and React were chosen for this project.
+% [ ] Mention the modularity of the backend and how it supports CLI and CI/CD.
+% [ ] Highlight the use of Docker for interactive environments.
+% [ ] Discuss the rationale for using YAML/JSON for task datasets.
+
+\section{UI and Use Cases}
+% Interfaz de usuario y casos de uso
+% User interface and use cases
+% [ ] Describe how the React frontend allows users to configure benchmarks interactively.
+% [ ] Explain how users can add/edit tasks and explore benchmark results.
+% [ ] Mention the ability to filter tasks by type, difficulty, and programming language.
+% [ ] Highlight the eco-friendly and cost-efficient design.
+
+\section{Backend-Frontend Interaction}
+% Interacción entre el backend y el frontend
+% Interaction between backend and frontend
+% [ ] Explain how the backend processes benchmark configurations and runs tasks.
+% [ ] Describe the API endpoints used for communication between the frontend and backend.
+% [ ] Mention the feedback loop mechanism for task evaluation.
 
 % Add placeholders for deliverables
 \chapter{Deliverables}
 % Entregables del proyecto
 % Project deliverables
-% Describe the Spring application that can be launched in CLI within CI/CD or as a backend, and the React frontend.
-% Include details about the modular benchmark and its configuration options.
+
+\section{Spring Application}
+% Aplicación Spring
+% Spring application
+% [ ] Describe the CLI mode for running benchmarks in CI/CD pipelines.
+% [ ] Explain the backend's modular architecture and its ability to support multiple programming languages.
+% [ ] Mention the use of Spring AI for integrating LLMs as judges.
+
+\section{React Frontend}
+% Interfaz React
+% React frontend
+% [ ] Describe the interactive UI for configuring benchmarks.
+% [ ] Highlight features like task filtering, result exploration, and task editing.
+% [ ] Mention the use of modern React libraries for performance optimization.
+
+\section{Modular Benchmark}
+% Benchmark modular
+% Modular benchmark
+% [ ] Explain the dataset format (YAML/JSON) and its flexibility.
+% [ ] Describe how tasks can be added or modified easily.
+% [ ] Mention the support for multiple programming languages and task types.
+% [ ] Highlight the eco-friendly design and reduced computational costs.
 
 \cleardoublepage
 
@@ -102,7 +141,9 @@
         \input{pages/06-anexos.tex}
         % Apéndices adicionales
         % Additional appendices
-        % Add placeholders for supplementary materials like YAML examples, UI screenshots, and configuration files.
+        % [ ] Add YAML examples for task datasets.
+        % [ ] Include screenshots of the React UI.
+        % [ ] Provide configuration examples for Docker environments.
     \end{appendices}
 }{}
 
