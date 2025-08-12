@@ -1,0 +1,101 @@
+Я иностранный студент в испанском университете и пишу TFM на английском. 
+
+Вот так выглядят рекомендации по содержанию TFM:
+
+```
+1.- Introducción
+ Tal y como se acordó en la reunión del claustro de profesores del máster, celebrada el día 24 de
+febrero de 2011, el Trabajo Fin de Máster (TFM) debe responder a la orientación investigadora del
+Máster, por lo que debe mostrar la capacidad para desarrollar un trabajo de investigación, aunque
+sea preliminar. Es decir, debe responder a un estudio previo del estado del arte en el ámbito
+del trabajo, incluir alguna propuesta novedosa que muestre la capacidad creativa del
+estudiante, y establecer una comparación crítica con métodos existentes, resaltando las
+contribuciones de la idea que se propone. El trabajo puede enfocarse desde una perspectiva
+de investigación básica (donde sobresale el contenido teórico), experimental (con validación de
+resultados en situaciones prácticas) o de innovación (aplicando soluciones novedosas a problemas
+reales).
+ Además, es importante recordar que el TFM debe responder a una dedicación aproximada de
+300 horas por parte del estudiante, tal y como establece su peso en el plan de estudio (12 ECTS).
+ Se trata, por tanto, de desarrollar un trabajo de introducción a la investigación, que siga los
+estándares de artículos enviados a congresos o revistas. Aunque no pueda exigirse el sometimiento
+a procesos de revisión en alguno de estos medios de difusión, dadas las limitaciones temporales
+para su elaboración, un enfoque adecuado del TFM debería permitir que versiones más elaboradas
+sean susceptibles de ser remitidas a foros especializados para su publicación. En cualquier caso,
+trabajos cuya conclusión impida su posterior publicación, pero que supongan algún tipo de
+contribución, se consideran también adecuados: por ejemplo, la validación experimental de que un
+método determinado no resulta adecuado para resolver problemas en determinado ámbito. No se
+considerarían TFM adecuados, las revisiones del estado del arte que no aporten un valor añadido a
+lo ya existente en la literatura, y que no vayan más allá de una recopilación de técnicas.
+ En la introducción del TFM se debe incluir, al menos, una definición de objetivos, con una
+descripción de cuál es el problema a resolver, la situación de la que se parte, la relevancia de la
+solución propuesta y la organización del resto del trabajo.
+2.- Antecedentes
+ La memoria debe incluir un estudio del estado del arte que sitúe los antecedentes previos del
+trabajo, incluyendo referencias a la bibliografía más relevante en el ámbito temático consultada
+por el autor.
+ Bien al comienzo del trabajo, o después de proporcionar los detalles de la propuesta 4, es
+conveniente realizar un estudio comparativo que muestre las aportaciones y relevancia de las
+contribuciones realizadas con otras soluciones ya existentes.
+3.- Descripción del problema
+ Debe describirse de forma clara y precisa el problema o familia de problemas que se pretende
+abordar con la propuesta.
+4.- Detalles de la propuesta
+ Debe detallar la propuesta de solución, la tecnología utilizada. Además debe comparar su
+solución con respecto a otras existentes, resaltando el aporte logrado.
+5.- Conclusiones
+ En algún momento deben resumirse las conclusiones del trabajo realizado, inlcuyendo algunas
+ideas sobre el trabajo futuro necesario para poder llegar a realizar una tesis doctoral en el ámbito
+considerado, o que al menos muestre el enfoque de investigación del trabajo.
+Referencias
+1. Pimentel, E. Guía para elaborar la memoria del TFM del máster ISIA. 2011 
+```
+
+Now please read my Anteproyecto in `./LLM Bench/Recompilation_20250504_EN.md` (the description of the idea and the list of sources that I want to use, incomplete) and help me to define structure for my work in TEX (edit the existing TeX files in `pages` folder). Don't write the whole document for me, just define a structure and add a bunch of TEX comment tags with description of what should I put there.
+
+
+Вот черновик Абстракта:
+```
+Benchmarks are widely used for measuring and comparing performance of LLMs in different areas, including logical puzzles, factual accuracy, and coding tasks among others. 
+The use of benchmarks allows developers to fine-tune a model, and a user to choose a model that better fits their needs or adjust its responses by changing a system prompt and parameters like temperature. 
+This requires a lot of benchmark runs. Running a benchmark is costly, time- and energy-consuming. Also, it is often inefficient, as they may contain problems that are not relevant for the use case of a model being adjusted. 
+
+So the goal of this work is to explore existing benchmarks, and design and develop an approach to benchmarking that is highly customizable and extendible, time-efficient, eco-friendly. As a result, a modular benchmark was developed, that allows to add and modify test cases using a user interface, and configure a benchmark run using task filters and toggles for enabling or disabling specific checks. Also, the output of the benchmark allows to examine the results in detail. 
+
+The existing benchmarks differ in contents and implementation. Most benchmarks are developed from scratch or forked from existing ones, and are not created to be easily adaptable or extendible for use cases.
+```
+
+Также вот описание из Anteproyecto, которому я в теории должен следовать (но это не строгое требование, я могу отойти от него, если это будет необходимо):
+```
+En este TFM diseñaremos las pruebas automatizadas específicamente para programación asistida con IA. En estas pruebas tomaremos en cuenta la satisfacción del usuario de un copiloto: no solo la calidad de la sugerencia, pero también el esfuerzo requerido por el usuario para obtener el resultado satisfactorio. Para eso, vamos a medir el grado de completitud (exhaustividad) del prompt que se requiere, el número de pasos (iteraciones).
+
+En las pruebas se van a utilizar:
+- código fuente;
+- una tarea y su contexto completo, incluyendo una solución esperada;
+- tests automáticos para comprobar la solución;
+- una asistente IA "sujeto" sin acceso a la definición de la tarea completa o los tests automáticos;
+- una IA "examinadora” con acceso a la definición de tarea completa y los tests automáticos;
+
+El examinador va a tener el contexto y la descripción completa de la tarea y del resultado que se espera. El sujeto va a tener el acceso al código fuente y una descripción muy breve de la tarea. La descripción breve de la tarea debe ser un poco ambigua y depender altamente del contexto del proyecto, específicamente para que la primera sugerencia rara vez sea acertada.
+El sujeto intenta y probablemente falla inicialmente, los tests automáticos no pasan.
+El examinador analiza el output del sujeto. Si el sujeto expresa la duda sobre el resultado esperado y deja la pregunta, el examinador lo responde de manera muy concisa, utilizando el contexto completo de la tarea como fuente. En caso contrario, el examinador analiza el resultado y proporciona la aclaración concisa.
+
+Tras unos intentos, se utilizan las siguientes métricas para formar el informe con la calificación final:
+- si el problema queda resuelto (todos los tests automáticos pasan);
+- la cantidad de tests fallidos en el caso de que el problema no quede resuelta hasta alcanzar el límite de intentos;
+- la cantidad de intentos requeridos;
+- la cantidad de tokens utilizados por el sujeto (para calcular el precio de ejecución);
+- la cantidad de palabras requeridas del examinador para guiar el sujeto;
+- la calidad del código: si infringe algunas reglas de formateo del lenguaje, o contiene “code smells" (por ejemplo, repeticiones)
+- la uniformidad con el código del proyecto (por ejemplo, que los Exceptions se tratan de la misma manera que en el resto de los ficheros)
+
+Para hacer esto, tendremos que responder a las siguientes preguntas:
+- ¿Como el proceso de desarrollo asistido con IA en tiempo real se diferencia con un desarrollo “autónomo” IA?
+- ¿Cuáles son los factores que afectan la satisfacción del usuario de un asistente con IA?
+- ¿Cuáles son las pruebas que permiten comprobar estos factores?
+- ¿Cuáles son las pruebas que se pueden utilizar para comprobar el rendimiento del asistente en formato de programación asistida?
+```
+
+
+Обрати внимание, что основная цель работы -- проанализировать существующие бенчмарки и предложить новый подход -- модульные и кастомизируемые бенчмарков, которые можно настраивать в зависимости от потребностей разработчика LLM или его пользователя. И в качестве демонстрации этого подхода я разработал бенчмарк, который настраивается при помощи YAML файлов, а также имеет фронтендовый UI для взаимодействия с ним. 
+
+Прежде чем начать, задай мне как минимум 10 вопросов. 
