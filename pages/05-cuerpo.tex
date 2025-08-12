@@ -105,3 +105,118 @@ Porta \cite{Cantu-Paz98asurvey} pulvinar fermentum faucibus lectus sodales etiam
 % [ ] Describe the dataset format and its flexibility.
 % [ ] Explain how tasks can be added or modified.
 % [ ] Mention the support for multiple programming languages.
+
+\chapter{Introduction}
+% [ ] Start with a broad introduction to LLMs and their impact on software development
+% [ ] Explain what benchmarks are and why they are important
+% [ ] Define the problem: benchmarks are costly and inefficient to run
+% [ ] Highlight the need for customizable and efficient benchmarks
+% [ ] State the objectives of this work
+% [ ] Outline the structure of the document
+
+\chapter{State of the Art}
+\section{Evolution of LLM Benchmarks}
+% [ ] Cite "Evaluating Large Language Models Trained on Code" (HumanEval paper)
+% [ ] Describe how HumanEval became the standard benchmark
+% [ ] Mention its limitations and why new benchmarks were needed
+% [ ] Use "Benchmarks and Metrics for Evaluations of Code Generation: A Critical Review" to classify different types of benchmarks
+
+\section{Types of Benchmarks}
+\subsection{Academic and Competitive Benchmarks}
+% [ ] Describe HumanEval and its influence
+% [ ] Cite "HumanEval Pro and MBPP Pro" to show evolution of benchmarks
+% [ ] Explain how MBPP was improved to prevent data leakage
+% [ ] Cite "One-to-many testing for code generation" to discuss test design
+
+\subsection{Real-world Task Benchmarks}
+% [ ] Cite "SWE-bench: Can Language Models Resolve Real-World GitHub Issues?"
+% [ ] Explain why real-world tasks are important
+% [ ] Discuss limitations of using real-world tasks
+
+\subsection{Interactive Benchmarks}
+% [ ] Cite "InterCode: Standardizing and Benchmarking Interactive Coding with Execution Feedback"
+% [ ] Explain the importance of feedback loops
+% [ ] Describe Docker environments for interactive testing
+% [ ] Cite "Copilot Arena: A Platform for Code LLM Evaluation in the Wild"
+% [ ] Discuss real user interaction metrics
+
+\section{User Experience in AI-Assisted Programming}
+% [ ] Cite "Need Help? Designing Proactive AI Assistants for Programming"
+% [ ] Discuss importance of timing in AI suggestions
+% [ ] Cite "Reading Between the Lines: Modeling User Behavior and Costs in AI-Assisted Programming"
+% [ ] Describe 12 states of working with Copilot
+% [ ] Cite "Practices and Challenges of Using GitHub Copilot: An Empirical Study"
+% [ ] List main problems users face with AI assistants
+
+\section{Problems with Existing Benchmarks}
+% [ ] Cite "Do Large Language Model Benchmarks Test Reliability?"
+% [ ] Discuss concept of platinum benchmarks
+% [ ] List common problems:
+%   - Benchmark saturation
+%   - Ambiguous tasks
+%   - Incorrect answers marked as correct
+%   - Data leakage
+% [ ] Explain why customizable benchmarks are needed
+
+\chapter{Problem Description}
+\section{Current Limitations}
+% [ ] High cost of running benchmarks
+% [ ] Time and energy consumption
+% [ ] Inefficiency due to irrelevant tasks
+% [ ] Lack of customization options
+% [ ] Limited feedback and result analysis
+
+\section{Requirements for a Solution}
+% [ ] Must be modular and customizable
+% [ ] Should support multiple programming languages
+% [ ] Must allow task filtering and configuration
+% [ ] Should provide detailed results analysis
+% [ ] Must be eco-friendly and cost-efficient
+
+\chapter{Proposed Solution}
+% ...existing code for Overview section...
+
+\section{Architecture}
+% [ ] Describe the overall system architecture
+% [ ] Explain the role of each component:
+%   - Spring Boot backend
+%   - React frontend
+%   - Docker environments
+%   - LLM integration
+% [ ] Include a diagram showing component interaction
+
+\section{Task Dataset Format}
+% [ ] Explain the YAML/JSON structure
+% [ ] Describe available task types
+% [ ] List supported programming languages
+% [ ] Show how to add new tasks
+% [ ] Include example configurations
+
+\section{Benchmark Configuration}
+% [ ] Describe available configuration options:
+%   - Task filters
+%   - Programming language selection
+%   - Metrics selection
+%   - LLM judge configuration
+% [ ] Explain how to optimize for different use cases
+
+\chapter{Results and Evaluation}
+\section{Performance Metrics}
+% [ ] Describe the metrics used
+% [ ] Compare with existing benchmarks
+% [ ] Analyze efficiency improvements
+
+\section{Case Studies}
+% [ ] Present example benchmark runs
+% [ ] Show different configuration scenarios
+% [ ] Analyze results in detail
+
+\chapter{Conclusions}
+% [ ] Summarize the main contributions
+% [ ] Compare with existing solutions
+% [ ] Discuss limitations
+% [ ] Suggest future work:
+%   - Additional programming languages
+%   - More task types
+%   - Enhanced UI features
+%   - Integration with CI/CD systems
