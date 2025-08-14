@@ -22,7 +22,7 @@ The main objectives of this work are:
 2. Design a modular benchmark system that allows:
    - Custom task selection and filtering
    - Configuration of testing criteria
-   - Support for multiple programming languages
+   - Support for multiple programming languages and task types
    - Integration with CI/CD pipelines
 3. Implement an interactive web interface for benchmark configuration and result analysis
 4. Develop a cost-efficient and environmentally conscious approach to benchmarking
@@ -120,26 +120,104 @@ The React frontend provides:
 
 \chapter{Implementation Details}
 
+\section{Project Structure}
+
+The project follows a modern microservices architecture with separate backend and frontend applications:
+
+\begin{verbatim}
+Project Root
+├── exec_configs/    # Execution configuration YAML files
+├── task_sources/    # Task source YAML files
+├── bench_status/    # Benchmark status files
+├── bench_results/   # Benchmark results
+├── frontend/        # React application
+└── src/            # Spring Boot application
+\end{verbatim}
+
 \section{Backend Development}
 
-The Spring Boot application handles:
-- Task processing and execution
-- Docker environment management
-- API endpoints for frontend communication
-- Integration with LLM judges
+The Spring Boot application serves as the core of the system, providing:
 
-Key technologies:
-- Spring Boot for core functionality
-- Spring AI for LLM integration
-- Docker SDK for container management
+\subsection{REST API Endpoints}
+The backend exposes a comprehensive RESTful API:
+\begin{itemize}
+    \item \texttt{/api/configs}: Configuration file management
+    \item \texttt{/api/tasks}: Task source file operations
+    \item \texttt{/api/benchmarks}: Benchmark execution control
+    \item \texttt{/api/status}: Status monitoring
+    \item \texttt{/api/results}: Result retrieval and analysis
+\end{itemize}
+
+\subsection{Core Functionality}
+\begin{itemize}
+    \item Task processing and execution in isolated environments
+    \item Docker container management for language-specific runtimes
+    \item File-based storage system for configurations and results
+    \item Integration with LLM judges through Spring AI
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    % Add backend architecture diagram
+    \caption{Backend Component Architecture}
+    \label{fig:backend-arch}
+\end{figure}
 
 \section{Frontend Development}
 
-The React application provides:
-- Interactive task management
-- Real-time configuration
-- Result visualization
-- Task editing capabilities
+The React frontend, built with TypeScript, provides an intuitive interface for:
+
+\subsection{User Interface Components}
+\begin{itemize}
+    \item Configuration file upload and management
+    \item Task source file handling
+    \item Real-time benchmark monitoring
+    \item Result visualization and analysis
+\end{itemize}
+
+\subsection{Interactive Features}
+The application enables users to:
+\begin{itemize}
+    \item Upload and manage YAML configurations
+    \item Configure benchmark parameters interactively
+    \item Monitor benchmark progress in real-time
+    \item Analyze and export results
+\end{itemize}
+
+\begin{figure}[h]
+    \centering
+    % Add frontend screenshot
+    \caption{Frontend Interface Overview}
+    \label{fig:frontend-ui}
+\end{figure}
+
+\section{Deployment}
+
+Both components support flexible deployment options:
+
+\subsection{Local Development}
+\begin{verbatim}
+# Backend
+mvn spring-boot:run
+
+# Frontend
+cd frontend
+npm install
+npm run dev
+\end{verbatim}
+
+\subsection{Docker Deployment}
+The system includes Docker configurations for containerized deployment:
+
+\begin{verbatim}
+# Backend container
+docker build -t ai-benchmark-backend -f Dockerfile.backend .
+docker run -p 8080:8080 ai-benchmark-backend
+
+# Frontend container
+docker build -t ai-benchmark-frontend -f Dockerfile.frontend .
+docker run -p 5173:5173 ai-benchmark-frontend
+\end{verbatim}
 
 \chapter{Results and Evaluation}
 
