@@ -1,4 +1,21 @@
+% Checklist and TO DOs
+% why do we need benchmarks
+% Classification of Benchmarks
+% add Pros and Cons of my approach compared with anothers
+% why do most benchmark use fixed sets of tasks
+% why do we need a modular benchmark
+%
+% Why did I chose Java and Spring Boot instead of Python (because Spring AI is great), and React
+% Mention that I used OpenRouter, but any provided supported by Spring AI could be used
+%
+% Focus more on the concept of modular and customizable benchmarks, than in the implementation
+% Describe bigcode-evaluation-harness and lm-evaluation-harness, and what lacks in them
+
 \chapter{Introduction}
+
+% What is missing or should be improved:
+% Methodology Overview: There is no brief mention of the approach or methods used in the work. Add a short paragraph summarizing the methodology (e.g., system design, implementation, evaluation).
+% Contributions: While objectives are listed, a concise summary of the main contributions (what is new or improved) should be added at the end of the introduction.
 
 Large Language Models (LLMs) have revolutionized software development through AI-assisted programming tools like GitHub Copilot. However, evaluating and fine-tuning these models requires extensive benchmarking, which comes at significant computational, financial, and environmental costs. Current benchmarks often contain irrelevant tasks and provide limited customization options, making them inefficient for specific use cases.
 
@@ -7,6 +24,8 @@ This work explores existing benchmarks for code-generating LLMs and proposes a n
 \section{Problem Statement}
 
 Running benchmarks is essential for both LLM developers and users. Developers need benchmarks to fine-tune their models, while users rely on them to select appropriate models and adjust parameters like temperature and system prompts. However, this process faces several challenges:
+% Fine-tune key parameters like temperature, top_p, top_k to control model creativity vs determinism.
+Cost and Resource Consumption: Each benchmark run consumes significant computational resources, time, and energy. As noted in recent studies \cite{ ???? Cantu-Paz98asurvey ?????}, the environmental impact of repeated benchmark runs is becoming a growing concern.
 
 Lack of Customization: Most benchmarks are developed as fixed sets of tasks, making them difficult to adapt for specific use cases. This limitation was highlighted in the SWE-bench study \cite{jimenez2024swebenchlanguagemodelsresolve}, which emphasized the need for more flexible evaluation methods.
 
