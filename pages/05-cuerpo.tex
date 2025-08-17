@@ -1,4 +1,5 @@
 % Checklist and TO DOs
+% Describe metodology of the work with sources
 % why do we need benchmarks
 % Classification of Benchmarks
 % add Pros and Cons of my approach compared with anothers
@@ -34,15 +35,18 @@ Inefficient Task Selection: Many benchmarks include tasks that may be irrelevant
 \section{Objectives}
 
 The main objectives of this work are:
-
-1. Analyze existing benchmarks and their limitations
-2. Design a modular benchmark system that allows:
-   - Custom task selection and filtering
-   - Configuration of testing criteria
-   - Support for multiple programming languages and task types
-   - Integration with CI/CD pipelines
-3. Implement an interactive web interface for benchmark configuration and result analysis
-4. Develop a cost-efficient and environmentally conscious approach to benchmarking
+\begin{enumerate}
+    \item Analyze existing benchmarks and their limitations
+    \item Design a modular benchmark system that allows:
+    \begin{itemize}
+        \item Custom task selection and filtering
+        \item Configuration of testing criteria
+        \item Support for multiple programming languages and task types
+        \item Integration with CI/CD pipelines
+    \end{itemize}
+    \item Implement an interactive web interface for benchmark configuration and result analysis
+    \item Develop a cost-efficient and environmentally conscious approach to benchmarking
+\end{enumerate}
 
 \chapter{State of the Art}
 
@@ -70,11 +74,13 @@ These findings highlight a critical gap in current benchmarks: they often focus 
 
 The limitations of existing benchmarks extend beyond just inefficiency. Studies like \cite{vendrow2025largelanguagemodelbenchmarks} have identified several critical issues:
 
-- Benchmark saturation: Many tasks become irrelevant as models improve
-- Limited feedback: Most benchmarks provide only pass/fail results
-- High costs: Running comprehensive benchmarks is expensive and time-consuming
-- Environmental impact: Repeated runs contribute to unnecessary carbon emissions
-- Inflexibility: Fixed task sets don't adapt to specific needs
+\begin{itemize}
+    \item Benchmark saturation: Many tasks become irrelevant as models improve
+    \item Limited feedback: Most benchmarks provide only pass/fail results
+    \item High costs: Running comprehensive benchmarks is expensive and time-consuming
+    \item Environmental impact: Repeated runs contribute to unnecessary carbon emissions
+    \item Inflexibility: Fixed task sets don't adapt to specific needs
+\end{itemize}
 
 \section{Requirements for a Solution}
 
