@@ -1,10 +1,13 @@
 % Checklist and TO DOs
 % Describe metodology of the work with sources
 % why do we need benchmarks
+    % Frontier language models are not reliable on simple tasks \cite{vendrow2025largelanguagemodelbenchmarks}
 % Classification of Benchmarks
 % add Pros and Cons of my approach compared with anothers
 % why do most benchmark use fixed sets of tasks
 % why do we need a modular benchmark
+% What do benchmarks check
+  % Categories of tasks: Math, Logic, Table understanding,  Reading comprehension, Commonsense reasoning, Vision \cite{vendrow2025largelanguagemodelbenchmarks}
 %
 % Why did I chose Java and Spring Boot instead of Python (because Spring AI is great), and React
 % Mention that I used OpenRouter, but any provided supported by Spring AI could be used
@@ -16,6 +19,10 @@
 
 % What is missing or should be improved:
 % Methodology Overview: There is no brief mention of the approach or methods used in the work. Add a short paragraph summarizing the methodology (e.g., system design, implementation, evaluation).
+% Нужно описать, что я нашёл и использовал уже существующие Critical Review по теме в качетсве базы для анализа существующей литературы, затем следовал ссылкам на статьи, которые мне нужны. Последний подходящий Critical Review был опубликован в середине 2024 года, так что затем я сделал поиск по статьям за 2025 года и вторую половину 2024 года по ключевым словам, связанным с Benchmarking и LLM, выбрав среди них актуальные, отвечая на вопросы исследования. Затем, на основании собранной информации, я добавил свои собственные идеи и предложения по улучшению бенчмарков.
+
+% ВАЖНО !!! Нужно добавить список вопросов, на которые я отвечал в ходе исследования литературы.!!
+
 % Contributions: While objectives are listed, a concise summary of the main contributions (what is new or improved) should be added at the end of the introduction.
 
 Large Language Models (LLMs) have revolutionized software development through AI-assisted programming tools like GitHub Copilot. However, evaluating and fine-tuning these models requires extensive benchmarking, which comes at significant computational, financial, and environmental costs. Current benchmarks often contain irrelevant tasks and provide limited customization options, making them inefficient for specific use cases.
@@ -26,9 +33,10 @@ This work explores existing benchmarks for code-generating LLMs and proposes a n
 
 Running benchmarks is essential for both LLM developers and users. Developers need benchmarks to fine-tune their models, while users rely on them to select appropriate models and adjust parameters like temperature and system prompts. However, this process faces several challenges:
 % Fine-tune key parameters like temperature, top_p, top_k to control model creativity vs determinism.
-Cost and Resource Consumption: Each benchmark run consumes significant computational resources, time, and energy. As noted in recent studies \cite{ ???? Cantu-Paz98asurvey ?????}, the environmental impact of repeated benchmark runs is becoming a growing concern.
+Cost and Resource Consumption: Each benchmark run consumes significant computational resources, time, and energy. As noted in recent studies \cite{ ????  ?????}, the environmental impact of repeated benchmark runs is becoming a growing concern.
 
 Lack of Customization: Most benchmarks are developed as fixed sets of tasks, making them difficult to adapt for specific use cases. This limitation was highlighted in the SWE-bench study \cite{jimenez2024swebenchlanguagemodelsresolve}, which emphasized the need for more flexible evaluation methods.
+% Развить мысль, как SWE сам решает эту проблему и каким образом
 
 Inefficient Task Selection: Many benchmarks include tasks that may be irrelevant for specific applications, leading to wasted resources. Recent research \cite{vendrow2025largelanguagemodelbenchmarks} has shown that benchmark saturation often results in running unnecessary tests that all modern LLMs pass easily.
 
@@ -55,32 +63,60 @@ The main objectives of this work are:
 The landscape of LLM benchmarks has evolved significantly since the introduction of HumanEval \cite{chen2021evaluatinglargelanguagemodels}. This pioneering benchmark set a standard for evaluating code generation capabilities, but its limitations became apparent as LLMs advanced.
 
 Recent developments like HumanEval Pro \cite{yu2024humanevalprombpppro} have introduced more sophisticated testing approaches. For instance, their multi-step evaluation process tests an LLM's ability to work with its own generated code, revealing limitations in some models that perform well on simpler tasks.
+% Хочу сказать иначе: задачки в HumanEval уже общеизвестны, так что ЛЛМ натренированы на их решениях. Зато HumanEval Pro добавили дополнительный шаг в задачу, что продемонстрировало, что даже самые современные LLMs могут не справляться с незнакомыми задачами, или переиспользовать написанный ими же код, вызывая его в качестве функции. Таким образом, разработка новых задач важна, и нужно предоставить пользователю бенчмарка удобный способ добавлять и модифицировать задачи в бенчмарке.
 
-\section{Real-world vs. Academic Benchmarks}
+
+\section{Types of LLM Benchmarks}
+
+% add classifications
 
 While academic benchmarks like HumanEval focus on controlled, isolated tasks, initiatives like SWE-bench \cite{jimenez2024swebenchlanguagemodelsresolve} have moved toward real-world scenarios. This shift reflects a growing recognition that LLM evaluation should encompass the complexity of actual software development.
 
 The InterCode framework \cite{yang2023intercodestandardizingbenchmarkinginteractive} introduced interactive environments using Docker, enabling evaluation of LLMs in realistic development scenarios with compilation and runtime feedback. This approach more closely mirrors actual developer workflows but comes with increased computational overhead.
 
+In \cite{chi2025copilotarenaplatformcode} the authors developed a plugin for IDE that offers the user two code completion options from two different LLMs and records which option the user chose. This allowed them to compare the performance of different LLMs in real-world coding tasks, providing valuable insights into user preferences and model effectiveness.
+
+
+\section{Problems in LLM Benchmarking}
+
+Benchmark saturation is partially explained by task leaking: the popular and publicly available benchmarks appear in the training datasets accompanied with the golden solutions. Even then, it doesn't mean that an LLM won't struggle when presented with the same task. With changing the task phrasing while keeping the semantic consistent, there is a 4.5 percet drop in solvability, showing that the models remember the phrasing of the descriptions in the original dataset. \cite{uniyal2024one}
+
+
 \section{User Experience in AI-Assisted Programming}
 
 Recent studies have revealed the complexity of user interaction with AI programming assistants. Research by \cite{chen2025needhelpdesigningproactive} identified specific moments when developers expect proactive suggestions from LLMs, while \cite{mozannar2024readinglinesmodelinguser} classified 12 distinct states of interaction with tools like GitHub Copilot.
+% И что с того, что идентифицировал? Тогда нужно развить мысль, но вообще я не решаю эту проблему в своей работе
 
 These findings highlight a critical gap in current benchmarks: they often focus solely on code correctness while ignoring user experience factors that significantly impact real-world utility.
+% Это надо переписать: актуальный бенчмарк должен учитывать качество написанного кода, для чего можно использовать LLM-as-Judge и специальные утилиты для статического анализа кода, такие как SonarQube или PMD. Эти инструменты могут оценивать качество кода по различным метрикам, включая читаемость, сложность и соответствие стилю.
+
+
+\section{Environmental impact of Benchmarking}
+
+% Тут надо сказать, что при разработке и fine-tuning LLM, используются значительные мощности, в том числе при повторяющемся запуске бенчмарков. Это приводит к значительным затратам на электроэнергию и углеродные выбросы, что становится все более важным вопросом в свете глобальных усилий по снижению воздействия на окружающую среду. Добавить какое-то исследование на эту тему.
+
+\section{Existing Benchmarking Frameworks and Their Limitations}
+% TO DO
+There are two known harnesses .....
 
 \chapter{Problem Description}
 
 \section{Analysis of Current Limitations}
 
-The limitations of existing benchmarks extend beyond just inefficiency. Studies like \cite{vendrow2025largelanguagemodelbenchmarks} have identified several critical issues:
+The limitations of existing benchmarks extend beyond just inefficiency. Studies like  have identified several critical issues:
 
+% TO DO: check if all that is mentioned in the paper
 \begin{itemize}
-    \item Benchmark saturation: Many tasks become irrelevant as models improve
+    \item Benchmark saturation: Many tasks become irrelevant as models improve \cite{vendrow2025largelanguagemodelbenchmarks}
+    \item Task leaking: LLMs are trained on benchmark tasks solutions, making them obsolete \cite{vendrow2025largelanguagemodelbenchmarks}
     \item Limited feedback: Most benchmarks provide only pass/fail results
     \item High costs: Running comprehensive benchmarks is expensive and time-consuming
     \item Environmental impact: Repeated runs contribute to unnecessary carbon emissions
     \item Inflexibility: Fixed task sets don't adapt to specific needs
+    \item Error-prone: benchmarks contain up to 5 percent of mislabelled or erroneous tasks \cite{vendrow2025largelanguagemodelbenchmarks}
 \end{itemize}
+
+% Describe how do I address these limitations in my work
 
 \section{Requirements for a Solution}
 
