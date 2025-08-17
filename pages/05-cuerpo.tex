@@ -8,11 +8,9 @@ This work explores existing benchmarks for code-generating LLMs and proposes a n
 
 Running benchmarks is essential for both LLM developers and users. Developers need benchmarks to fine-tune their models, while users rely on them to select appropriate models and adjust parameters like temperature and system prompts. However, this process faces several challenges:
 
-Cost and Resource Consumption: Each benchmark run consumes significant computational resources, time, and energy. As noted in recent studies \cite{Cantu-Paz98asurvey}, the environmental impact of repeated benchmark runs is becoming a growing concern.
+Lack of Customization: Most benchmarks are developed as fixed sets of tasks, making them difficult to adapt for specific use cases. This limitation was highlighted in the SWE-bench study \cite{jimenez2024swebenchlanguagemodelsresolve}, which emphasized the need for more flexible evaluation methods.
 
-Lack of Customization: Most benchmarks are developed as fixed sets of tasks, making them difficult to adapt for specific use cases. This limitation was highlighted in the SWE-bench study \cite{swebench2023}, which emphasized the need for more flexible evaluation methods.
-
-Inefficient Task Selection: Many benchmarks include tasks that may be irrelevant for specific applications, leading to wasted resources. Recent research \cite{platinumbenchmarks2025} has shown that benchmark saturation often results in running unnecessary tests that all modern LLMs pass easily.
+Inefficient Task Selection: Many benchmarks include tasks that may be irrelevant for specific applications, leading to wasted resources. Recent research \cite{vendrow2025largelanguagemodelbenchmarks} has shown that benchmark saturation often results in running unnecessary tests that all modern LLMs pass easily.
 
 \section{Objectives}
 
@@ -31,19 +29,19 @@ The main objectives of this work are:
 
 \section{Evolution of Code Generation Benchmarks}
 
-The landscape of LLM benchmarks has evolved significantly since the introduction of HumanEval \cite{humaneval2021}. This pioneering benchmark set a standard for evaluating code generation capabilities, but its limitations became apparent as LLMs advanced.
+The landscape of LLM benchmarks has evolved significantly since the introduction of HumanEval \cite{chen2021evaluatinglargelanguagemodels}. This pioneering benchmark set a standard for evaluating code generation capabilities, but its limitations became apparent as LLMs advanced.
 
-Recent developments like HumanEval Pro \cite{humanevalprombpp2024} have introduced more sophisticated testing approaches. For instance, their multi-step evaluation process tests an LLM's ability to work with its own generated code, revealing limitations in some models that perform well on simpler tasks.
+Recent developments like HumanEval Pro \cite{yu2024humanevalprombpppro} have introduced more sophisticated testing approaches. For instance, their multi-step evaluation process tests an LLM's ability to work with its own generated code, revealing limitations in some models that perform well on simpler tasks.
 
 \section{Real-world vs. Academic Benchmarks}
 
-While academic benchmarks like HumanEval focus on controlled, isolated tasks, initiatives like SWE-bench \cite{swebench2023} have moved toward real-world scenarios. This shift reflects a growing recognition that LLM evaluation should encompass the complexity of actual software development.
+While academic benchmarks like HumanEval focus on controlled, isolated tasks, initiatives like SWE-bench \cite{jimenez2024swebenchlanguagemodelsresolve} have moved toward real-world scenarios. This shift reflects a growing recognition that LLM evaluation should encompass the complexity of actual software development.
 
-The InterCode framework \cite{intercode2023} introduced interactive environments using Docker, enabling evaluation of LLMs in realistic development scenarios with compilation and runtime feedback. This approach more closely mirrors actual developer workflows but comes with increased computational overhead.
+The InterCode framework \cite{yang2023intercodestandardizingbenchmarkinginteractive} introduced interactive environments using Docker, enabling evaluation of LLMs in realistic development scenarios with compilation and runtime feedback. This approach more closely mirrors actual developer workflows but comes with increased computational overhead.
 
 \section{User Experience in AI-Assisted Programming}
 
-Recent studies have revealed the complexity of user interaction with AI programming assistants. Research by \cite{needhelp2024} identified specific moments when developers expect proactive suggestions from LLMs, while \cite{readinglines2022} classified 12 distinct states of interaction with tools like GitHub Copilot.
+Recent studies have revealed the complexity of user interaction with AI programming assistants. Research by \cite{chen2025needhelpdesigningproactive} identified specific moments when developers expect proactive suggestions from LLMs, while \cite{mozannar2024readinglinesmodelinguser} classified 12 distinct states of interaction with tools like GitHub Copilot.
 
 These findings highlight a critical gap in current benchmarks: they often focus solely on code correctness while ignoring user experience factors that significantly impact real-world utility.
 
@@ -51,7 +49,7 @@ These findings highlight a critical gap in current benchmarks: they often focus 
 
 \section{Analysis of Current Limitations}
 
-The limitations of existing benchmarks extend beyond just inefficiency. Studies like \cite{platinumbenchmarks2025} have identified several critical issues:
+The limitations of existing benchmarks extend beyond just inefficiency. Studies like \cite{vendrow2025largelanguagemodelbenchmarks} have identified several critical issues:
 
 - Benchmark saturation: Many tasks become irrelevant as models improve
 - Limited feedback: Most benchmarks provide only pass/fail results
