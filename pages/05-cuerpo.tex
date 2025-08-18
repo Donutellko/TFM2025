@@ -1,3 +1,12 @@
+% Project TO-DOs
+% - count number of tokens used for resolving a task
+% - add more tasks to the task set
+% - add a toggle to rephrase the task description
+
+
+
+
+
 % Checklist and TO DOs
 % Describe metodology of the work with sources
 % why do we need benchmarks
@@ -75,7 +84,9 @@ While academic benchmarks like HumanEval focus on controlled, isolated tasks, in
 The InterCode framework \cite{yang2023intercodestandardizingbenchmarkinginteractive} introduced interactive environments using Docker, enabling evaluation of LLMs in realistic development scenarios with compilation and runtime feedback. This approach more closely mirrors actual developer workflows but comes with increased computational overhead.
 
 In \cite{chi2025copilotarenaplatformcode} the authors developed a plugin for IDE that offers the user two code completion options from two different LLMs and records which option the user chose. This allowed them to compare the performance of different LLMs in real-world coding tasks, providing valuable insights into user preferences and model effectiveness.
+Another article \cite{mozannar2024readinglinesmodelinguser} finds out that a user can often accept a first proposed solution in order to see it with proper syntax highlighting and be able to understand it better. But later he could even remove the suggestion and waits for a repeated completion or simply writes the piece of the code themself. Although that should not be considered a significant flaw of the benchmark, it could partially skew the results.
 
+Most benchmarks are very limited in the output they provide. For example, SWE leaderboard \cite{swebenchSWEbenchLeaderboards} is created based on a single number that does not reflect the types of tasks that the model is better or worse at solving \cite{miah2024usercentricevaluationcode}. Thus, a user might choose a suboptimal model for their specific needs, resulting in lower performance or higher cost. This is partially countered by websites that aggregate results on several benchmarks \cite{vellumLeaderboard2025} which can give a very high-level picture.
 
 \section{Problems in LLM Benchmarking}
 
@@ -94,6 +105,9 @@ These findings highlight a critical gap in current benchmarks: they often focus 
 \section{Environmental impact of Benchmarking}
 
 % Тут надо сказать, что при разработке и fine-tuning LLM, используются значительные мощности, в том числе при повторяющемся запуске бенчмарков. Это приводит к значительным затратам на электроэнергию и углеродные выбросы, что становится все более важным вопросом в свете глобальных усилий по снижению воздействия на окружающую среду. Добавить какое-то исследование на эту тему.
+
+There are leaderboards that account for $CO_2$ emissions, such as Hugging Face \cite{huggingfaceCalculation}, which tracks the carbon footprint of models. However, these metrics are often not integrated into traditional benchmarks, leading to a lack of awareness about the environmental impact of LLM evaluation practices.
+
 
 \section{Existing Benchmarking Frameworks and Their Limitations}
 % TO DO
@@ -136,6 +150,12 @@ User Experience:
 - Interactive configuration interface
 - Detailed result analysis
 - Integration with development workflows
+
+The benchmark should:
+- Provide a way to analyse individual task failures
+- Allow users to select tasks based on their specific needs
+-
+- ...
 
 \chapter{Proposed Solution}
 
