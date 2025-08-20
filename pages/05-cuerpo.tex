@@ -56,9 +56,10 @@ The literature review and subsequent research were guided by the following quest
 
 Running benchmarks is essential for LLM developers, researchers and users. Developers and researchers need benchmarks to fine-tune their models or compare approaches, while users rely on them to select appropriate models and adjust parameters like temperature and system prompts. However, this process faces several challenges:
 % Fine-tune key parameters like temperature, top_p, top_k to control model creativity vs determinism.
-Cost and Resource Consumption: Each benchmark run consumes significant computational resources, time, and energy. As noted in recent studies~\cite{ ????  ?????}, the environmental impact of repeated benchmark runs is becoming a growing concern.
+Cost and Resource Consumption: Each benchmark run consumes significant computational resources, time, and energy. As noted in recent studies, the environmental impact of repeated benchmark runs is becoming a growing concern.
+% TO-DO: add a reference to the study on environmental impact
 
-Lack of Customization: Most benchmarks are developed as fixed sets of tasks, making them difficult to adapt for specific use cases. This limitation was highlighted in the SWE-bench study \cite{jimenez2024swebenchlanguagemodelsresolve}, which emphasized the need for more flexible evaluation methods.
+Lack of Customization: Most benchmarks are developed as fixed sets of tasks, making them difficult to adapt for specific use cases. This limitation was highlighted in the SWE-bench study~\cite{jimenez2024swebenchlanguagemodelsresolve}, which emphasized the need for more flexible evaluation methods.
 % Развить мысль, как SWE сам решает эту проблему и каким образом
 
 Inefficient Task Selection: Many benchmarks include tasks that may be irrelevant for specific applications, leading to wasted resources. Recent research \cite{vendrow2025largelanguagemodelbenchmarks} has shown that benchmark saturation often results in running unnecessary tests that all modern LLMs pass easily.
@@ -143,7 +144,55 @@ However, as Miah and Zhu~\cite{miah2024usercentricevaluationcode} pointed out, u
 
 % TO DO more detail and a comparison table
 
-Two widely used benchmarking frameworks are \textbf{bigcode-evaluation-harness} and \textbf{lm-evaluation-harness}. Both provide tools for running standardized benchmarks on LLMs, but they have notable limitations. The bigcode-evaluation-harness focuses on code generation tasks and supports multiple datasets, but it offers limited customization and extensibility for new task types. The lm-evaluation-harness is more general-purpose and supports a broader range of language tasks, yet it also relies on fixed task sets and lacks modularity for user-defined benchmarks. Neither framework provides built-in support for environmental metrics or fine-grained task selection, highlighting the need for more flexible and sustainable benchmarking solutions.
+Apart from the benchmarks themselves, there are several frameworks that facilitate LLM evaluation.
+These frameworks provide tools for running benchmarks and collecting results.
+
+Two widely used benchmarking frameworks are \textbf{bigcode-evaluation-harness}~\cite{githubGitHubBigcodeprojectbigcodeevaluationharness} and \textbf{lm-evaluation-harness}~\cite{githubGitHubEleutherAIlmevaluationharness}.
+Both provide tools for running standardized benchmarks on LLMs, but they have notable limitations.
+The lm-evaluation-harness is more general-purpose and supports a broader range of language tasks, yet it also relies on fixed task sets and lacks modularity for user-defined benchmarks.
+Neither framework provides built-in support for environmental metrics or fine-grained task selection, highlighting the need for more flexible and sustainable benchmarking solutions.
+
+% Convert this to LaTeX table:
+%| Criteria | bigcode-evaluation-harness | lm-evaluation-harness |
+%| --- | --- | --- |
+%| Evaluation of multiple LLMs | One model per run | One model per run |
+%| Available configuration | Number of tasks, Temperature, Task dataset name, Saving LLM responses | Single tasks dataset,  |
+%| Run customization | Temperature,  | Limited, fixed task sets |
+%| Modularity | Limited, fixed task sets | Limited, fixed task sets |
+%| Defining new tasks | Requires source code modification | Requires source code modification |
+%| Environmental Metrics | No support | No support |
+%| Run interface | CLI-based, no GUI | CLI-based, no GUI |
+%| Result analysis | Overall numeric metric and LLM responses saved as a file |  |
+%| Visualization | No visualization tools | No visualization tools |
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|p{4cm}|p{5cm}|p{5cm}|}
+  \hline
+        \textbf{Criteria} & \textbf{bigcode-evaluation-harness} & \textbf{lm-evaluation-harness} \\
+        \hline
+        Evaluation of multiple LLMs & One model per run & One model per run \\
+        \hline
+        Available configuration & Number of tasks, Temperature, Task dataset name, Saving LLM responses & Single tasks dataset \\
+        \hline
+        Run customization & Temperature & Limited, fixed task sets \\
+        \hline
+        Modularity & Limited, fixed task sets & Limited, fixed task sets \\
+        \hline
+        Defining new tasks & Requires source code modification & Requires source code modification \\
+        \hline
+        Environmental Metrics & No support & No support \\
+        \hline
+        Run interface & CLI-based, no GUI & CLI-based, no GUI \\
+        \hline
+        Result analysis & Overall numeric metric and LLM responses saved as a file &  \\
+        \hline
+        Visualization & No visualization tools & No visualization tools \\
+        \hline
+    \end{tabular}
+    \caption{Comparison of bigcode-evaluation-harness and lm-evaluation-harness}
+    \label{tab:framework-comparison}
+\end{table}
 
 \chapter{Problem Description}
 
