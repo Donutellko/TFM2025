@@ -1,12 +1,3 @@
-% Project TO-DOs
-% - count number of tokens used for resolving a task
-% - add more tasks to the task set
-% - add a toggle to rephrase the task description
-
-
-
-
-
 % Checklist and TO DOs
 % Describe metodology of the work with sources
 % why do we need benchmarks
@@ -37,6 +28,29 @@
 Large Language Models (LLMs) have revolutionized software development through AI-assisted programming tools like GitHub Copilot. However, evaluating and fine-tuning these models requires extensive benchmarking, which comes at significant computational, financial, and environmental costs. Current benchmarks often contain irrelevant tasks and provide limited customization options, making them inefficient for specific use cases.
 
 This work explores existing benchmarks for code-generating LLMs and proposes a novel approach: modular and customizable benchmarks that can be tailored to specific needs while remaining cost-effective and environmentally conscious.
+
+% Methodology Overview
+This thesis began with a comprehensive literature review, using recent critical reviews as a foundation for analyzing the state of LLM benchmarking. The review was extended by following citations to relevant articles published in late 2024 and 2025, focusing on keywords related to benchmarking and LLMs. The findings from this literature analysis informed the design and implementation of a modular benchmarking system, which was then evaluated for efficiency, flexibility, and environmental impact.
+
+% Research Questions
+The literature review and subsequent research were guided by the following questions:
+\begin{itemize}
+    \item What are the main limitations of current LLM benchmarks for code generation?
+    % \item How does benchmark saturation and task leaking affect the reliability of evaluation?
+    \item What metrics best reflect real-world usability and code quality?
+    \item How can benchmarks be made customizable for different user needs?
+    \item What is the environmental impact of repeated benchmarking, and how can it be reduced?
+\end{itemize}
+
+% Contributions Summary
+\textbf{Main contributions of this work:}
+\begin{itemize}
+    \item A critical analysis of existing LLM code generation benchmarks and their shortcomings.
+    \item The design and implementation of a modular, customizable benchmarking framework.
+    \item Integration of environmental and cost considerations into the benchmarking process.
+    \item An interactive web interface for configuring benchmarks and analyzing results.
+    \item Recommendations for future benchmarking practices based on empirical findings.
+\end{itemize}
 
 \section{Problem Statement}
 
@@ -99,7 +113,7 @@ Recent studies have revealed the complexity of user interaction with AI programm
 % И что с того, что идентифицировал? Тогда нужно развить мысль, но вообще я не решаю эту проблему в своей работе
 
 These findings highlight a critical gap in current benchmarks: they often focus solely on code correctness while ignoring user experience factors that significantly impact real-world utility.
-% Это надо переписать: актуальный бенчмарк должен учитывать качество написанного кода, для чего можно использовать LLM-as-Judge и специальные утилиты для статического анализа кода, такие как SonarQube или PMD. Эти инструменты могут оценивать качество кода по различным метрикам, включая читаемость, сложность и соответствие стилю.
+% Текст выше надо переписать: актуальный бенчмарк должен учитывать качество написанного кода, для чего можно использовать LLM-as-Judge и специальные утилиты для статического анализа кода, такие как SonarQube или PMD. Эти инструменты могут оценивать качество кода по различным метрикам, включая читаемость, сложность и соответствие стилю.
 
 One of the important aspects of LLM evaluation is the choice of the metrics.
 For code quality, there are BLEU, CodeBLEU, RUBY, ROUGE-L, METEOR, ChrF\@.
@@ -113,6 +127,8 @@ As a result, they come to a conclusion that LLM-as-a-judge is a substantial impr
 
 \section{Environmental impact of Benchmarking}
 
+Repeated training and benchmarking of LLMs require substantial computational resources, leading to significant electricity consumption and carbon emissions. This environmental impact is increasingly important in the context of global efforts to reduce carbon footprints. We will want for benchmarks to account for these factors and encourage more sustainable evaluation practices.
+
 % Тут надо сказать, что при разработке и fine-tuning LLM, используются значительные мощности, в том числе при повторяющемся запуске бенчмарков. Это приводит к значительным затратам на электроэнергию и углеродные выбросы, что становится все более важным вопросом в свете глобальных усилий по снижению воздействия на окружающую среду. Добавить какое-то исследование на эту тему.
 
 There are leaderboards that account for $CO_2$ emissions, such as Hugging Face \cite{huggingfaceCalculation}, which tracks the carbon footprint of models. However, these metrics are often not integrated into traditional benchmarks, leading to a lack of awareness about the environmental impact of LLM evaluation practices.
@@ -124,8 +140,10 @@ Notably, HumanEval and HumanEval+ use $k=100$ (\texttt{pass@100}).
 However, as Miah and Zhu~\cite{miah2024usercentricevaluationcode} pointed out, users do not normally run the LLM several times, so pass@k does not reflect its usability.
 
 \section{Existing Benchmarking Frameworks and Their Limitations}
-% TO DO
-There are two known harnesses .....
+
+% TO DO more detail and a comparison table
+
+Two widely used benchmarking frameworks are \textbf{bigcode-evaluation-harness} and \textbf{lm-evaluation-harness}. Both provide tools for running standardized benchmarks on LLMs, but they have notable limitations. The bigcode-evaluation-harness focuses on code generation tasks and supports multiple datasets, but it offers limited customization and extensibility for new task types. The lm-evaluation-harness is more general-purpose and supports a broader range of language tasks, yet it also relies on fixed task sets and lacks modularity for user-defined benchmarks. Neither framework provides built-in support for environmental metrics or fine-grained task selection, highlighting the need for more flexible and sustainable benchmarking solutions.
 
 \chapter{Problem Description}
 
@@ -143,6 +161,7 @@ The limitations of existing benchmarks extend beyond just inefficiency. Studies 
     \item Inflexibility: Fixed task sets don't adapt to specific needs
     \item Error-prone: benchmarks contain up to 5 percent of mislabelled or erroneous tasks \cite{vendrow2025largelanguagemodelbenchmarks}
 \end{itemize}
+
 
 % Describe how do I address these limitations in my work
 
