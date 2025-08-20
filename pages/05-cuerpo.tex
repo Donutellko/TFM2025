@@ -40,9 +40,9 @@ This work explores existing benchmarks for code-generating LLMs and proposes a n
 
 \section{Problem Statement}
 
-Running benchmarks is essential for both LLM developers and users. Developers need benchmarks to fine-tune their models, while users rely on them to select appropriate models and adjust parameters like temperature and system prompts. However, this process faces several challenges:
+Running benchmarks is essential for LLM developers, researchers and users. Developers and researchers need benchmarks to fine-tune their models or compare approaches, while users rely on them to select appropriate models and adjust parameters like temperature and system prompts. However, this process faces several challenges:
 % Fine-tune key parameters like temperature, top_p, top_k to control model creativity vs determinism.
-Cost and Resource Consumption: Each benchmark run consumes significant computational resources, time, and energy. As noted in recent studies \cite{ ????  ?????}, the environmental impact of repeated benchmark runs is becoming a growing concern.
+Cost and Resource Consumption: Each benchmark run consumes significant computational resources, time, and energy. As noted in recent studies~\cite{ ????  ?????}, the environmental impact of repeated benchmark runs is becoming a growing concern.
 
 Lack of Customization: Most benchmarks are developed as fixed sets of tasks, making them difficult to adapt for specific use cases. This limitation was highlighted in the SWE-bench study \cite{jimenez2024swebenchlanguagemodelsresolve}, which emphasized the need for more flexible evaluation methods.
 % Развить мысль, как SWE сам решает эту проблему и каким образом
@@ -71,7 +71,7 @@ The main objectives of this work are:
 
 The landscape of LLM benchmarks has evolved significantly since the introduction of HumanEval \cite{chen2021evaluatinglargelanguagemodels}. This pioneering benchmark set a standard for evaluating code generation capabilities, but its limitations became apparent as LLMs advanced.
 
-Recent developments like HumanEval Pro \cite{yu2024humanevalprombpppro} have introduced more sophisticated testing approaches. For instance, their multi-step evaluation process tests an LLM's ability to work with its own generated code, revealing limitations in some models that perform well on simpler tasks.
+Recent developments like HumanEval Pro~\cite{yu2024humanevalprombpppro} have introduced more sophisticated testing approaches. For instance, their multi-step evaluation process tests an LLM's ability to work with its own generated code, revealing limitations in some models that perform well on simpler tasks.
 % Хочу сказать иначе: задачки в HumanEval уже общеизвестны, так что ЛЛМ натренированы на их решениях. Зато HumanEval Pro добавили дополнительный шаг в задачу, что продемонстрировало, что даже самые современные LLMs могут не справляться с незнакомыми задачами, или переиспользовать написанный ими же код, вызывая его в качестве функции. Таким образом, разработка новых задач важна, и нужно предоставить пользователю бенчмарка удобный способ добавлять и модифицировать задачи в бенчмарке.
 
 
@@ -83,10 +83,10 @@ While academic benchmarks like HumanEval focus on controlled, isolated tasks, in
 
 The InterCode framework \cite{yang2023intercodestandardizingbenchmarkinginteractive} introduced interactive environments using Docker, enabling evaluation of LLMs in realistic development scenarios with compilation and runtime feedback. This approach more closely mirrors actual developer workflows but comes with increased computational overhead.
 
-In \cite{chi2025copilotarenaplatformcode} the authors developed a plugin for IDE that offers the user two code completion options from two different LLMs and records which option the user chose. This allowed them to compare the performance of different LLMs in real-world coding tasks, providing valuable insights into user preferences and model effectiveness.
-Another article \cite{mozannar2024readinglinesmodelinguser} finds out that a user can often accept a first proposed solution in order to see it with proper syntax highlighting and be able to understand it better. But later he could even remove the suggestion and waits for a repeated completion or simply writes the piece of the code themself. Although that should not be considered a significant flaw of the benchmark, it could partially skew the results.
+In~\cite{chi2025copilotarenaplatformcode} the authors developed a plugin for IDE that offers the user two code completion options from two different LLMs and records which option the user chose. This allowed them to compare the performance of different LLMs in real-world coding tasks, providing valuable insights into user preferences and model effectiveness.
+Another article~\cite{mozannar2024readinglinesmodelinguser} finds out that a user can often accept a first proposed solution in order to see it with proper syntax highlighting and be able to understand it better. But later he could even remove the suggestion and waits for a repeated completion or simply writes the piece of the code themself. Although that should not be considered a significant flaw of the benchmark, it could partially skew the results.
 
-Most benchmarks are very limited in the output they provide. For example, SWE leaderboard \cite{swebenchSWEbenchLeaderboards} is created based on a single number that does not reflect the types of tasks that the model is better or worse at solving \cite{miah2024usercentricevaluationcode}. Thus, a user might choose a suboptimal model for their specific needs, resulting in lower performance or higher cost. This is partially countered by websites that aggregate results on several benchmarks \cite{vellumLeaderboard2025} which can give a very high-level picture.
+Most benchmarks are very limited in the output they provide. For example, SWE leaderboard~\cite{swebenchSWEbenchLeaderboards} is created based on a single number that does not reflect the types of tasks that the model is better or worse at solving~\cite{miah2024usercentricevaluationcode}. Thus, a user might choose a suboptimal model for their specific needs, resulting in lower performance or higher cost. This is partially countered by websites that aggregate results on several benchmarks~\cite{vellumLeaderboard2025} which can give a very high-level picture.
 
 \section{Problems in LLM Benchmarking}
 
@@ -101,6 +101,15 @@ Recent studies have revealed the complexity of user interaction with AI programm
 These findings highlight a critical gap in current benchmarks: they often focus solely on code correctness while ignoring user experience factors that significantly impact real-world utility.
 % Это надо переписать: актуальный бенчмарк должен учитывать качество написанного кода, для чего можно использовать LLM-as-Judge и специальные утилиты для статического анализа кода, такие как SonarQube или PMD. Эти инструменты могут оценивать качество кода по различным метрикам, включая читаемость, сложность и соответствие стилю.
 
+One of the important aspects of LLM evaluation is the choice of the metrics.
+For code quality, there are BLEU, CodeBLEU, RUBY, ROUGE-L, METEOR, ChrF\@.
+They assess the similarity of the generated code to the golden solution, taking into account the properties of source code.
+Evtikhiev et al.~\cite{evtikhiev2023out} takes 6 metrics, commonly used in papers.
+However, the authours conduct a study, comparing the results of metrics with human evaluation of the solutions.
+The results suggest that none of the analyzed metrics can correctly emulate human judgment, but ChrF metric is considered better than the others commonly used in papers.
+
+Crupi et al.~\cite{crupi2025effectiveness} looks into an approach of using LLM to evaluate the quality of the code (LLM-as-a-judge approach).
+As a result, they come to a conclusion that LLM-as-a-judge is a substantial improvement over mentioned metrics, and GPT-4-turbo can mimic closely a human evaluation.
 
 \section{Environmental impact of Benchmarking}
 
@@ -110,6 +119,9 @@ There are leaderboards that account for $CO_2$ emissions, such as Hugging Face \
 
 The most common metric in benchmarks is pass@k that measures the percentage of correct solutions among the $k$ solutions generated by the model.
 This implies that for each task in the benchmark dataset, a model repeatedly generates a number of solutions, just to receive a single numeric result to use for a metric.
+This metric is used in ClassEval, MBPP, MathQA-Python, CoderEval, and HumanEval+.
+Notably, HumanEval and HumanEval+ use $k=100$ (\texttt{pass@100}).
+However, as Miah and Zhu~\cite{miah2024usercentricevaluationcode} pointed out, users do not normally run the LLM several times, so pass@k does not reflect its usability.
 
 \section{Existing Benchmarking Frameworks and Their Limitations}
 % TO DO
