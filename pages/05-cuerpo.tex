@@ -143,44 +143,6 @@ Such as in the case of SWE-bench and following \textit{SWE-bench Verified} and \
 
 %Another article~\cite{mozannar2024readinglinesmodelinguser} finds out that a user can often accept a first proposed solution in order to see it with proper syntax highlighting and be able to understand it better. But later he could even remove the suggestion and waits for a repeated completion or simply writes the piece of the code themself. Although that should not be considered a significant flaw of the benchmark, it could partially skew the results.
 
-
-\section{Existing Benchmarking Frameworks and Their Limitations}
-
-Apart from the benchmarks themselves, there are several frameworks that facilitate LLM evaluation.
-These frameworks provide tools for running benchmarks and collecting results.
-
-Two widely used benchmarking frameworks are \textbf{bigcode-evaluation-harness}~\cite{bigcode-evaluation-harness} and \textbf{lm-evaluation-harness}~\cite{githubGitHubEleutherAIlmevaluationharness}.
-Both provide tools for running standardized benchmarks on LLMs, but they have notable limitations.
-The lm-evaluation-harness is more general-purpose and supports a broader range of language tasks, yet it also relies on fixed task sets and lacks modularity for user-defined benchmarks.
-Neither framework provides built-in support for environmental metrics or fine-grained task selection, highlighting the need for more flexible and sustainable benchmarking solutions.
-
-In the Table\ref{tab:framework-comparison} we compare the two frameworks based on their features and limitations.
-
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|p{4cm}|p{5cm}|p{5cm}|}
-        \hline
-        \textbf{Feature} & \textbf{bigcode-evaluation-harness} & \textbf{lm-evaluation-harness} \\
-        \hline
-        Evaluation of multiple LLMs & One model per run & One model per run \\
-        \hline
-        Available configuration & Task dataset name, Number of tasks, Temperature, Saving LLM responses, Limit of LLM response & TO-DO \\
-        \hline
-        Included benchmarks & MBPP(+), DS-1000, MultiPL-E, Mercury, etc. & Limited, fixed task sets \\
-        \hline
-        Defining new tasks & Requires source code modification & Requires source code modification \\
-        \hline
-        Run interface & CLI-based, no GUI & CLI-based, no GUI \\
-        \hline
-        Result analysis & Overall numeric metric and LLM responses saved as a file &  \\
-        \hline
-        Visualization & No visualization tools & No visualization tools \\
-        \hline
-    \end{tabular}
-    \caption{Comparison of bigcode-evaluation-harness and lm-evaluation-harness}
-    \label{tab:framework-comparison}
-\end{table}
-
 Based on the analysis of existing benchmarks, we can identify several key limitations that our work aims to address:
 \begin{itemize}
     \item Benchmark saturation,
@@ -286,6 +248,48 @@ As a result, they come to a conclusion that LLM-as-a-judge is a substantial impr
 
 % remove or rephrase: Recent studies have revealed the complexity of user interaction with AI programming assistants. Research by \cite{chen2025needhelpdesigningproactive} identified specific moments when developers expect proactive suggestions from LLMs, while \cite{mozannar2024readinglinesmodelinguser} classified 12 distinct states of interaction with tools like GitHub Copilot.
 % И что с того, что идентифицировал? Тогда нужно развить мысль, но вообще я не решаю эту проблему в своей работе
+
+\section{Existing Benchmarking Frameworks and Their Limitations}
+
+Apart from the benchmarks themselves, there are several frameworks that facilitate LLM evaluation.
+These frameworks provide tools for running benchmarks and collecting results.
+
+Two widely used benchmarking frameworks are \textbf{bigcode-evaluation-harness}~\cite{bigcode-evaluation-harness} and \textbf{lm-evaluation-harness}~\cite{githubGitHubEleutherAIlmevaluationharness}.
+Both provide tools for running standardized benchmarks on LLMs, but they have notable limitations.
+The lm-evaluation-harness is more general-purpose and supports a broader range of language tasks, yet it also relies on fixed task sets and lacks modularity for user-defined benchmarks.
+Neither framework provides built-in support for environmental metrics or fine-grained task selection, highlighting the need for more flexible and sustainable benchmarking solutions.
+
+In the Table\ref{tab:framework-comparison} we compare the two frameworks based on their features and limitations.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|p{4cm}|p{5cm}|p{5cm}|}
+        \hline
+        \textbf{Feature} & \textbf{bigcode-evaluation-harness} & \textbf{lm-evaluation-harness} \\
+        \hline
+        Specialization & Majorly, code writing tasks, but also allows for documentation generation tasks and natural language reasoning tasks & A universal harness supporting a wide range of tasks \\
+        \hline
+        Included benchmarks & MBPP, MBPP+, DS-1000, MultiPL-E, Mercury, GSM8K, etc. & MBPP, MBPP+, HumanEval, SpanishBench, basqueGLUE, and many more. \\
+        \hline
+        Defining new tasks & Requires source code modification & Requires source code modification \\
+        \hline
+        Available configuration & Task dataset name, Number of tasks, Temperature, Saving LLM responses, Limit of LLM response & Task datasets list,  \\
+        \hline
+        Run interface & CLI-based, no GUI & CLI-based, no GUI \\
+        \hline
+        Result analysis & Overall numeric metric and LLM responses saved as a file &  \\
+        \hline
+        Visualization & No visualization tools & No visualization tools \\
+        \hline
+        Evaluation of multiple LLMs & One model per run & One model per run \\
+        \hline
+        Supports model loading via transformers & Yes & Yes \\
+        \hline
+    \end{tabular}
+    \caption{Comparison of bigcode-evaluation-harness and lm-evaluation-harness}
+    \label{tab:framework-comparison}
+\end{table}
+
 
 \chapter{Problem Description}
 
