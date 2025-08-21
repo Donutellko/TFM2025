@@ -71,6 +71,7 @@ The main objectives of this work are:
     \item Analyze existing benchmarks and their limitations
     \item Design a modular benchmark system that allows:
     \begin{itemize}
+        % Badly written, TO-DO
         \item Custom task selection and filtering
         \item Configuration of testing criteria
         \item Support for multiple programming languages and task types
@@ -131,21 +132,17 @@ The environments and scenarios were prepared for Python, SQL, and BASH, but the 
 This approach more closely mirrors actual developer workflows and allows for testing LLMs in the role of a partially independent agent.
 But this approach comes with increased computational overhead of running a Docker environment, a virtual operating system, and an instance of a database, which limits the overall speed and a number of scenarios that can be tested at once.
 
-
-\section{Types of LLM Benchmarks}
-
-% add classifications
-
-
-
-In~\cite{chi2025copilotarenaplatformcode} the authors developed a plugin for IDE that offers the user two code completion options from two different LLMs and records which option the user chose. This allowed them to compare the performance of different LLMs in real-world coding tasks, providing valuable insights into user preferences and model effectiveness.
-Another article~\cite{mozannar2024readinglinesmodelinguser} finds out that a user can often accept a first proposed solution in order to see it with proper syntax highlighting and be able to understand it better. But later he could even remove the suggestion and waits for a repeated completion or simply writes the piece of the code themself. Although that should not be considered a significant flaw of the benchmark, it could partially skew the results.
-
-Most benchmarks are very limited in the output they provide. For example, SWE leaderboard~\cite{swebenchSWEbenchLeaderboards} is created based on a single number that does not reflect the types of tasks that the model is better or worse at solving~\cite{miah2024usercentricevaluationcode}. Thus, a user might choose a suboptimal model for their specific needs, resulting in lower performance or higher cost. This is partially countered by websites that aggregate results on several benchmarks~\cite{vellumLeaderboard2025} which can give a very high-level picture.
-
 Many of the mentioned benchmarks have inspired researchers to implement new benchmarks based on them.
-That could be their adaptations in other programming languages, or refined datasets with verified and new hand-crafted tasks.
+That could be their adaptations in other programming languages or refined datasets with verified and new hand-crafted tasks.
 Such as in the case of SWE-bench and following \textit{SWE-bench Verified} and \textit{Multi-swe-bench}.
+
+
+\section{Classification of LLM Benchmarks}
+
+% TO-DO add classifications
+
+%Another article~\cite{mozannar2024readinglinesmodelinguser} finds out that a user can often accept a first proposed solution in order to see it with proper syntax highlighting and be able to understand it better. But later he could even remove the suggestion and waits for a repeated completion or simply writes the piece of the code themself. Although that should not be considered a significant flaw of the benchmark, it could partially skew the results.
+
 
 \section{Existing Benchmarking Frameworks and Their Limitations}
 
@@ -157,7 +154,9 @@ Both provide tools for running standardized benchmarks on LLMs, but they have no
 The lm-evaluation-harness is more general-purpose and supports a broader range of language tasks, yet it also relies on fixed task sets and lacks modularity for user-defined benchmarks.
 Neither framework provides built-in support for environmental metrics or fine-grained task selection, highlighting the need for more flexible and sustainable benchmarking solutions.
 
-\begin{table}[h]
+In the Table\ref{tab:framework-comparison} we compare the two frameworks based on their features and limitations.
+
+\begin{table}[H]
     \centering
     \begin{tabular}{|p{4cm}|p{5cm}|p{5cm}|}
         \hline
@@ -182,14 +181,56 @@ Neither framework provides built-in support for environmental metrics or fine-gr
     \label{tab:framework-comparison}
 \end{table}
 
+Based on the analysis of existing benchmarks, we can identify several key limitations that our work aims to address:
+\begin{itemize}
+    \item Benchmark saturation,
+%: Many tasks become irrelevant as models improve\cite{vendrow2025largelanguagemodelbenchmarks};
+    \item Data leakage,
+%: LLMs are trained on benchmark tasks solutions, making them obsolete\cite{vendrow2025largelanguagemodelbenchmarks};
+    \item Limited feedback,
+%: Most benchmarks provide only pass/fail results;
+    \item High resources consumption,
+%: Running comprehensive benchmarks is expensive and time-consuming;
+    \item Environmental impact,
+%: Repeated runs contribute to unnecessary carbon emissions;
+%    \item Inflexibility,
+%%: Fixed task sets don't adapt to specific needs;
+    \item Error-proneness tasks,
+%: benchmarks contain up to 5 percent of mislabelled or erroneous tasks\cite{vendrow2025largelanguagemodelbenchmarks}.
+    \item Limited feedback and output.
+\end{itemize}
 
-\section{Environmental impact of Benchmarking}
+Let's address each of these limitations one by one.
 
-Repeated training and benchmarking of LLMs require substantial computational resources, leading to significant electricity consumption and carbon emissions. This environmental impact is increasingly important in the context of global efforts to reduce carbon footprints. We will want for benchmarks to account for these factors and encourage more sustainable evaluation practices.
+\subsection{Benchmark Saturation}
 
-% Тут надо сказать, что при разработке и fine-tuning LLM, используются значительные мощности, в том числе при повторяющемся запуске бенчмарков. Это приводит к значительным затратам на электроэнергию и углеродные выбросы, что становится все более важным вопросом в свете глобальных усилий по снижению воздействия на окружающую среду. Добавить какое-то исследование на эту тему.
+When a benchmark becomes saturated, it means that the tasks in the benchmark are too easy for the current state-of-the-art LLMs, leading to high pass rates and diminishing returns on further improvements.
+It can be caused by either advances in LLMs or by data leakage, where the tasks and their solutions are present in the training datasets of the models being evaluated.
 
-There are leaderboards that account for $CO_2$ emissions, such as Hugging Face \cite{huggingfaceCalculation}, which tracks the carbon footprint of models. However, these metrics are often not integrated into traditional benchmarks, leading to a lack of awareness about the environmental impact of LLM evaluation practices.
+At some moment, testing on the simplest tasks becomes irrelevant, as all models pass them with high scores.
+Some datasets contain \textbf{metadata} that allows filtering out tasks based on their difficulty, thus saving resources and time on each evaluation.
+
+\subsection{Data Leakage}
+
+Benchmark saturation mentioned in the above sections is partially explained by advances in models, but it can also be attributed to information \textbf{leaking}: the popular and publicly available benchmarks appear in the training datasets accompanied by the golden solutions.
+This leads to a situation where the models are trained on the same tasks they are being evaluated on.
+
+There are several ways to avoid the consequences of data leakage:
+\begin{itemize}
+    \item hand-crafting brand-new tasks without publishing them or using for in-house training;
+    \item generating new tasks based on the existing ones as it was done with HumanEval Pro and MBPP Pro;
+    \item or perturbing existing tasks as it was done in ReCode.
+\end{itemize}
+
+\subsection{High Cost and Environmental Impact}
+
+Repeated training and benchmarking of LLMs require significant computational resources, leading to significant electricity consumption and carbon emissions.
+This environmental impact is increasingly important in the context of global efforts to reduce carbon footprints.
+We will want for benchmarks to account for these factors and encourage more sustainable evaluation practices.
+% TO-DO: Добавить какое-то исследование на эту тему.
+
+There are leaderboards that account for $CO_2$ emissions, such as Hugging Face\cite{huggingfaceCalculation}, which tracks the carbon footprint of using models.
+However, these metrics are often not integrated into traditional benchmarks, leading to a lack of awareness about the environmental impact of LLM evaluation practices.
 
 The most common metric in benchmarks is pass@k that measures the percentage of correct solutions among the $k$ solutions generated by the model.
 This implies that for each task in the benchmark dataset, a model repeatedly generates a number of solutions, just to receive a single numeric result to use for a metric.
@@ -197,13 +238,41 @@ This metric is used in ClassEval, MBPP, MathQA-Python, CoderEval, and HumanEval+
 Notably, HumanEval and HumanEval+ use $k=100$ (\texttt{pass@100}).
 However, as Miah and Zhu~\cite{miah2024usercentricevaluationcode} pointed out, users do not normally run the LLM several times, so pass@k does not reflect its usability.
 
+\subsection{Limited Feedback and Output}
+
+This limitation is intertwined with the high cost.
+The output of most benchmarks is a single numeric metric, such as pass@k, which indicates the percentage of tasks solved correctly by the model.
+Compared to the amount of work and energy that was consumed to produce this result, and the amount of information that could be extracted from the model's responses and test runs, this approach is very limited.
+
+For example, SWE leaderboard~\cite{swebenchSWEbenchLeaderboards} is created based on a single number that does not reflect the types of tasks that the model is better or worse at solving~\cite{miah2024usercentricevaluationcode}.
+Thus, a researcher or a user might choose a suboptimal model for their specific needs, resulting in lower performance or higher cost.
+This is partially countered by websites that aggregate results on several benchmarks~\cite{vellumLeaderboard2025} which can give a very high-level picture.
+
+Some of the ways to gather more information from the model's responses are:
+\begin{itemize}
+    \item Gather performance metrics for each task, such as execution time, memory usage, and CPU load;
+    \item Count the number of input and output tokens used for each generation to compare cost-effectiveness of models;
+    \item Analyze the generated code for style and quality, such as cyclomatic complexity, number of lines, and code duplication;
+    \item Provide a way to analyze individual task failures, such as incorrect solutions, timeouts, and exceptions;
+    \item Using LLM-as-a-judge approach to evaluate the quality of the generated solution.
+\end{itemize}
+
+\subsection{Error-Proneness of Tasks}
+
+When creating and managing big datasets, errors are inevitable.
+As\cite{vendrow2025largelanguagemodelbenchmarks} found out, popular benchmarks contain up to 5 percent of mislabeled or erroneous tasks.
+This can lead to incorrect evaluation results and misinterpretation of model capabilities.
+
+To mitigate this issue, a researcher should be able to examine the failures and more easily spot the errors in the tasks.
+This will also allow the researcher to spot patterns in model's errors, and possibly mitigate them by improving training datasets, updating a system prompt, and adjusting temperature and other parameters.
+
 \section{Problems in LLM Benchmarking}
 
 % Задачки в HumanEval уже общеизвестны, так что ЛЛМ натренированы на их решениях. Зато HumanEval Pro добавили дополнительный шаг в задачу, что продемонстрировало, что даже самые современные LLMs могут не справляться с незнакомыми задачами, или переиспользовать написанный ими же код, вызывая его в качестве функции. Таким образом, разработка новых задач важна, и нужно предоставить пользователю бенчмарка удобный способ добавлять и модифицировать задачи в бенчмарке.
 
-Benchmark saturation mentioned above is partially explained by advances in models, but it can also be attributed to information \textbf{leaking}: the popular and publicly available benchmarks appear in the training datasets accompanied with the golden solutions.
+Benchmark saturation mentioned in the above sections is partially explained by advances in models, but it can also be attributed to information \textbf{leaking}: the popular and publicly available benchmarks appear in the training datasets accompanied by the golden solutions.
 Even then, it doesn't mean that an LLM won't struggle when presented with the same task.
-When changing the task phrasing while keeping the semantic consistent, there is a 4.5 percet drop in solvability, showing that the models remember the phrasing of the descriptions in the original dataset. \cite{uniyal2024one}
+When changing the task phrasing while keeping the semantic consistent, there is a 4.5-percent drop in solvability, showing that the models remember the phrasing of the descriptions in the original dataset. \cite{uniyal2024one}
 
 One of the important aspects of LLM evaluation is the choice of the metrics.
 For code quality, there are BLEU, CodeBLEU, RUBY, ROUGE-L, METEOR, ChrF\@.
@@ -212,7 +281,7 @@ Evtikhiev et al.~\cite{evtikhiev2023out} takes 6 metrics, commonly used in paper
 However, the authours conduct a study, comparing the results of metrics with human evaluation of the solutions.
 The results suggest that none of the analyzed metrics can correctly emulate human judgment, but ChrF metric is considered better than the others commonly used in papers.
 
-A paper by \cite{crupi2025effectiveness} looks into an approach of using LLM to evaluate the quality of the solution generated by another model (LLM-as-a-judge approach).
+A paper by\cite{crupi2025effectiveness}looks into an approach of using LLM to evaluate the quality of the solution generated by another model (LLM-as-a-judge approach).
 As a result, they come to a conclusion that LLM-as-a-judge is a substantial improvement over mentioned metrics, and GPT-4-turbo can mimic closely a human evaluation.
 
 % remove or rephrase: Recent studies have revealed the complexity of user interaction with AI programming assistants. Research by \cite{chen2025needhelpdesigningproactive} identified specific moments when developers expect proactive suggestions from LLMs, while \cite{mozannar2024readinglinesmodelinguser} classified 12 distinct states of interaction with tools like GitHub Copilot.
@@ -220,20 +289,20 @@ As a result, they come to a conclusion that LLM-as-a-judge is a substantial impr
 
 \chapter{Problem Description}
 
+In the previous chapter, we looked at the existing popular benchmarking frameworks.
+Based on the list of their features, we can create a list of limitations that we can address in our work:
+\begin{itemize}
+    \item A more broad and detailed output of the results, instead of simple numeric outputs.
+    \item A flexible and interactive web interface for configuring benchmarks, selecting tasks, and visualizing results, or diving deeper into the failures.
+    \item An easier approach for defining new tasks or modifying the existing ones, without the need to modify the source code of the framework.
+    \item TO-DO
+\end{itemize}
+
 \section{Analysis of Current Limitations}
 
 The limitations of existing benchmarks extend beyond just inefficiency. Studies like  have identified several critical issues:
 
 % TO DO: check if all that is mentioned in the paper
-\begin{itemize}
-    \item Benchmark saturation: Many tasks become irrelevant as models improve \cite{vendrow2025largelanguagemodelbenchmarks}
-    \item Task leaking: LLMs are trained on benchmark tasks solutions, making them obsolete \cite{vendrow2025largelanguagemodelbenchmarks}
-    \item Limited feedback: Most benchmarks provide only pass/fail results
-    \item High costs: Running comprehensive benchmarks is expensive and time-consuming
-    \item Environmental impact: Repeated runs contribute to unnecessary carbon emissions
-    \item Inflexibility: Fixed task sets don't adapt to specific needs
-    \item Error-prone: benchmarks contain up to 5 percent of mislabelled or erroneous tasks \cite{vendrow2025largelanguagemodelbenchmarks}
-\end{itemize}
 
 
 % Describe how do I address these limitations in my work
