@@ -1,3 +1,12 @@
+# Project TO-DOs
+- count number of tokens used for resolving a task
+- add more tasks to the task set
+- add a toggle to rephrase the task description
+- add a feature to run the generations K times for pass@k
+- add a feature to only re-run failed tasks
+- calculate and show some statistics on the frontend
+- add a feature to translate the task description to other languages
+
 <p align="center">
   <br/>
   <img src=images/marcauma-total-2.jpg alt="UMA">
