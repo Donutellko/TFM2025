@@ -84,19 +84,59 @@ The main objectives of this work are:
 
 \section{Evolution of Code Generation Benchmarks}
 
-The landscape of LLM benchmarks has evolved significantly since the introduction of HumanEval \cite{chen2021evaluatinglargelanguagemodels}. This pioneering benchmark set a standard for evaluating code generation capabilities, but its limitations became apparent as LLMs advanced.
+The evolution of benchmarks for code generation has been driven by the need to evaluate the capabilities of Large Language Models (LLMs) in programming tasks.
+Early benchmarks focused on isolated tasks, but as LLMs became more sophisticated, the need for more comprehensive and realistic evaluation methods emerged.
 
-Recent developments like HumanEval Pro~\cite{yu2024humanevalprombpppro} have introduced more sophisticated testing approaches. For instance, their multi-step evaluation process tests an LLM's ability to work with its own generated code, revealing limitations in some models that perform well on simpler tasks.
-% Хочу сказать иначе: задачки в HumanEval уже общеизвестны, так что ЛЛМ натренированы на их решениях. Зато HumanEval Pro добавили дополнительный шаг в задачу, что продемонстрировало, что даже самые современные LLMs могут не справляться с незнакомыми задачами, или переиспользовать написанный ими же код, вызывая его в качестве функции. Таким образом, разработка новых задач важна, и нужно предоставить пользователю бенчмарка удобный способ добавлять и модифицировать задачи в бенчмарке.
+The first benchmarks were aimed at text comprehension and contained questions and expected answers, such as GLUE, SQuAD and GSM8K with grade-school math problems~(\cite{vendrow2025largelanguagemodelbenchmarks}).
+
+As LLM capabilities expanded, benchmarks shifted towards programming tasks, with a focus on code generation and understanding.
+Some pioneers in LLM code benchmarking that are MBPP, HumanEval and APPS.
+\begin{itemize}
+\item MBPP (Mostly Basic Python Problems) published by~\cite{austin2021program} contains $974$ crowdsourced Python programming problems with tests.
+
+\item HumanEval was developed in OpenAI by\cite{chen2021evaluatinglargelanguagemodels} with $164$ hand-crafted problems, with a goal of avoiding data leakage (to ensure that the problems and golden solutions are not present in the training dataset).
+
+\item APPS by ~\cite{hendrycksapps2021} features $10000$ Python tasks with $131777$ test cases, borrowed from open-access sites like Codewars and Codeforces.
+\end{itemize}
+These benchmarks are still used to this day for comparing performance of different models in scientific papers.
+Notably, APPS is a benchmark commonly used for fine-tuning LLMs for programming tasks, as it allows to use separate sets of problems for training and evaluation~(\cite{bigcode-evaluation-harness}).
+
+The mentioned benchmarks became less effective, as newer models were trained on the same tasks they are being evaluated on.
+This phenomenon is known as \textbf{data leakage} as described by\cite{vendrow2025largelanguagemodelbenchmarks}.
+
+Amazon's Recode benchmark~\cite{recode_wang2022} addressed this issue by introducing perturbations on docstrings, function names, and codes, while staying semantically close to the original task.
+However, that is more of a way to test the robustness of the model, rather than a way to test its ability to solve brand-new problems.
+
+More recent developments like HumanEval Pro and MBPP Pro~\cite{yu2024humanevalprombpppro} introduced more sophisticated testing approaches.
+Their multistep evaluation process tests an LLM's ability to work with its own generated code.
+First, an LLM generates a solution to a known problem from HumanEval or MBPP datasets.
+Then, it is given a new task that requires calling a function generated in the first step.
+This approach revealed limitations in some models that perform well on simpler tasks.
+
+The mentioned academic benchmarks focus on controlled and isolated tasks, SWE-bench (\cite{jimenez2024swebenchlanguagemodelsresolve}) moved toward real-world scenarios.
+Software engineering tasks were taken from resolved Issues from GitHub repositories of open-source projects Python.
+SWE-bench is famous for its leaderboards, where laboratories and companies all over the world compete to achieve the higher percentage of solved tasks.
+But the benchmark is limited to tasks from only 12 open-source repositories, and only supports Python programming language.
+
+Researchers~\cite{chi2025copilotarenaplatformcode} have found a different way to evaluate LLMs in real-world scenarios.
+Instead of using a fixed set of tasks, they developed a plugin called CopilotArena for an IDE.
+The plugin provides two code completion options from different LLMs, and allows a user to choose the one they prefer.
+This approach allows for a more realistic evaluation of LLMs in coding tasks, but it lacks the controlled environment and a solid numerical result for each model.
+Such an approach could be useful for A/B testing of LLMs in production, but it is not suitable for scientific research and repeated evaluations during fine-tuning.
+
+The benchmarks mentioned above perform in a static environment, where the model is given a task and expected to generate a solution.
+The InterCode framework by\cite{yang2023intercodestandardizingbenchmarkinginteractive} introduces interactive environments using Docker.
+This enables evaluation of LLMs in realistic and interactive development scenarios with compilation and runtime feedback.
+The environments and scenarios were prepared for Python, SQL, and BASH, but the framework allows introducing new environments and scenarios.
+This approach more closely mirrors actual developer workflows and allows for testing LLMs in the role of a partially independent agent.
+But this approach comes with increased computational overhead of running a Docker environment, a virtual operating system, and an instance of a database, which limits the overall speed and a number of scenarios that can be tested at once.
 
 
 \section{Types of LLM Benchmarks}
 
 % add classifications
 
-While academic benchmarks like HumanEval focus on controlled, isolated tasks, initiatives like SWE-bench \cite{jimenez2024swebenchlanguagemodelsresolve} have moved toward real-world scenarios. This shift reflects a growing recognition that LLM evaluation should encompass the complexity of actual software development.
 
-The InterCode framework \cite{yang2023intercodestandardizingbenchmarkinginteractive} introduced interactive environments using Docker, enabling evaluation of LLMs in realistic development scenarios with compilation and runtime feedback. This approach more closely mirrors actual developer workflows but comes with increased computational overhead.
 
 In~\cite{chi2025copilotarenaplatformcode} the authors developed a plugin for IDE that offers the user two code completion options from two different LLMs and records which option the user chose. This allowed them to compare the performance of different LLMs in real-world coding tasks, providing valuable insights into user preferences and model effectiveness.
 Another article~\cite{mozannar2024readinglinesmodelinguser} finds out that a user can often accept a first proposed solution in order to see it with proper syntax highlighting and be able to understand it better. But later he could even remove the suggestion and waits for a repeated completion or simply writes the piece of the code themself. Although that should not be considered a significant flaw of the benchmark, it could partially skew the results.
@@ -104,6 +144,8 @@ Another article~\cite{mozannar2024readinglinesmodelinguser} finds out that a use
 Most benchmarks are very limited in the output they provide. For example, SWE leaderboard~\cite{swebenchSWEbenchLeaderboards} is created based on a single number that does not reflect the types of tasks that the model is better or worse at solving~\cite{miah2024usercentricevaluationcode}. Thus, a user might choose a suboptimal model for their specific needs, resulting in lower performance or higher cost. This is partially countered by websites that aggregate results on several benchmarks~\cite{vellumLeaderboard2025} which can give a very high-level picture.
 
 \section{Problems in LLM Benchmarking}
+
+% Задачки в HumanEval уже общеизвестны, так что ЛЛМ натренированы на их решениях. Зато HumanEval Pro добавили дополнительный шаг в задачу, что продемонстрировало, что даже самые современные LLMs могут не справляться с незнакомыми задачами, или переиспользовать написанный ими же код, вызывая его в качестве функции. Таким образом, разработка новых задач важна, и нужно предоставить пользователю бенчмарка удобный способ добавлять и модифицировать задачи в бенчмарке.
 
 Benchmark saturation mentioned above is partially explained by advances in models, but it can also be attributed to information \textbf{leaking}: the popular and publicly available benchmarks appear in the training datasets accompanied with the golden solutions. 
 Even then, it doesn't mean that an LLM won't struggle when presented with the same task. 
@@ -139,8 +181,6 @@ However, as Miah and Zhu~\cite{miah2024usercentricevaluationcode} pointed out, u
 
 \section{Existing Benchmarking Frameworks and Their Limitations}
 
-% TO DO more detail and a comparison table
-
 Apart from the benchmarks themselves, there are several frameworks that facilitate LLM evaluation.
 These frameworks provide tools for running benchmarks and collecting results.
 
@@ -159,7 +199,7 @@ Neither framework provides built-in support for environmental metrics or fine-gr
         \hline
         Available configuration & Task dataset name, Number of tasks, Temperature, Saving LLM responses, Limit of LLM response & TO-DO \\
         \hline
-        Included benchmarks & Common benchmark tasks & Limited, fixed task sets \\
+        Included benchmarks & MBPP(+), DS-1000, MultiPL-E, Mercury, etc. & Limited, fixed task sets \\
         \hline
         Defining new tasks & Requires source code modification & Requires source code modification \\
         \hline
@@ -274,16 +314,17 @@ The React frontend provides:
 
 \section{Project Structure}
 
-The project follows a modern microservices architecture with separate backend and frontend applications:
+The project follows a modern microservices architecture with separate backend and frontend applications.
+Currently, the configuration, status and result files are stored in a file-based storage system, but they can be easily adapted to use a database if needed.
 
 \begin{verbatim}
 Project Root
+|-- src/             # Spring Boot application source code
+|-- frontend/        # React application source code
 |-- exec_configs/    # Execution configuration YAML files
 |-- task_sources/    # Task source YAML files
 |-- bench_status/    # Benchmark status files
-|-- bench_results/   # Benchmark results
-|-- frontend/        # React application
-`-- src/             # Spring Boot application
+`-- bench_results/   # Benchmark results
 \end{verbatim}
 
 \section{Backend Development}
@@ -296,8 +337,8 @@ The backend exposes a comprehensive RESTful API:
     \item \texttt{/api/configs}: Configuration file management
     \item \texttt{/api/tasks}: Task source file operations
     \item \texttt{/api/benchmarks}: Benchmark execution control
-    \item \texttt{/api/status}: Status monitoring
-    \item \texttt{/api/results}: Result retrieval and analysis
+    \item \texttt{/api/status}: Status monitoring for current benchmarks run
+    \item \texttt{/api/results}: Result retrieval for visualization and analysis
 \end{itemize}
 
 \subsection{Core Functionality}
