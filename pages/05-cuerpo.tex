@@ -27,19 +27,21 @@
 
 Large Language Models (LLMs) have revolutionized software development through AI-assisted programming tools like GitHub Copilot. However, evaluating and fine-tuning these models requires extensive benchmarking, which comes at significant computational, financial, and environmental costs. Current benchmarks often contain irrelevant tasks and provide limited customization options, making them inefficient for specific use cases.
 
-This work explores existing benchmarks for code-generating LLMs and proposes a novel approach: modular and customizable benchmarks that can be tailored to specific needs while remaining cost-effective and environmentally conscious.
+This work explores existing benchmarks for code-generating LLMs and proposes a novel approach: an easily customizable benchmarks with detailed and conveniently explorable outputs that can be tailored to specific needs while remaining cost-effective and environmentally conscious.
 
 % Methodology Overview
-This thesis began with a comprehensive literature review, using recent critical reviews as a foundation for analyzing the state of LLM benchmarking. The review was extended by following citations to relevant articles published in late 2024 and 2025, focusing on keywords related to benchmarking and LLMs. The findings from this literature analysis informed the design and implementation of a modular benchmarking system, which was then evaluated for efficiency, flexibility, and environmental impact.
+This thesis began with a comprehensive literature review, using recent critical reviews as a foundation for analyzing the state of LLM benchmarking.
+The review was extended by following citations to relevant articles published in late 2024 and 2025, focusing on keywords related to benchmarking and LLMs.
+The findings from this literature analysis informed the design and implementation of a modular benchmarking system, which was then evaluated for efficiency, flexibility, and environmental impact.
 
 % Research Questions
-The literature review and subsequent research were guided by the following questions:
+The literature review and further research were guided by the following questions:
 \begin{itemize}
-    \item What are the main limitations of current LLM benchmarks for code generation?
+    \item RQ1: What are the main limitations of current LLM benchmarks for code generation?
     % \item How does benchmark saturation and task leaking affect the reliability of evaluation?
-    \item What metrics best reflect real-world usability and code quality?
-    \item How can benchmarks be made customizable for different user needs?
-    \item What is the environmental impact of repeated benchmarking, and how can it be reduced?
+    \item RQ2: What metrics best reflect real-world usability and code quality?
+    \item RQ3: How can benchmarks be made customizable for different user needs?
+    \item RQ4: What is the environmental impact of repeated benchmarking, and how can it be reduced?
 \end{itemize}
 
 % Contributions Summary
@@ -54,15 +56,12 @@ The literature review and subsequent research were guided by the following quest
 
 \section{Problem Statement}
 
-Running benchmarks is essential for LLM developers, researchers and users. Developers and researchers need benchmarks to fine-tune their models or compare approaches, while users rely on them to select appropriate models and adjust parameters like temperature and system prompts. However, this process faces several challenges:
-% Fine-tune key parameters like temperature, top_p, top_k to control model creativity vs determinism.
-Cost and Resource Consumption: Each benchmark run consumes significant computational resources, time, and energy. As noted in recent studies, the environmental impact of repeated benchmark runs is becoming a growing concern.
-% TO-DO: add a reference to the study on environmental impact
+Benchmarking LLMs for code generation is essential for both research and practice, but current approaches face critical limitations.
+Most benchmarks are fixed datasets, which leads to task saturation and data leakage as models are trained on their contents.
+The lack of customization prevents researchers and practitioners from focusing on tasks relevant to their use cases.
+At the same time, running large benchmarks consumes significant computational resources, resulting in high costs and environmental impact. Furthermore, benchmark outputs are often limited to single numeric metrics, which fail to capture nuanced aspects of model performance such as efficiency, style, or error patterns.
 
-Lack of Customization: Most benchmarks are developed as fixed sets of tasks, making them difficult to adapt for specific use cases. This limitation was highlighted in the SWE-bench study~\cite{jimenez2024swebenchlanguagemodelsresolve}, which emphasized the need for more flexible evaluation methods.
-% Развить мысль, как SWE сам решает эту проблему и каким образом
-
-Inefficient Task Selection: Many benchmarks include tasks that may be irrelevant for specific applications, leading to wasted resources. Recent research \cite{vendrow2025largelanguagemodelbenchmarks} has shown that benchmark saturation often results in running unnecessary tests that all modern LLMs pass easily.
+Therefore, the problem addressed in this thesis is the absence of a flexible, customizable, and sustainable benchmarking framework that can adapt to evolving LLM capabilities and user needs.
 
 \section{Objectives}
 
@@ -80,6 +79,14 @@ The main objectives of this work are:
     \item Implement an interactive web interface for benchmark configuration and result analysis
     \item Develop a cost-efficient and environmentally conscious approach to benchmarking
 \end{enumerate}
+
+\section{Relevance of the Work}
+
+The relevance of this work lies in addressing the growing inefficiency and environmental cost of LLM benchmarks.
+By introducing a customizable framework, this thesis provides a practical solution for researchers and practitioners who need targeted, resource-efficient evaluations.
+The proposed system not only saves time and energy but also improves the usability of benchmarking results, making them more relevant for real-world applications.
+
+
 
 \chapter{State of the Art}
 
@@ -137,11 +144,14 @@ That could be their adaptations in other programming languages or refined datase
 Such as in the case of SWE-bench and following \textit{SWE-bench Verified} and \textit{Multi-swe-bench}.
 
 
-\section{Classification of LLM Benchmarks}
+% \section{Classification of LLM Benchmarks}
 
-% TO-DO add classifications
+% TO-DO add classifications ?
+
+\section{Limitations of LLM Code Generation Benchmarks}
 
 %Another article~\cite{mozannar2024readinglinesmodelinguser} finds out that a user can often accept a first proposed solution in order to see it with proper syntax highlighting and be able to understand it better. But later he could even remove the suggestion and waits for a repeated completion or simply writes the piece of the code themself. Although that should not be considered a significant flaw of the benchmark, it could partially skew the results.
+
 
 Based on the analysis of existing benchmarks, we can identify several key limitations that our work aims to address:
 \begin{itemize}
@@ -151,13 +161,13 @@ Based on the analysis of existing benchmarks, we can identify several key limita
 %: LLMs are trained on benchmark tasks solutions, making them obsolete\cite{vendrow2025largelanguagemodelbenchmarks};
     \item Limited feedback,
 %: Most benchmarks provide only pass/fail results;
-    \item High resources consumption,
+    \item High resources' consumption,
 %: Running comprehensive benchmarks is expensive and time-consuming;
     \item Environmental impact,
 %: Repeated runs contribute to unnecessary carbon emissions;
 %    \item Inflexibility,
 %%: Fixed task sets don't adapt to specific needs;
-    \item Error-proneness tasks,
+    \item Error-proneness of tasks,
 %: benchmarks contain up to 5 percent of mislabelled or erroneous tasks\cite{vendrow2025largelanguagemodelbenchmarks}.
     \item Limited feedback and output.
 \end{itemize}
@@ -239,8 +249,8 @@ When changing the task phrasing while keeping the semantic consistent, there is 
 One of the important aspects of LLM evaluation is the choice of the metrics.
 For code quality, there are BLEU, CodeBLEU, RUBY, ROUGE-L, METEOR, ChrF\@.
 They assess the similarity of the generated code to the golden solution, taking into account the properties of source code.
-Evtikhiev et al.~\cite{evtikhiev2023out} takes 6 metrics, commonly used in papers.
-However, the authours conduct a study, comparing the results of metrics with human evaluation of the solutions.
+Evtikhiev et al.~\cite{evtikhiev2023out} takes 6~metrics, commonly used in papers.
+The authors conduct a study, comparing the results of metrics with human evaluation of the solutions.
 The results suggest that none of the analyzed metrics can correctly emulate human judgment, but ChrF metric is considered better than the others commonly used in papers.
 
 A paper by\cite{crupi2025effectiveness}looks into an approach of using LLM to evaluate the quality of the solution generated by another model (LLM-as-a-judge approach).
@@ -248,6 +258,31 @@ As a result, they come to a conclusion that LLM-as-a-judge is a substantial impr
 
 % remove or rephrase: Recent studies have revealed the complexity of user interaction with AI programming assistants. Research by \cite{chen2025needhelpdesigningproactive} identified specific moments when developers expect proactive suggestions from LLMs, while \cite{mozannar2024readinglinesmodelinguser} classified 12 distinct states of interaction with tools like GitHub Copilot.
 % И что с того, что идентифицировал? Тогда нужно развить мысль, но вообще я не решаю эту проблему в своей работе
+
+\section{Comparison of LLM Code Generation Benchmarks}
+
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|l|l|l|l|}
+        \hline
+        \textbf{Benchmark} & \textbf{Size} & \textbf{Domain} & \textbf{Innovation} & \textbf{Limitations} \\
+        \hline
+        MBPP & 974 tasks & Python & Crowdsourced, test cases & Leakage, basic tasks \\
+        APPS & 10,000+ & Python & Large scale & Leakage, too easy for SOTA \\
+        ReCode & ~3k & Python & Robustness via perturbation & Synthetic, limited \\
+        SWE-bench & ~2k & Python (12 repos) & Real GitHub issues & Limited repos/langs \\
+        HumanEval & 164 tasks & Python & Handcrafted, leakage-avoidance & Small, saturated \\
+        HumanEval+ & 400+ & Python & Extension of HumanEval & Still small, leakage \\
+        HumanEval Pro & 2,000+ & Python & Multi-step tasks & Python-only, resource-heavy \\
+        BigCodeBench & 1M+ & Multi & Massive scale & Hard to run, saturation risk \\
+        InterCode & 3k+ & Python, SQL, Bash & Interactive Docker env & Heavy resources, complex \\
+        CopilotArena & Unlimited & Unlimited & Real user experience & No numeric metric or controlled env \\
+        \hline
+    \end{tabular}
+    \caption{Comparison of major LLM code generation benchmarks}\label{tab:bench-compare-table}
+\end{table}
+
+
 
 \section{Existing Benchmarking Frameworks and Their Limitations}
 
@@ -273,9 +308,11 @@ In the Table\ref{tab:framework-comparison} we compare the two frameworks based o
         \hline
         Defining new tasks & Requires source code modification & Requires source code modification \\
         \hline
-        Available configuration & Task dataset name, Number of tasks, Temperature, Saving LLM responses, Limit of LLM response & Task datasets list,  \\
+        Available configuration & Task dataset name, Number of tasks, Temperature, Saving LLM responses, Limits of LLM response, etc. & Task datasets list (other parameters are is defined on task level), Limits of LLM response, System prompt, etc.  \\
         \hline
-        Run interface & CLI-based, no GUI & CLI-based, no GUI \\
+        Extended output & LLM response or references as JSON & Prompt, LLM response, and metrics results as JSON \\
+        \hline
+        Run interface & CLI-based, no GUI & CLI-based, no GUI, an API for training loops \\
         \hline
         Result analysis & Overall numeric metric and LLM responses saved as a file &  \\
         \hline
@@ -289,6 +326,33 @@ In the Table\ref{tab:framework-comparison} we compare the two frameworks based o
     \caption{Comparison of bigcode-evaluation-harness and lm-evaluation-harness}
     \label{tab:framework-comparison}
 \end{table}
+
+
+\section{Research Questions Analysis}
+
+\textit{RQ1: What are the main limitations of current LLM benchmarks for code generation?}
+We dug through the literature and found that the main limitations of current LLM benchmarks for code generation are: Benchmark saturation, Data leakage, Limited feedback, High resources consumption, Environmental impact, Error-proneness of tasks, Limited feedback and output.
+
+\textit{RQ2: What metrics best reflect real-world usability and code quality?}
+Out of the commonly used code quality metrics (BLEU, CodeBLEU, RUBY, ROUGE-L, METEOR, ChrF), the ChrF turns out to be the best-suited for code generation tasks, as it takes into account the properties of source code.
+
+But an LLM-as-a-judge approach is considered a significant improvement over the mentioned metrics.
+When used with some of the modern models, an LLM can mimic closely a human evaluation.
+
+\textit{RQ3: How can benchmarks be made customizable for different user needs?}
+Existing frameworks like bigcode-evaluation-harness and lm-evaluation-harness provide a way to introduce new task datasets and metrics for specific user needs.
+However, they require source code modification and do not provide a user interface for configuring benchmarks.
+The reviewed frameworks also lack flexibility in task selection and filtering.
+
+A solution with a friendly user interface can allow users to easily configure benchmarks, select relevant task types, and visualize results.
+
+\textit{RQ4: What is the environmental impact of repeated benchmarking, and how can it be reduced?}
+Benchmarks consume significant resources, but environmental impact is rarely measured. Including runtime, energy, and CO$_2$ reporting makes evaluation more responsible.
+
+
+The analysis of existing benchmarks highlights both their contributions and their shortcomings, especially in terms of saturation, flexibility, and sustainability.
+These insights directly motivate the design of a new benchmarking framework, which addresses these limitations by focusing on modularity, customization, and eco-aware evaluation.
+In the following sections, we describe the design and implementation of this framework, as well as its evaluation through selected experiments.
 
 
 \chapter{Problem Description}
