@@ -408,7 +408,7 @@ The choice of technologies is motivated by their suitability for modularity and 
     \item \textbf{Spring Framework (console interface)} --- allows reuse of the same components for CLI execution and CI/CD integration.
     \item \textbf{Spring AI} --- unifies access to multiple LLM APIs, simplifying the addition of new providers.
     \item \textbf{PMD, Checkstyle, SonarQube} --- widely used static analysis tools available for Java, which make it possible to measure code quality with established metrics.
-    \item \textbf{Docker (planned)} --- offers an isolated environment for executing arbitrary languages and tools, ensuring reproducibility and security.
+    \item \textbf{Docker} --- offers an isolated environment for executing arbitrary languages and tools, ensuring reproducibility and security.
 \end{itemize}
 
 \subsection{Workflow}
@@ -432,7 +432,96 @@ At a high level, the workflow is as follows:
 The interaction described above is shown as a sequence diagram (Appendix~\ref{appendix:sequence}).
 % The diagram is generated using PlantUML, which can be integrated into \LaTeX{} by enabling the \texttt{plantuml} package.
 
+\subsection{Execution Configuration File}
 
+The execution configuration (\texttt{exec-config.yaml}) defines the parameters under which a benchmark run is executed.
+It is a structured YAML file that provides a modular way to select tasks, models, and evaluation criteria without changing the core logic of the system.
+This design allows the user to combine different \emph{task sources} with different \emph{execution configurations}, enabling flexible experimentation.
+A full example of the file is provided in the Appendix, while here we describe its structure and purpose.
+
+\paragraph{General structure.}
+The file contains the following top-level sections:
+
+\begin{itemize}
+    \item \textbf{Version} --- format version of the configuration file, used for compatibility checks.
+    \item \textbf{Difficulties} --- a list of difficulty levels of tasks to include (e.g., \emph{easy}, \emph{medium}, \emph{hard}).
+    \item \textbf{Areas} --- a placeholder section to restrict tasks to certain thematic domains.
+    \item \textbf{Languages} --- programming languages targeted by the benchmark (e.g., Java, Python).
+    \item \textbf{Parameters} --- a set of boolean switches controlling how the LLM is expected to generate and use code, tests, or libraries.
+    \item \textbf{Criteria} --- a list of evaluation criteria that will be applied to candidate solutions. Each criterion can be individually enabled or disabled.
+    \item \textbf{LLMs} --- a list of model identifiers to be benchmarked (including provider and model version).
+\end{itemize}
+
+Here's the brief example of how the file looks like:
+% TO-DO: add a full example to the appendix
+
+\begin{verbatim}
+version: 1.0
+difficulties: [easy, medium, ]
+areas: [math, ]
+languages: [java, ]
+parameters:
+  - name: use-llm-judge         # if we want to check the results with an LLM-judge
+    enabled: true
+  - name: all-tests-public      # if we want to give the LLM all tests as a reference
+    enabled: true
+  - name: should-write-comments # if we want the solution to contain comments
+    enabled: false
+criteria: # list of criteria to evaluate the solutions
+  - name: unit-test         # only for languages that we can run in a sandbox
+    enabled: true
+  - name: ram-usage         # works only if unit_test criteria is enabled
+    enabled: true
+  - name: llm-judge-code-quality # for all languages
+    enabled: true
+  - name: sonarqube         # for all languages
+    enabled: true
+llms: [mistralai/devstral-small:free, ]
+\end{verbatim}
+
+In this case, the benchmark will run tasks of easy and medium difficulty in the math area.
+It will only select tasks that list Java in the list of supported languages.
+
+For each task, benchmark will build a prompt from a FreeMarker template using the task description and parameters.
+Some parameters will be used in prompt building.
+For example, the \textit{all-tests-public} means when tests are divided into public and hidden, the LLM will receive all available tests anyway.
+And the prompt will mention that the solution doesn't have to contain comments.
+
+The prompt will be sent to all the mentioned LLMs.
+
+After receiving a solution from the LLM, the benchmark will evaluate it using unit tests, measure RAM usage during test execution, analyze code quality with SonarQube, and use an LLM-as-a-judge to assess code quality.
+The unit-tests themselves can use the list of parameters to adjust their behavior.
+For example, if the \textit{should-write-comments} parameter is enabled, the tests can check for the presence of comments in the code.
+
+Now let's look at each section in more detail.
+Also, in the following section about the Task Source file, we will see how the metadata of tasks is set, and how parameters are used in building prompts and tests.
+
+\paragraph{Parameters.}
+The \texttt{parameters} section contains toggles that modify how code generation and testing should behave.
+Examples include whether the LLM should generate its own unit tests, whether it should receive reference tests, or whether it is allowed to use external libraries.
+These options make it possible to simulate different levels of information and tooling that a model may rely on.
+
+\paragraph{Criteria.}
+The \texttt{criteria} section specifies which metrics and tools are used to evaluate solutions.
+The framework supports both static analysis tools (\emph{PMD, Checkstyle, SonarQube}), dynamic execution (\emph{unit tests, coverage via JaCoCo, resource usage}), and LLM-based judgment (\emph{LLM-as-a-judge for code quality and comments}).
+Each criterion can be individually activated depending on the language and desired evaluation scope.
+This modular approach makes it easy to extend the benchmark with new metrics.
+
+\paragraph{LLM selection.}
+Finally, the \texttt{llms} section lists one or more models to be benchmarked.
+Each entry corresponds to a model identifier, which may include provider-specific information and quota (e.g., free-tier models).
+Multiple models can be specified in one configuration file, allowing direct comparison under identical conditions.
+
+\paragraph{Advantages.}
+By keeping all execution settings in a declarative YAML file, users can:
+\begin{enumerate}
+    \item Share and reproduce benchmark configurations easily.
+    \item Run the same benchmark setup both via the web interface and the CLI.
+    \item Extend the framework by adding new parameters, criteria, or model identifiers without changing the core code.
+\end{enumerate}
+
+
+\subsection{Task Source File}
 
 
 
