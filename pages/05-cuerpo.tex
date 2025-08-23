@@ -72,6 +72,9 @@ The main objectives of this work are:
     \item Develop a cost-efficient and environmentally conscious approach to benchmarking
 \end{enumerate}
 
+The goal of this work is not to compete with large-scale frameworks, but to present a prototype that illustrates a different approach: a benchmarking tool for LLMs with a graphical user interface and configuration-driven design.
+Instead of hard-coded pipelines, users can flexibly define tasks, parameters, and evaluation criteria through configuration files generated using the UI.
+
 \section{Relevance of the Work}
 
 The relevance of this work lies in addressing the growing inefficiency and environmental cost of LLM benchmarks.
@@ -320,7 +323,17 @@ In the Table\ref{tab:framework-comparison} we compare the two frameworks based o
 \section{Research Questions Analysis}
 
 \textit{RQ1: What are the main limitations of current LLM benchmarks for code generation?}
-We dug through the literature and found that the main limitations of current LLM benchmarks for code generation are: Benchmark saturation, Data leakage, Limited feedback, High resources consumption, Environmental impact, Error-proneness of tasks, Limited feedback and output.
+We dug through the literature and found that the main limitations of current LLM benchmarks for code generation are:
+
+\begin{itemize}
+    \item Benchmark saturation,
+    \item Data leakage,
+    \item Limited feedback,
+    \item High resources' consumption,
+    \item Environmental impact,
+    \item Error-proneness of tasks,
+    \item Limited feedback and output.
+\end{itemize}
 
 \textit{RQ2: What metrics best reflect real-world usability and code quality?}
 Out of the commonly used code quality metrics (BLEU, CodeBLEU, RUBY, ROUGE-L, METEOR, ChrF), the ChrF turns out to be the best-suited for code generation tasks, as it takes into account the properties of source code.
@@ -344,3 +357,96 @@ These insights directly motivate the design of a new benchmarking framework, whi
 In the following sections, we describe the design and implementation of this framework, as well as its evaluation through selected experiments.
 
 
+\chapter{Design and Implementation of the Modular Benchmarking Framework}
+
+\section{Prototype Goal and Scope}
+
+The goal of the prototype is to provide a controlled environment for running benchmarks and analyzing their outputs.
+
+The key idea is to separate three concerns:
+(1) definition of \textit{task sources} and \textit{execution configurations},
+(2) execution and tracking of benchmarks,
+(3) presentation and inspection of results.
+This separation enables the use of different combinations of task sources and execution configurations.
+
+The scope of the prototype is limited to managing benchmark runs, collecting outputs, and exposing them through a simple interface.
+It does not aim to provide large-scale distributed evaluation, advanced analytics, or integration with external benchmark platforms.
+These aspects remain outside the present work.
+
+
+
+
+\section{System Design}
+
+This section describes the architecture of the prototype, its main components, and the workflow of interactions between the user, the frontend, and the backend.
+The focus is on modularity, extensibility, and clarity of responsibilities.
+The system operates directly on files (task sets, benchmark configurations, and results) instead of a database.
+This choice makes it easy to share datasets and configurations, edit them outside of the web interface, and execute benchmarks directly from the CLI.
+
+\subsection{Overview}
+
+The system consists of two main entry points:
+\begin{itemize}
+    \item \textbf{Web interface}, built with Spring MVC, that allows a user to browse files, edit them, launch benchmarks, and inspect results.
+    \item \textbf{Console interface}, built with Spring Framework, which allows running benchmarks directly from the terminal or from CI/CD pipelines.
+\end{itemize}
+
+Both entry points communicate with the \textbf{benchmark executor}, which is modular and extensible by design.
+Its components are:
+\begin{itemize}
+    \item \textbf{Controller class}, responsible for orchestrating benchmark execution.
+    \item \textbf{LLM communication layer}, implemented with Spring AI, which abstracts interactions with different LLM providers.
+    \item \textbf{Quality evaluation layer}, consisting of modules for code quality checks (e.g., PMD, Checkstyle, SonarQube, and LLM-as-a-judge).
+    \item \textbf{Test execution layer}, currently implemented for in-memory Java execution, but extendable to remote execution or containerized execution via Docker.
+\end{itemize}
+
+\subsection{Technologies}
+
+The choice of technologies is motivated by their suitability for modularity and integration:
+\begin{itemize}
+    \item \textbf{Spring MVC} --- provides a clean abstraction for implementing REST endpoints and handling requests from the frontend.
+    \item \textbf{Spring Framework (console interface)} --- allows reuse of the same components for CLI execution and CI/CD integration.
+    \item \textbf{Spring AI} --- unifies access to multiple LLM APIs, simplifying the addition of new providers.
+    \item \textbf{PMD, Checkstyle, SonarQube} --- widely used static analysis tools available for Java, which make it possible to measure code quality with established metrics.
+    \item \textbf{Docker (planned)} --- offers an isolated environment for executing arbitrary languages and tools, ensuring reproducibility and security.
+\end{itemize}
+
+\subsection{Workflow}
+
+At a high level, the workflow is as follows:
+\begin{enumerate}
+    \item The user opens the frontend.
+    \item The frontend requests from the backend the list of files available in three folders: \textit{configs}, \textit{tasks}, and \textit{results}.
+    \item The user selects a file; the frontend fetches it from the backend.
+    \item The user edits a task file in the frontend and saves it back to the backend.
+    \item The user edits a config file in the frontend and saves it back to the backend.
+    \item The user launches a benchmark by selecting one config and a set of task files; the frontend sends this request to the backend.
+    \item The backend delegates execution to the \textit{worker}, which starts running tasks and returns a run identifier.
+    \item The frontend polls the backend with the run identifier to fetch status (e.g., number of tasks completed per file).
+    \item Once status is no longer in-progress, the frontend informs the user and stops polling.
+    \item The user requests a result file, the frontend fetches it from the backend, and presents statistics, errors, and detailed outputs.
+\end{enumerate}
+
+\subsection{Sequence Diagram}
+
+The interaction described above is shown as a sequence diagram (Appendix~\ref{appendix:sequence}).
+% The diagram is generated using PlantUML, which can be integrated into \LaTeX{} by enabling the \texttt{plantuml} package.
+
+
+
+
+
+\section{Limitations and Scope Boundaries}
+
+The prototype serves as a minimal but functional environment for experimentation.
+It shows how benchmarks can be defined, executed, and reviewed, but it does not attempt to cover issues of scalability, long-term storage, or automated evaluation pipelines.
+These remain directions for future work rather than part of the current implementation.
+
+% --- COMMENT: Possible limitations to note ---
+% 1. Currently supports only in-memory Java execution.
+% 2. Status polling may be inefficient for very long runs (consider WebSockets).
+% 3. Large result files might require pagination or streaming.
+% 4. System relies on files rather than a database; may limit scalability but increases portability.
+
+
+\chapter{Conclusion}

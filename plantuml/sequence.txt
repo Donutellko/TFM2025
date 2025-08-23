@@ -1,0 +1,36 @@
+@startuml
+actor User
+participant Frontend
+participant Backend
+participant Worker
+
+User -> Frontend: Open interface
+Frontend -> Backend: Request file lists
+Backend --> Frontend: Return lists (configs, tasks, results)
+
+User -> Frontend: Select file
+Frontend -> Backend: Fetch file
+Backend --> Frontend: Return file
+
+User -> Frontend: Edit and save task file
+Frontend -> Backend: Save updated task file
+User -> Frontend: Edit and save config file
+Frontend -> Backend: Save updated config file
+
+User -> Frontend: Launch benchmark (config + tasks)
+Frontend -> Backend: Request execution
+Backend -> Worker: Start execution
+Worker --> Backend: Return run identifier
+Backend --> Frontend: Run identifier
+
+loop Polling
+    Frontend -> Backend: Request status(runID)
+    Backend --> Frontend: Return status
+end
+
+Frontend -> User: Notify when completed
+User -> Frontend: Request result file
+Frontend -> Backend: Fetch result file
+Backend --> Frontend: Return result file
+Frontend -> User: Display statistics, errors, details
+@enduml
