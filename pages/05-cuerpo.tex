@@ -455,29 +455,37 @@ The file contains the following top-level sections:
 Here's the brief example of how the file looks like:
 % TO-DO: add a full example to the appendix
 
+\begin{figure}[H]
+\centering
 \begin{verbatim}
 version: 1.0
 difficulties: [easy, medium, ]
 areas: [math, ]
 languages: [python, ]
 parameters:
-  - name: use-llm-judge         # if we want to check the results with an LLM-judge
+  - name: use-llm-judge         
+    # if we want to check the results with an LLM-judge
     enabled: true
-  - name: all-tests-public      # if we want to give the LLM all tests as a reference
+  - name: all-tests-public      
+    # if we want to give the LLM all tests as a reference
     enabled: true
-  - name: should-write-comments # if we want the solution to contain comments
+  - name: should-write-comments 
+    # if we want the solution to contain comments
     enabled: false
 criteria: # list of criteria to evaluate the solutions
-  - name: unit-test         # only for languages that we can run in a sandbox
+  - name: unit-test
+    # only for languages that we can run in a sandbox
     enabled: true
-  - name: ram-usage         # works only if unit_test criteria is enabled
+  - name: ram-usage
+    # works only if unit_test criteria is enabled
     enabled: true
-  - name: llm-judge-code-quality # for all languages
+  - name: llm-judge-code-quality
     enabled: true
-  - name: sonarqube         # for all languages
+  - name: sonarqube
     enabled: true
 llms: [mistralai/devstral-small:free, ]
 \end{verbatim}
+\end{figure}
 
 In this case, the benchmark will run tasks of easy and medium difficulty in the math area.
 It will only select tasks that list Python in the list of supported languages, and provides a prompt for it.
@@ -527,42 +535,45 @@ Task sources define the pool of tasks available for execution.
 Each source is represented as a YAML file that contains task definitions together with metadata, prompts, tests, and reference solutions.
 The system can combine multiple task sources with different execution configurations, enabling flexible benchmarking setups.
 
-\begin{figure}[h]
-    \centering
-    \begin{lstlisting}[language=yaml, caption={Excerpt from a task source YAML}]
+\begin{figure}[H]
+\centering
+\begin{verbatim}
 version: 1.0
 name: task-source-example-1
 tasks:
-  -
-    name: highest common factor
-    difficulty: easy
-    area: math
-    source: MBPP    # additional metadata, from which benchmark did we get this task
-    languages: [python, ]
-    available_parameters: [use-llm-judge, all-tests-public, all-tests-hidden]
-    available_criteria: [unit-test, llm-judge-code-quality, sonarqube]
-    task:
-      common_prompt: |
-        Write a function in ${language} to calculate the highest common factor of two numbers.
-        <#if !parameters['all-tests-hidden'] >
-            Here are the tests: ${public_tests}
-            <#if parameters['all-tests-public'] > ${hidden_tests} </#if>
-        </#if>
+ -
+ name: highest common factor
+ difficulty: easy
+ area: math
+ source: MBPP    # additional metadata
+ languages: [python, ]
+ available_parameters: 
+    [use-llm-judge, all-tests-public, all-tests-hidden]
+ available_criteria: 
+    [unit-test, llm-judge-code-quality, sonarqube]
+ task:
+  common_prompt: |
+    Write a function in ${language} to calculate the highest common 
+    factor of two numbers.
+    <#if !parameters['all-tests-hidden'] >
+        Here are the tests: ${public_tests}
+        <#if parameters['all-tests-public'] > ${hidden_tests} </#if>
+    </#if>
 
-      languages_specific:
-        python:
-          description: ${common_prompt}
-          public_tests:
-            - code: |
-               result = ${solution.function_name}(10, 15)
-               assert result == 5
+  languages_specific:
+    python:
+      description: ${common_prompt}
+      public_tests:
+        - code: |
+           result = ${solution.function_name}(10, 15)
+           assert result == 5
 
-      golden_solution:
-        pseudocode: "..." # can be used for LLM-as-a-judge or reference
+  golden_solution:
+    pseudocode: "..." # can be used for LLM-as-a-judge or reference
 
-      llm_judge_prompt: |
-        You are an experienced interviewer assessing the candidate's solution...
-    \end{lstlisting}
+  llm_judge_prompt: |
+    You are an experienced interviewer...
+\end{verbatim}
 \end{figure}
 
 The YAML structure starts with global metadata, including version and source name.
