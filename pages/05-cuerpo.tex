@@ -257,20 +257,29 @@ As a result, they come to a conclusion that LLM-as-a-judge is a substantial impr
 
 \begin{table}[h!]
     \centering
-    \begin{tabular}{|l|l|l|l|l|}
+    \begin{tabular}{|l|l|p{5.3cm}|p{5.3cm}|}
         \hline
-        \textbf{Benchmark} & \textbf{Size} & \textbf{Domain} & \textbf{Innovation} & \textbf{Limitations} \\
+        \textbf{Benchmark} & \textbf{Size} & \textbf{Innovation} & \textbf{Limitations} \\
         \hline
-        MBPP & 974 tasks & Python & Crowdsourced, test cases & Leakage, basic tasks \\
-        APPS & 10,000+ & Python & Large scale & Leakage, too easy for SOTA \\
-        ReCode & ~3k & Python & Robustness via perturbation & Synthetic, limited \\
-        SWE-bench & ~2k & Python (12 repos) & Real GitHub issues & Limited repos/langs \\
-        HumanEval & 164 tasks & Python & Handcrafted, leakage-avoidance & Small, saturated \\
-        HumanEval+ & 400+ & Python & Extension of HumanEval & Still small, leakage \\
-        HumanEval Pro & 2,000+ & Python & Multi-step tasks & Python-only, resource-heavy \\
-        BigCodeBench & 1M+ & Multi & Massive scale & Hard to run, saturation risk \\
-        InterCode & 3k+ & Python, SQL, Bash & Interactive Docker env & Heavy resources, complex \\
-        CopilotArena & Unlimited & Unlimited & Real user experience & No numeric metric or controlled env \\
+        MBPP & 974 tasks & Crowdsourced, test cases & Leakage, basic tasks \\
+        \hline
+        APPS & 10,000+ & Large scale & Leakage, too easy for modern \\
+        \hline
+        ReCode & ~3k & Robustness via perturbation & Synthetic, limited \\
+        \hline
+        SWE-bench & ~2k & Real GitHub issues & Limited repos/langs \\
+        \hline
+        HumanEval & 164 tasks & Handcrafted, avoids leakage & Small, saturated \\
+        \hline
+        HumanEval+ & 400+ & Extension of HumanEval & Still small, leakage \\
+        \hline
+        HumanEval Pro & 2,000+ & Multi-step tasks & Python-only, resource-heavy \\
+        \hline
+        BigCodeBench & 1M+ & Massive scale & Hard to run, saturation risk \\
+        \hline
+        InterCode & 3k+  & Interactive Docker env & Heavy resources, complex \\
+        \hline
+        CopilotArena & Unlimited & Real user experience & No numeric metric or controlled env \\
         \hline
     \end{tabular}
     \caption{Comparison of major LLM code generation benchmarks}\label{tab:bench-compare-table}
@@ -643,16 +652,26 @@ Each criterion produces a structured LLM Response Evaluation Result object that 
     \item \textbf{Output} --- any additional output produced during the evaluation;
     \item \textbf{Error} --- any error message if the evaluation failed;
     \item \textbf{Time millis} --- the time taken to execute the evaluation in milliseconds.
+    \item \textbf{Test case ID} (only for unit tests) --- the identifier of the specific test case;
+    \item \textbf{Solution and test case code} (only for unit tests) --- the prepared source code that was executed;
 \end{itemize}
 
 Each object is associated with a specific task and LLM response.
-This allows for detailed analysis of performance across different dimensions.
+This allows for detailed analysis of results across different dimensions.
 For example, one can see how a particular model performed on a specific task across multiple criteria, or compare the performance of different models on the same task.
+For each test failure, the output includes the output and the exact code that was executed, making it easier to debug issues.
 
 
 \section{Results and Evaluation}
 
+TO-DO
 
+\subsection{Advantages}
+
+Shared environment means that the researchers use the resources more optimally.
+There is no need to set up the benchmarking in each workstation, as they can be used as thin clients.
+Every user can access the same version of the benchmark, the same versions of datasets and configurations, ensuring consistency in experiments.
+Secrets are managed in a centralized way, so there is no risk of leaking them by accident.
 
 \subsection{Limitations and Scope Boundaries}
 
@@ -666,6 +685,11 @@ These remain directions for future work rather than part of the current implemen
 % 3. Large result files might require pagination or streaming.
 % 4. System relies on files rather than a database; may limit scalability but increases portability.
 
+To be shared between different parties, the system requires implementing proper authorization, permission management, and a more advanced approach to version control.
+
 \subsection{Future Work}
 
+
 \chapter{Conclusion}
+
+
