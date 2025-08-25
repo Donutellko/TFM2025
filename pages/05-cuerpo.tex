@@ -1,3 +1,5 @@
+% ESG -- environmental sustainability G ???
+
 % Checklist and TO DOs
 % Describe metodology of the work with sources
 % Classification of Benchmarks
@@ -595,8 +597,64 @@ Both public and hidden tests are supported, giving flexibility in how much refer
 Finally, each task may contain golden solutions, expressed in one or more programming languages or pseudocode.
 These serve as reference implementations and may be used for validation or as baseline solutions.
 
+\subsection{Benchmark Criteria and Metrics}
 
-\section{Limitations and Scope Boundaries}
+The benchmark supports multiple criteria for evaluating generated solutions.
+Each criterion is implemented as a separate Spring Component, which allows for easy extension by adding new criteria classes.
+
+Each criterion class implements a common interface with methods for filtering applicable tasks and executing the evaluation.
+Filtering is based on execution configuration (if this criterion is explicitly enabled) and task metadata: for example, by the programming language.
+
+The supported criteria include:
+\begin{itemize}
+    \item \textbf{Unit tests in Java} --- runs the provided unit tests against the generated code using in-memory Java compiler;
+    \item \textbf{CPU usage} --- measures CPU time during test execution;
+    \item \textbf{LLM-as-a-judge for code quality} --- uses an LLM to evaluate the quality of the generated code based on a prompt;
+    \item \textbf{PMD} --- analyzes the generated code using PMD and collects metrics such as code smells, complexity, and potential bugs;
+    \item \textbf{Tokens count} --- counts the number of input and output tokens used during LLM interaction to estimate cost-effectiveness;
+    \item \textbf{Checkstyle} --- analyzes the generated code for JVM languages using Checkstyle and collects metrics such as style violations and formatting issues.
+\end{itemize}
+
+Criteria to be implemented in the future include:
+\begin{itemize}
+    \item \textbf{Test Execution in Docker} --- runs the generated code in a Docker container to support multiple programming languages and isolate execution environments;
+    \item \textbf{Code quality with SonarQube} --- analyzes the generated code using SonarQube and collects metrics such as code smells, bugs, vulnerabilities, and technical debt;
+    \item \textbf{Memory usage} --- measures peak memory consumption during test execution;
+    \item \textbf{Code coverage with JaCoCo} --- measures the percentage of code covered by unit tests;
+    \item \textbf{Language-specific style checks} --- analyzes the generated code using Pyright and similar tools and collects metrics such as style violations and formatting issues;
+    \item \textbf{LLM-as-a-judge for comments} --- uses an LLM to evaluate the quality of comments in the generated code based on a prompt.
+\end{itemize}
+
+Each criterion produces a structured LLM Response Evaluation Result object that includes:
+% private String executorClass;
+% private String executionId; // unique ID for the execution (shared between metrics calculated for a test run)
+% private String criteria; // required
+% private Double score;    // evaluation result, 0 or 1 for tests, value for metrics
+% private String unit;     // units for score, e.g. "success" for tests, "ms" for time, "bytes" for memory, etc.
+% private String output;   // if applicable
+% private String error;    // if the evaluation failed
+% private Double timeMillis; // time to execute the evaluation
+\begin{itemize}
+    \item \textbf{Executor class} --- the name of the class that performed the evaluation;
+    \item \textbf{Execution ID} --- a unique identifier for the execution, shared
+    \item \textbf{Criteria} --- the name of the criterion;
+    \item \textbf{Score} --- the numeric result of the evaluation (e.g., 0 or 1 for tests, a value for metrics);
+    \item \textbf{Unit} --- the unit of measurement for the score (e.g., "success" for tests, "ms" for time, "bytes" for memory);
+    \item \textbf{Output} --- any additional output produced during the evaluation;
+    \item \textbf{Error} --- any error message if the evaluation failed;
+    \item \textbf{Time millis} --- the time taken to execute the evaluation in milliseconds.
+\end{itemize}
+
+Each object is associated with a specific task and LLM response.
+This allows for detailed analysis of performance across different dimensions.
+For example, one can see how a particular model performed on a specific task across multiple criteria, or compare the performance of different models on the same task.
+
+
+\section{Results and Evaluation}
+
+
+
+\subsection{Limitations and Scope Boundaries}
 
 The prototype serves as a minimal but functional environment for experimentation.
 It shows how benchmarks can be defined, executed, and reviewed, but it does not attempt to cover issues of scalability, long-term storage, or automated evaluation pipelines.
@@ -608,5 +666,6 @@ These remain directions for future work rather than part of the current implemen
 % 3. Large result files might require pagination or streaming.
 % 4. System relies on files rather than a database; may limit scalability but increases portability.
 
+\subsection{Future Work}
 
 \chapter{Conclusion}
