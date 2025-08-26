@@ -325,6 +325,8 @@ In the Table\ref{tab:framework-comparison} we compare the two frameworks based o
         \hline
         Supports model loading via transformers & Yes & Yes \\
         \hline
+        Caching of LLM generations & No & Yes with an argument \\
+        \hline
     \end{tabular}
     \caption{Comparison of bigcode-evaluation-harness and lm-evaluation-harness}
     \label{tab:framework-comparison}
@@ -664,7 +666,42 @@ For each test failure, the output includes the output and the exact code that wa
 
 \section{Results and Evaluation}
 
-TO-DO
+After implementing the prototype, let's compare it with existing frameworks and discuss its advantages, limitations, and future work.
+
+Table~\ref{tab:framework-comparison-with-proposed} compares the proposed framework with bigcode-evaluation-harness and lm-evaluation-harness.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|p{2.3cm}|p{4.3cm}|p{4.3cm}|p{4.3cm}|}
+        \hline
+        \textbf{Feature} & \textbf{bigcode-evaluation-harness} & \textbf{lm-evaluation-harness} & \textbf{proposed benchmarking framework} \\
+        \hline
+        Specialization & Majorly, code writing tasks, but also allows for documentation generation tasks and natural language reasoning tasks & A universal harness supporting a wide range of tasks & Ecologically concious, taking the most information out of a test and a generated solution \\
+        \hline
+        Included benchmarks & MBPP, MBPP+, DS-1000, MultiPL-E, Mercury, GSM8K, etc. & MBPP, HumanEval, SpanishBench, basqueGLUE, and many more. & HumanEval for Python and Java, MBPP. \\
+        \hline
+        Adding tasks, datasets & Requires source code modification & Requires source code modification & With UI or by editing a YAML file editing \\
+        \hline
+        Available configuration & Task dataset name, Number of tasks, Temperature, Saving LLM responses, Limits of LLM response, etc. & Task datasets list (other parameters are is defined on task level), Limits of LLM response, System prompt, etc. & Task dataset and filters (difficulty, domain, language), Criteria to use (unit-tests, token count, code quality, etc.), Caching generations, test code in prompts \\
+        \hline
+        Extended output & LLM response or references as JSON & Prompt, LLM response, and metrics results as JSON & Detailed with generations results, metrics, test assertion errors  \\
+        \hline
+        Run interface & CLI-based, no GUI & CLI-based, no GUI, an API for training loops & Web UI and CLI \\
+        \hline
+        Result analysis & Overall numeric metric and LLM responses saved as a file & Overall numeric metric & Detailed for each metric: with evaluation details and generated solutions  \\
+        \hline
+        Visualization & No visualization tools & No visualization tools & An UI to edit datasets, configure runs, browse its results \\
+        \hline
+        Multiple LLMs & One model per run & One model per run & Multiple models per run\\
+        \hline
+        Model loading via transformers & Yes & Yes & No \\
+        \hline
+        Cache LLM responses & No & Yes with a flag & Yes, in run configuration \\
+        \hline
+    \end{tabular}
+    \caption{Comparison of bigcode-evaluation-harness and lm-evaluation-harness}
+    \label{tab:framework-comparison-with-proposed}
+\end{table}
 
 \subsection{Advantages}
 
