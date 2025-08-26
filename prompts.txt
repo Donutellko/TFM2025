@@ -98,4 +98,39 @@ Para hacer esto, tendremos que responder a las siguientes preguntas:
 
 Обрати внимание, что основная цель работы -- проанализировать существующие бенчмарки и предложить новый подход -- модульные и кастомизируемые бенчмарков, которые можно настраивать в зависимости от потребностей разработчика LLM или его пользователя. И в качестве демонстрации этого подхода я разработал бенчмарк, который настраивается при помощи YAML файлов, а также имеет фронтендовый UI для взаимодействия с ним. 
 
-Прежде чем начать, задай мне как минимум 10 вопросов. 
+Прежде чем начать, задай мне как минимум 10 вопросов.
+
+
+
+
+
+
+
+
+
+
+
+
+Look at the source files and also on the results YAML format.
+When I open a single Benchmark Result, it should show a list of models, and under each model, there should be a sublist of test sources. For each test source, there should be a table of its stats per criteria.
+
+In this table, rows represents unique criteria.
+First column: "Criteria" (a name of a criteria that is present in "evaluation_result" lists, like "unit-test" and "cpu-time").
+Second column: "Avg. score" with average only for non-negative values.
+Third column: "Complete" with count of non-negative values.
+Fourth column: "Skipped" with count of negative values.
+Fifth column: "Errors" with count of entries with non-empty "error" field.
+
+When clicking on number in Complete, Skipped, Errors column, a modal "Status browser" should be opened. The title should contain the name of the LLM and the name of the task source. In the modal, there should be three tabs: Complete, Skipped, Errors, each with a table of all the matching entries (non-negative, negative, or with error).
+
+When clicking on any entry, a Criteria result modal should be opened. The Criteria result modal title should contain the name of the LLM, the name of the task source, the name of the task, and the name of the criteria. The modal should contain:
+basic info (task name, model name, task source name, criteria name, executor_class),
+evaluation result (score, unit of measure, error message and output message if any, time_millis of execution),
+prompt (with syntax highlighting),
+response (with syntax highlighting),
+prepared code (if exists).
+
+When clicking on task name, Task result modal should be opened.
+Task result modal title should contain the name of the LLM, the name of the task source, and the name of the task.
+The modal should contain: basic info (task name, model name, task source name, timestamp), prompt (with syntax highlighting), response (with syntax highlighting), evaluation result.
+Evaluation result is a table with criteria, score, unit of measure, and status. Status field should contain (could be several): a green checkmark if there is no error, a yellow cross if score is negative,  and a red cross if there is any error, a questionmark if there is output). When clicking on criteria name, the Criteria result modal should be opened.
