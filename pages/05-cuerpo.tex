@@ -769,20 +769,6 @@ There is no need to set up the benchmarking in each workstation, as they can be 
 Every user can access the same version of the benchmark, the same versions of datasets and configurations, ensuring consistency in experiments.
 Secrets for APIs are managed in a centralized way, so there is no risk of leaking them by accident.
 
-\subsection{Limitations and Scope Boundaries}
-
-The prototype serves as a minimal but functional environment for experimentation.
-It shows how benchmarks can be defined, executed, and reviewed, but it does not attempt to cover issues of scalability, long-term storage, or automated evaluation pipelines.
-These remain directions for future work rather than part of the current implementation.
-
-% --- COMMENT: Possible limitations to note ---
-% 1. Currently supports only in-memory Java execution.
-% 2. Status polling may be inefficient for very long runs (consider WebSockets).
-% 3. Large result files might require pagination or streaming.
-% 4. System relies on files rather than a database; may limit scalability but increases portability.
-
-To be shared between different parties, the system requires implementing proper authorization, permission management, and a more advanced approach to version control.
-
 \subsection{Future Work}
 
 The current prototype demonstrates that the proposed approach is viable and already supports the core functionalities needed to run benchmarks and collect meaningful results.
@@ -805,26 +791,12 @@ Feedback from experienced researchers and developers will also be critical for v
 
 \chapter{Conclusion}
 
-From the research perspective, this work highlights the fragmentation of existing LLM benchmarks and the lack of flexible tools to combine them.
-Current datasets are often designed for narrow purposes, making it difficult to get a comprehensive view of model performance across domains such as programming, reasoning, and factual knowledge.
-By defining tasks and execution parameters declaratively, the prototype shows that it is possible to bridge these gaps and enable more systematic comparisons
+This work presented a prototype of a modular benchmark system for large language models. The system integrates a backend with a REST API, a frontend interface, and a configuration mechanism based on declarative YAML files. The prototype demonstrates that benchmarks can be executed with different combinations of task sources and execution settings, producing results that include both traditional metrics, such as unit tests and static analysis, and LLM-based evaluations.
 
-The study also confirms that benchmarks cannot rely on a single type of metric.
-Traditional criteria such as unit tests and static analysis capture important aspects of correctness and quality, but they fail to address dimensions like clarity, readability, or style.
-Conversely, LLM-as-a-judge can provide insights into these qualitative aspects, though it introduces challenges of reproducibility and subjectivity.
-Taken together, these findings reinforce the importance of combining multiple evaluation approaches within a single benchmarking framework.
+From the research side, the study confirmed that the landscape of LLM benchmarks is highly diverse. There are many existing benchmarks, but they differ in the metrics they use, the programming languages they support, and their long-term stability. Some benchmarks quickly saturate, others become outdated, and many suffer from data leakage. Existing harnesses also have clear limitations: they do not provide detailed analysis of results, do not make it convenient to compare models across multiple metrics, and often lack flexibility for extending datasets and tasks. These observations motivated the design of a configurable system that can adapt to different benchmarks and evaluation needs.
 
-This work presented a prototype of a modular benchmark system for large language models.
-The system integrates a backend with a REST API, a frontend interface, and a flexible configuration mechanism based on declarative YAML files.
-The prototype demonstrates that benchmark execution can combine different task sources and execution configurations, producing results that include both traditional metrics, such as unit tests and static analysis, and LLM-based evaluations.
+The experiments with the prototype illustrated the complete pipeline: uploading task sources and configurations, launching benchmarks, monitoring their progress, and inspecting results. Even with a small number of tasks and languages, the system proved that such a workflow is feasible and can support different benchmarking scenarios.
 
-The experiments illustrate the full pipeline, from uploading task sources and configurations, to launching benchmarks, monitoring progress, and inspecting results.
-Even with a limited number of tasks and languages, the prototype proves that the proposed approach is feasible and can support diverse benchmarking scenarios.
+At the same time, the implementation remains a prototype. It lacks isolated execution environments, which makes performance-related metrics sensitive to the conditions of the host machine. Test execution is currently implemented only for a subset of languages, and collaborative use on a shared server would require authentication and file locking. Datasets also need to be expanded and standardized before the results could be reliably used in research.
 
-At the same time, the current implementation remains a prototype.
-It lacks isolated execution environments, which makes performance-related metrics sensitive to changes in the host system. Test execution is currently supported only for a subset of languages, and collaborative use on a shared server would require additional features such as authentication and file locking.
-Moreover, datasets need to be expanded and standardized before results could be reliably applied in research.
-
-Future work should address these limitations by improving execution isolation, extending language support, and refining the user interface.
-Security and collaboration features will be important for real-world deployment.
-Finally, validation by the research community will be essential for establishing the credibility and usefulness of the approach.
+Future work should address these limitations by improving execution isolation, extending language support, and refining the user interface. Security and collaboration features will be necessary for real-world deployment. Finally, before the approach can be adopted more widely, it will be important to collect feedback from the research community and adjust the design accordingly.
