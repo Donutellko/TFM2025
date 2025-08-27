@@ -532,12 +532,15 @@ Finally, the \texttt{llms} section lists one or more models to be benchmarked.
 Each entry corresponds to a model identifier, which may include provider-specific information and quota (e.g., free-tier models).
 Multiple models can be specified in one configuration file, allowing direct comparison under identical conditions.
 
-\paragraph{Advantages.}
+\paragraph{Additional advantages of the approach.}
 By keeping all execution settings in a declarative YAML file, users can:
 \begin{enumerate}
-    \item Share and reproduce benchmark configurations easily.
+    \item Share and reproduce benchmark configurations easily. Shared environment means that the researchers use the resources more optimally.
+    \item There is no need to set up the benchmarking in each workstation, as they can be used as thin clients.
+    \item Every user can access the same version of the benchmark, the same versions of datasets and configurations, ensuring consistency in experiments.
     \item Run the same benchmark setup both via the web interface and the CLI.
     \item Extend the framework by adding new parameters, criteria, or model identifiers without changing the core code.
+    \item Secrets for APIs are managed in a centralized way, so there is no risk of leaking them by accident.
 \end{enumerate}
 
 
@@ -761,12 +764,12 @@ Table~\ref{tab:framework-comparison-with-proposed} compares the proposed framewo
     \label{tab:framework-comparison-with-proposed}
 \end{table}
 
-\subsection{Advantages}
+% \subsection{Advantages}
 
-Shared environment means that the researchers use the resources more optimally.
-There is no need to set up the benchmarking in each workstation, as they can be used as thin clients.
-Every user can access the same version of the benchmark, the same versions of datasets and configurations, ensuring consistency in experiments.
-Secrets for APIs are managed in a centralized way, so there is no risk of leaking them by accident.
+% Shared environment means that the researchers use the resources more optimally.
+% There is no need to set up the benchmarking in each workstation, as they can be used as thin clients.
+% Every user can access the same version of the benchmark, the same versions of datasets and configurations, ensuring consistency in experiments.
+% Secrets for APIs are managed in a centralized way, so there is no risk of leaking them by accident.
 
 \subsection{Future Work}
 
