@@ -45,7 +45,6 @@ The literature review and further research were guided by the following question
     \item The design and implementation of a modular, customizable benchmarking framework.
     \item Integration of environmental and cost considerations into the benchmarking process.
     \item An interactive web interface for configuring benchmarks and analyzing results.
-    \item Recommendations for future benchmarking practices based on empirical findings.
 \end{itemize}
 
 \section{Problem Statement}
@@ -791,12 +790,14 @@ Feedback from experienced researchers and developers will also be critical for v
 
 \chapter{Conclusion}
 
-This work presented a prototype of a modular benchmark system for large language models. The system integrates a backend with a REST API, a frontend interface, and a configuration mechanism based on declarative YAML files. The prototype demonstrates that benchmarks can be executed with different combinations of task sources and execution settings, producing results that include both traditional metrics, such as unit tests and static analysis, and LLM-based evaluations.
+Benchmarks play a central role in the development of large language models and in guiding their use in real-world applications. In this work we analyzed existing benchmarks and harnesses, and found that each approach has its own limitations. Benchmarks saturate, suffer from data leakage, many support only a limited set of metrics or languages, and most consume significant energy and computational resources. Harnesses, in turn, often lack detailed analysis of results and do not provide convenient mechanisms for comparing models across multiple metrics. Different benchmarks partially compensate for each other, but none of them is universal.
 
-From the research side, the study confirmed that the landscape of LLM benchmarks is highly diverse. There are many existing benchmarks, but they differ in the metrics they use, the programming languages they support, and their long-term stability. Some benchmarks quickly saturate, others become outdated, and many suffer from data leakage. Existing harnesses also have clear limitations: they do not provide detailed analysis of results, do not make it convenient to compare models across multiple metrics, and often lack flexibility for extending datasets and tasks. These observations motivated the design of a configurable system that can adapt to different benchmarks and evaluation needs.
+To address these issues, we proposed an approach that maximizes the insight gained from each benchmark run. By combining multiple evaluation criteria within a single execution, the framework increases the usefulness of results for researchers and practitioners, while at the same time reducing the environmental impact of benchmarking by limiting redundant runs. To demonstrate the feasibility of this idea, we implemented a prototype system and validated its basic functionality. The prototype confirms that it is possible to integrate traditional program analysis metrics with LLM-based evaluations, while also highlighting several challenges that need to be solved before such a tool can be used in practice.
+
+The system integrates a backend with a REST API, a frontend interface, and a configuration mechanism based on declarative YAML files. The prototype demonstrates that benchmarks can be executed with different combinations of task sources and execution settings, producing results that include both traditional metrics, such as unit tests and static analysis, and LLM-based evaluations.
 
 The experiments with the prototype illustrated the complete pipeline: uploading task sources and configurations, launching benchmarks, monitoring their progress, and inspecting results. Even with a small number of tasks and languages, the system proved that such a workflow is feasible and can support different benchmarking scenarios.
 
-At the same time, the implementation remains a prototype. It lacks isolated execution environments, which makes performance-related metrics sensitive to the conditions of the host machine. Test execution is currently implemented only for a subset of languages, and collaborative use on a shared server would require authentication and file locking. Datasets also need to be expanded and standardized before the results could be reliably used in research.
+The current implementation remains a prototype. It lacks isolated execution environments, which makes performance-related metrics sensitive to the conditions of the host machine. Test execution is supported only for a subset of programming languages, and collaborative use on a shared server would require authentication and file locking. Datasets also need to be expanded and standardized before results could be reliably applied in research.
 
 Future work should address these limitations by improving execution isolation, extending language support, and refining the user interface. Security and collaboration features will be necessary for real-world deployment. Finally, before the approach can be adopted more widely, it will be important to collect feedback from the research community and adjust the design accordingly.
