@@ -619,11 +619,11 @@ Filtering is based on execution configuration (if this criterion is explicitly e
 The supported criteria include:
 \begin{itemize}
     \item \textbf{Unit tests in Java} --- runs the provided unit tests against the generated code using in-memory Java compiler;
-    \item \textbf{CPU usage} --- measures CPU time during test execution;
+    \item \textbf{CPU usage} --- measures CPU time during test execution in milliseconds;
     \item \textbf{LLM-as-a-judge for code quality} --- uses an LLM to evaluate the quality of the generated code based on a prompt;
-    \item \textbf{PMD} --- analyzes the generated code using PMD and collects metrics such as code smells, complexity, and potential bugs;
+    \item \textbf{PMD} --- analyzes the generated code using PMD and collects metrics such as code smells, complexity, and potential bugs, calculated from code smells and complexity, with different weights assigned to different types of issues, and normalized to a 0-1 scale;
     \item \textbf{Tokens count} --- counts the number of input and output tokens used during LLM interaction to estimate cost-effectiveness;
-    \item \textbf{Checkstyle} --- analyzes the generated code for JVM languages using Checkstyle and collects metrics such as style violations and formatting issues.
+    \item \textbf{Checkstyle} --- analyzes the generated code for JVM languages using Checkstyle and collects metrics such as style violations and formatting issues, with different weights assigned to different types of issues, and normalized to a 0-1 scale.
 \end{itemize}
 
 Criteria to be implemented in the future include:
@@ -668,6 +668,65 @@ For each test failure, the output includes the output and the exact code that wa
 
 After implementing the prototype, let's compare it with existing frameworks and discuss its advantages, limitations, and future work.
 
+\subsection{Experimental Runs}
+
+To demonstrate the functionality of the prototype, we conducted several experimental runs using different configurations and task sources.
+We selected a subset of tasks from the HumanEval dataset, focusing on easy and medium difficulty levels in Java.
+
+The execution configuration file specified the use of two LLMs: \texttt{mistralai/devstral-nemo} and \texttt{mistralai/devstral-small}.
+We enabled the following criteria for evaluation:
+\begin{itemize}
+    \item Unit tests measured in percentage of passed tests;
+    \item CPU usage during test execution measured in milliseconds;
+    \item Token count for input and output measured in number of tokens;
+    \item LLM-as-a-judge for code quality;
+    \item PMD codestyle analysis.
+\end{itemize}
+
+The benchmark was executed via the web interface, allowing us to monitor progress and view results in real-time.
+The results were collected in structured YAML files, which included detailed outputs for each task and criterion.
+
+Table~\ref{tab:benchmark-results-summary} shows a summary of the results:
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|l|l|l|l|}
+        \hline
+        \textbf{Criteria}	& \textbf{Unit} & \textbf{mistral-nemo}	& \textbf{devstral-small-2505} \\
+        \hline
+        Parameters count    &               & 12B                   & 24B \\
+        Release date        &               & July 2024             & May 2025 \\
+        \hline
+        llm-judge-code-quality & score & 69.5 & 70.5 \\
+        llm-judge-solution-correctness & score & 84.5 & 86.67 \\
+        java-pmd & 1/errors & 0.84 & 0.8 \\
+        token-count & tokens & 268.33 & 454.5 \\
+        unit-test & success & 67\% & 100\% \\
+        cpu-usage & ms & 0.12 & 0.57 \\
+        \hline
+    \end{tabular}
+    \caption{Summary of benchmark results for two LLMs on selected tasks}
+    \label{tab:benchmark-results-summary}
+\end{table}
+
+\textbf{TO-DO: more models and tasks, maybe also with other datasets and configurations}
+
+So as we can see from this table, the smaller and newer model outperformed the larger and older one across code quality and the amount of tests passed.
+However, it used significantly more tokens and CPU time, indicating a trade-off between performance and efficiency.
+In general, the results are consistent with expectations based on the models descriptions in~\cite{mistralModelsBenchmarks}.
+
+The UI allows us to inspect detailed results for each task and criterion.
+For example, by clicking on the unit-test criterion, we can see which specific tests were passed or failed, along with the exact code that was executed.
+For example, we can take a closer look at the task 1 in HumanEval for Java which caused an error for mistral-nemo model.
+We see that there is an AssertionError that occurred on line 20 of a unit-test.
+We can understand that the code was compiled and executed successfully, but the result was incorrect due to an error in logic, and can inspect the code closer if we wish so.
+
+This level of investigation would not be possible without having the rich output, and would be more difficult without having a UI for browsing them.
+
+Thus, this example demonstrates its effectiveness of the benchmarking framework in providing detailed insights into model performance across multiple dimensions.
+
+\subsection{Comparison with Existing Frameworks}
+
 Table~\ref{tab:framework-comparison-with-proposed} compares the proposed framework with bigcode-evaluation-harness and lm-evaluation-harness.
 
 \begin{table}[H]
@@ -708,7 +767,7 @@ Table~\ref{tab:framework-comparison-with-proposed} compares the proposed framewo
 Shared environment means that the researchers use the resources more optimally.
 There is no need to set up the benchmarking in each workstation, as they can be used as thin clients.
 Every user can access the same version of the benchmark, the same versions of datasets and configurations, ensuring consistency in experiments.
-Secrets are managed in a centralized way, so there is no risk of leaking them by accident.
+Secrets for APIs are managed in a centralized way, so there is no risk of leaking them by accident.
 
 \subsection{Limitations and Scope Boundaries}
 
@@ -729,4 +788,26 @@ To be shared between different parties, the system requires implementing proper 
 
 \chapter{Conclusion}
 
+From the research perspective, this work highlights the fragmentation of existing LLM benchmarks and the lack of flexible tools to combine them.
+Current datasets are often designed for narrow purposes, making it difficult to get a comprehensive view of model performance across domains such as programming, reasoning, and factual knowledge.
+By defining tasks and execution parameters declaratively, the prototype shows that it is possible to bridge these gaps and enable more systematic comparisons
 
+The study also confirms that benchmarks cannot rely on a single type of metric.
+Traditional criteria such as unit tests and static analysis capture important aspects of correctness and quality, but they fail to address dimensions like clarity, readability, or style.
+Conversely, LLM-as-a-judge can provide insights into these qualitative aspects, though it introduces challenges of reproducibility and subjectivity.
+Taken together, these findings reinforce the importance of combining multiple evaluation approaches within a single benchmarking framework.
+
+This work presented a prototype of a modular benchmark system for large language models.
+The system integrates a backend with a REST API, a frontend interface, and a flexible configuration mechanism based on declarative YAML files.
+The prototype demonstrates that benchmark execution can combine different task sources and execution configurations, producing results that include both traditional metrics, such as unit tests and static analysis, and LLM-based evaluations.
+
+The experiments illustrate the full pipeline, from uploading task sources and configurations, to launching benchmarks, monitoring progress, and inspecting results.
+Even with a limited number of tasks and languages, the prototype proves that the proposed approach is feasible and can support diverse benchmarking scenarios.
+
+At the same time, the current implementation remains a prototype.
+It lacks isolated execution environments, which makes performance-related metrics sensitive to changes in the host system. Test execution is currently supported only for a subset of languages, and collaborative use on a shared server would require additional features such as authentication and file locking.
+Moreover, datasets need to be expanded and standardized before results could be reliably applied in research.
+
+Future work should address these limitations by improving execution isolation, extending language support, and refining the user interface.
+Security and collaboration features will be important for real-world deployment.
+Finally, validation by the research community will be essential for establishing the credibility and usefulness of the approach.
