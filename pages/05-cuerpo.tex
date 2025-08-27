@@ -785,6 +785,23 @@ To be shared between different parties, the system requires implementing proper 
 
 \subsection{Future Work}
 
+The current prototype demonstrates that the proposed approach is viable and already supports the core functionalities needed to run benchmarks and collect meaningful results.
+At the same time, it remains a prototype and lacks several features required for reliable use in real research and production settings.
+
+First, the execution environment is not sufficiently isolated.
+Changes in the host machine may affect execution time and distort metrics such as CPU usage.
+A more robust sandboxing mechanism is needed to ensure reproducibility.
+Moreover, the system currently supports only a subset of programming languages.
+Extending test execution to other widely used languages would broaden applicability.
+
+Second, while the prototype allows shared use on a common server, it raises concerns about data consistency and security.
+Proper authorization, as well as locking mechanisms for files being edited, should be implemented to support collaborative scenarios safely.
+
+Third, although the user interface already covers the essential operations, further improvements are necessary to make it more convenient and user-friendly.
+
+Finally, before results produced by this benchmark can be used in scientific studies, datasets need to be expanded and standardized.
+Feedback from experienced researchers and developers will also be critical for validating the approach and guiding its further development.
+
 
 \chapter{Conclusion}
 
