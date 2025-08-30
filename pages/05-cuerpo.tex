@@ -14,7 +14,7 @@
 %
 % Focus more on the concept of benchmarks with UI, than in the implementation
 
-\chapter{Introduction}
+\section{Introduction}
 
 % What is missing or should be improved:
 % Methodology Overview: There is no brief mention of the approach or methods used in the work. Add a short paragraph summarizing the methodology (e.g., system design, implementation, evaluation).
@@ -47,7 +47,7 @@ The literature review and further research were guided by the following question
     \item An interactive web interface for configuring benchmarks and analyzing results.
 \end{itemize}
 
-\section{Problem Statement}
+\subsection{Problem Statement}
 
 Benchmarking LLMs for code generation is essential for both research and practice, but current approaches face critical limitations.
 Most benchmarks are fixed datasets, which leads to task saturation and data leakage as models are trained on their contents.
@@ -56,7 +56,7 @@ At the same time, running large benchmarks consumes significant computational re
 
 Therefore, the problem addressed in this thesis is the absence of a flexible, customizable, and sustainable benchmarking framework that can adapt to evolving LLM capabilities and user needs.
 
-\section{Objectives}
+\subsection{Objectives}
 
 The main objectives of this work are:
 \begin{enumerate}
@@ -76,7 +76,7 @@ The main objectives of this work are:
 The goal of this work is not to compete with large-scale frameworks, but to present a prototype that illustrates a different approach: a benchmarking tool for LLMs with a graphical user interface and configuration-driven design.
 Instead of hard-coded pipelines, users can flexibly define tasks, parameters, and evaluation criteria through configuration files generated using the UI.
 
-\section{Relevance of the Work}
+\subsection{Relevance of the Work}
 
 The relevance of this work lies in addressing the growing inefficiency and environmental cost of LLM benchmarks.
 By introducing a customizable framework, this thesis provides a practical solution for researchers and practitioners who need targeted, resource-efficient evaluations.
@@ -84,9 +84,9 @@ The proposed system not only saves time and energy but also improves the usabili
 
 
 
-\chapter{State of the Art}
+\section{State of the Art}
 
-\section{Evolution of Code Generation Benchmarks}
+\subsection{Evolution of Code Generation Benchmarks}
 
 The evolution of benchmarks for code generation has been driven by the need to evaluate the capabilities of Large Language Models (LLMs) in programming tasks.
 Early benchmarks focused on isolated tasks, but as LLMs became more sophisticated, the need for more comprehensive and realistic evaluation methods emerged.
@@ -140,11 +140,11 @@ That could be their adaptations in other programming languages or refined datase
 Such as in the case of SWE-bench and following \textit{SWE-bench Verified} and \textit{Multi-swe-bench}.
 
 
-% \section{Classification of LLM Benchmarks}
+% \subsection{Classification of LLM Benchmarks}
 
 % TO-DO add classifications ?
 
-\section{Limitations of LLM Code Generation Benchmarks}
+\subsection{Limitations of LLM Code Generation Benchmarks}
 
 %Another article~\cite{mozannar2024readinglinesmodelinguser} finds out that a user can often accept a first proposed solution in order to see it with proper syntax highlighting and be able to understand it better. But later he could even remove the suggestion and waits for a repeated completion or simply writes the piece of the code themself. Although that should not be considered a significant flaw of the benchmark, it could partially skew the results.
 
@@ -170,7 +170,7 @@ Based on the analysis of existing benchmarks, we can identify several key limita
 
 Let's address each of these limitations one by one.
 
-\subsection{Benchmark Saturation}
+\subsubsection{Benchmark Saturation}
 
 When a benchmark becomes saturated, it means that the tasks in the benchmark are too easy for the current state-of-the-art LLMs, leading to high pass rates and diminishing returns on further improvements.
 It can be caused by either advances in LLMs or by data leakage, where the tasks and their solutions are present in the training datasets of the models being evaluated.
@@ -178,7 +178,7 @@ It can be caused by either advances in LLMs or by data leakage, where the tasks 
 At some moment, testing on the simplest tasks becomes irrelevant, as all models pass them with high scores.
 Some datasets contain \textbf{metadata} that allows filtering out tasks based on their difficulty, thus saving resources and time on each evaluation.
 
-\subsection{Data Leakage}
+\subsubsection{Data Leakage}
 
 Benchmark saturation mentioned in the above sections is partially explained by advances in models, but it can also be attributed to information \textbf{leaking}: the popular and publicly available benchmarks appear in the training datasets accompanied by the golden solutions.
 This leads to a situation where the models are trained on the same tasks they are being evaluated on.
@@ -190,7 +190,7 @@ There are several ways to avoid the consequences of data leakage:
     \item or perturbing existing tasks as it was done in ReCode.
 \end{itemize}
 
-\subsection{High Cost and Environmental Impact}
+\subsubsection{High Cost and Environmental Impact}
 
 Repeated training and benchmarking of LLMs require significant computational resources, leading to significant electricity consumption and carbon emissions.
 This environmental impact is increasingly important in the context of global efforts to reduce carbon footprints.
@@ -206,7 +206,7 @@ This metric is used in ClassEval, MBPP, MathQA-Python, CoderEval, and HumanEval+
 Notably, HumanEval and HumanEval+ use $k=100$ (\texttt{pass@100}).
 However, as Miah and Zhu~\cite{miah2024usercentricevaluationcode} pointed out, users do not normally run the LLM several times, so pass@k does not reflect its usability.
 
-\subsection{Limited Feedback and Output}
+\subsubsection{Limited Feedback and Output}
 
 This limitation is intertwined with the high cost.
 The output of most benchmarks is a single numeric metric, such as pass@k, which indicates the percentage of tasks solved correctly by the model.
@@ -225,7 +225,7 @@ Some of the ways to gather more information from the model's responses are:
     \item Using LLM-as-a-judge approach to evaluate the quality of the generated solution.
 \end{itemize}
 
-\subsection{Error-Proneness of Tasks}
+\subsubsection{Error-Proneness of Tasks}
 
 When creating and managing big datasets, errors are inevitable.
 As~\cite{vendrow2025largelanguagemodelbenchmarks} found out, popular benchmarks contain up to 5 percent of mislabeled or erroneous tasks.
@@ -234,7 +234,7 @@ This can lead to incorrect evaluation results and misinterpretation of model cap
 To mitigate this issue, a researcher should be able to examine the failures and more easily spot the errors in the tasks.
 This will also allow the researcher to spot patterns in model's errors, and possibly mitigate them by improving training datasets, updating a system prompt, and adjusting temperature and other parameters.
 
-\section{Problems in LLM Benchmarking}
+\subsection{Problems in LLM Benchmarking}
 
 % Задачки в HumanEval уже общеизвестны, так что ЛЛМ натренированы на их решениях. Зато HumanEval Pro добавили дополнительный шаг в задачу, что продемонстрировало, что даже самые современные LLMs могут не справляться с незнакомыми задачами, или переиспользовать написанный ими же код, вызывая его в качестве функции. Таким образом, разработка новых задач важна, и нужно предоставить пользователю бенчмарка удобный способ добавлять и модифицировать задачи в бенчмарке.
 
@@ -252,7 +252,7 @@ The results suggest that none of the analyzed metrics can correctly emulate huma
 A paper by~\cite{crupi2025effectiveness} looks into an approach of using LLM to evaluate the quality of the solution generated by another model (LLM-as-a-judge approach).
 As a result, they come to a conclusion that LLM-as-a-judge is a substantial improvement over mentioned metrics, and GPT-4-turbo can mimic closely a human evaluation.
 
-\section{Comparison of LLM Code Generation Benchmarks}
+\subsection{Comparison of LLM Code Generation Benchmarks}
 
 \begin{table}[h!]
     \centering
@@ -286,7 +286,7 @@ As a result, they come to a conclusion that LLM-as-a-judge is a substantial impr
 
 
 
-\section{Existing Benchmarking Frameworks and Their Limitations}
+\subsection{Existing Benchmarking Frameworks and Their Limitations}
 
 Apart from the benchmarks themselves, there are several frameworks that facilitate LLM evaluation.
 These frameworks provide tools for running benchmarks and collecting results.
@@ -332,7 +332,7 @@ In the Table\ref{tab:framework-comparison} we compare the two frameworks based o
 \end{table}
 
 
-\section{Research Questions Analysis}
+\subsection{Research Questions Analysis}
 
 \textit{RQ1: What are the main limitations of current LLM benchmarks for code generation?}
 We dug through the literature and found that the main limitations of current LLM benchmarks for code generation are:
@@ -369,9 +369,9 @@ These insights directly motivate the design of a new benchmarking framework, whi
 In the following sections, we describe the design and implementation of this framework, as well as its evaluation through selected experiments.
 
 
-\chapter{Design and Implementation of the Modular Benchmarking Framework}
+\section{Design and Implementation of the Modular Benchmarking Framework}
 
-\section{Prototype Goal and Scope}
+\subsection{Prototype Goal and Scope}
 
 The goal of the prototype is to provide a controlled environment for running benchmarks and analyzing their outputs.
 
@@ -388,14 +388,14 @@ These aspects remain outside the present work.
 
 
 
-\section{System Design}
+\subsection{System Design}
 
 This section describes the architecture of the prototype, its main components, and the workflow of interactions between the user, the frontend, and the backend.
 The focus is on modularity, extensibility, and clarity of responsibilities.
 The system operates directly on files (task sets, benchmark configurations, and results) instead of a database.
 This choice makes it easy to share datasets and configurations, edit them outside of the web interface, and execute benchmarks directly from the CLI.
 
-\subsection{Overview}
+\subsubsection{Overview}
 
 The system consists of two main entry points:
 \begin{itemize}
@@ -412,7 +412,7 @@ Its components are:
     \item \textbf{Test execution layer}, currently implemented for in-memory Java execution, but extendable to remote execution or containerized execution via Docker.
 \end{itemize}
 
-\subsection{Technologies}
+\subsubsection{Technologies}
 
 The choice of technologies is motivated by their suitability for modularity and integration:
 \begin{itemize}
@@ -423,7 +423,7 @@ The choice of technologies is motivated by their suitability for modularity and 
     \item \textbf{Docker} --- offers an isolated environment for executing arbitrary languages and tools, ensuring reproducibility and security.
 \end{itemize}
 
-\subsection{Workflow}
+\subsubsection{Workflow}
 
 At a high level, the workflow is as follows:
 \begin{enumerate}
@@ -439,12 +439,12 @@ At a high level, the workflow is as follows:
     \item The user requests a result file, the frontend fetches it from the backend, and presents statistics, errors, and detailed outputs.
 \end{enumerate}
 
-\subsection{Sequence Diagram}
+\subsubsection{Sequence Diagram}
 
 The interaction described above is shown as a sequence diagram (Appendix~\ref{appendix:sequence}).
 % The diagram is generated using PlantUML, which can be integrated into \LaTeX{} by enabling the \texttt{plantuml} package.
 
-\subsection{Execution Configuration File}
+\subsubsection{Execution Configuration File}
 
 The execution configuration (\texttt{exec-config.yaml}) defines the parameters under which a benchmark run is executed.
 It is a structured YAML file that provides a modular way to select tasks, models, and evaluation criteria without changing the core logic of the system.
@@ -475,13 +475,13 @@ difficulties: [easy, medium, ]
 areas: [math, ]
 languages: [python, ]
 parameters:
-  - name: use-llm-judge         
+  - name: use-llm-judge
     # if we want to check the results with an LLM-judge
     enabled: true
-  - name: all-tests-public      
+  - name: all-tests-public
     # if we want to give the LLM all tests as a reference
     enabled: true
-  - name: should-write-comments 
+  - name: should-write-comments
     # if we want the solution to contain comments
     enabled: false
 criteria: # list of criteria to evaluate the solutions
@@ -544,7 +544,7 @@ By keeping all execution settings in a declarative YAML file, users can:
 \end{enumerate}
 
 
-\subsection{Task Source File}
+\subsubsection{Task Source File}
 
 Task sources define the pool of tasks available for execution.
 Each source is represented as a YAML file that contains task definitions together with metadata, prompts, tests, and reference solutions.
@@ -562,13 +562,13 @@ tasks:
  area: math
  source: MBPP    # additional metadata
  languages: [python, ]
- available_parameters: 
+ available_parameters:
     [use-llm-judge, all-tests-public, all-tests-hidden]
- available_criteria: 
+ available_criteria:
     [unit-test, llm-judge-code-quality, sonarqube]
  task:
   common_prompt: |
-    Write a function in ${language} to calculate the highest common 
+    Write a function in ${language} to calculate the highest common
     factor of two numbers.
     <#if !parameters['all-tests-hidden'] >
         Here are the tests: ${public_tests}
@@ -610,7 +610,7 @@ Both public and hidden tests are supported, giving flexibility in how much refer
 Finally, each task may contain golden solutions, expressed in one or more programming languages or pseudocode.
 These serve as reference implementations and may be used for validation or as baseline solutions.
 
-\subsection{Benchmark Criteria and Metrics}
+\subsubsection{Benchmark Criteria and Metrics}
 
 The benchmark supports multiple criteria for evaluating generated solutions.
 Each criterion is implemented as a separate Spring Component, which allows for easy extension by adding new criteria classes.
@@ -666,11 +666,11 @@ For example, one can see how a particular model performed on a specific task acr
 For each test failure, the output includes the output and the exact code that was executed, making it easier to debug issues.
 
 
-\section{Results and Evaluation}
+\subsection{Results and Evaluation}
 
 After implementing the prototype, let's compare it with existing frameworks and discuss its advantages, limitations, and future work.
 
-\subsection{Experimental Runs}
+\subsubsection{Experimental Runs}
 
 To demonstrate the functionality of the prototype, we conducted several experimental runs using different configurations and task sources.
 We selected a subset of tasks from the HumanEval dataset, focusing on easy and medium difficulty levels in Java.
@@ -727,7 +727,7 @@ This level of investigation would not be possible without having the rich output
 
 Thus, this example demonstrates its effectiveness of the benchmarking framework in providing detailed insights into model performance across multiple dimensions.
 
-\subsection{Comparison with Existing Frameworks}
+\subsubsection{Comparison with Existing Frameworks}
 
 Table~\ref{tab:framework-comparison-with-proposed} compares the proposed framework with bigcode-evaluation-harness and lm-evaluation-harness.
 
@@ -764,14 +764,14 @@ Table~\ref{tab:framework-comparison-with-proposed} compares the proposed framewo
     \label{tab:framework-comparison-with-proposed}
 \end{table}
 
-% \subsection{Advantages}
+% \subsubsection{Advantages}
 
 % Shared environment means that the researchers use the resources more optimally.
 % There is no need to set up the benchmarking in each workstation, as they can be used as thin clients.
 % Every user can access the same version of the benchmark, the same versions of datasets and configurations, ensuring consistency in experiments.
 % Secrets for APIs are managed in a centralized way, so there is no risk of leaking them by accident.
 
-\subsection{Future Work}
+\subsubsection{Future Work}
 
 The current prototype demonstrates that the proposed approach is viable and already supports the core functionalities needed to run benchmarks and collect meaningful results.
 At the same time, it remains a prototype and lacks several features required for reliable use in real research and production settings.
@@ -791,7 +791,7 @@ Finally, before results produced by this benchmark can be used in scientific stu
 Feedback from experienced researchers and developers will also be critical for validating the approach and guiding its further development.
 
 
-\chapter{Conclusion}
+\section{Conclusion}
 
 Benchmarks play a central role in the development of large language models and in guiding their use in real-world applications. In this work we analyzed existing benchmarks and harnesses, and found that each approach has its own limitations. Benchmarks saturate, suffer from data leakage, many support only a limited set of metrics or languages, and most consume significant energy and computational resources. Harnesses, in turn, often lack detailed analysis of results and do not provide convenient mechanisms for comparing models across multiple metrics. Different benchmarks partially compensate for each other, but none of them is universal.
 

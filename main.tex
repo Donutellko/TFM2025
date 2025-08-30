@@ -1,11 +1,18 @@
-\documentclass[12pt, a4paper]{book}
+\documentclass[12pt, a4paper, twoside]{article}
 
 % Core packages
+\usepackage{umatfgenglish}
 \input{packages/core.tex}
 \input{packages/extra.tex}
 
+%\graphicspath{{images/}{../images/}}
+
+\lstset{language=Java} % Change for your snippets language
+
 % Load variables
 \input{datos.tex}
+
+\usepackage{subfiles} % Best loaded last in the preamble
 
 \begin{document}
 
@@ -13,13 +20,15 @@
 
 \input{pages/01-etiqueta.tex}
 
-\newpage\null\thispagestyle{empty}\newpage
-\newpage\null\thispagestyle{empty}\newpage
+%\newpage\null\thispagestyle{empty}\newpage
+%\newpage\null\thispagestyle{empty}
+\newpage\thispagestyle{empty}
 
 \thispagestyle{empty}
 \input{pages/02-portada.tex}
 
-\newpage\null\thispagestyle{empty}\newpage
+%\newpage\null\thispagestyle{empty}
+\newpage\thispagestyle{empty}
 
 \ifdef{\addacknowledgments}{
     \pagenumbering{roman}
@@ -27,13 +36,14 @@
     \setcounter{page}{1}
     \input{pages/03-agradecimientos.tex}
     
-    \newpage\null\thispagestyle{empty}\newpage
+    %\newpage\null\thispagestyle{empty}
+    \newpage\thispagestyle{empty}
     
     \thispagestyle{onlyfooter}
     \setcounter{page}{2}
     \input{pages/04-resumen.tex}
     
-    \newpage\null\thispagestyle{empty}\newpage
+    \newpage\thispagestyle{empty}
     
     \setcounter{page}{3}
     \pagenumbering{arabic}
@@ -42,7 +52,7 @@
     \thispagestyle{empty}
     \input{pages/04-resumen.tex}
     
-    \newpage\null\thispagestyle{empty}\newpage
+    \thispagestyle{empty}\newpage
     
     \setcounter{page}{2}
     \pagenumbering{arabic}
@@ -52,38 +62,26 @@
 \setcounter{tocdepth}{3}
 \tableofcontents
 
-\newpage\null\thispagestyle{empty}\newpage
-\cleardoublepage
+\newpage
 
 \ifdef{\configpar}{
-    \setlength{\parindent}{10px}
+    \setlength{\parindent}{10pt}
 }{}
 
 \setcounter{page}{1}
 \input{pages/05-cuerpo.tex}
 
-\cleardoublepage
+\newpage\null\thispagestyle{empty}
 
-\addcontentsline{toc}{chapter}{Bibliography}
-\label{chapter:references}
+\addcontentsline{toc}{section}{Bibliography}
+\label{section:references}
 \printbibliography
 
-\ifdef{\addappendix}{
-    \cleardoublepage
-    \thispagestyle{empty}
-    
-    \vspace*{\fill}
-    \begin{center}
-        {\huge Appendices}
-    \end{center}
-    \vspace*{\fill}
-    
-    \appendix
-    
-    \begin{appendices}
-        \input{pages/06-anexos.tex}
-    \end{appendices}
-}{}
+\begin{umaappendices}
+    \input{pages/06-anexos.tex}
+\end{umaappendices}
 
+%% Back Cover
+\includepdf[noautoscale=true, width=\paperwidth]{backcover.pdf}
 
 \end{document}

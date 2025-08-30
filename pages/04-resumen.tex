@@ -1,4 +1,22 @@
-\textbf{Resumen}:
+%\documentclass[../main.tex]{subfiles}
+
+%\begin{document}
+%% begin abstract format
+\makeatletter
+\renewenvironment{abstract}{%
+    \if@twocolumn
+      \section*{Resumen \\}%
+    \else %% <- here I've removed \small
+    \begin{flushright}
+        {\filleft\Huge\bfseries\fontsize{48pt}{12}\selectfont Resumen\vspace{\z@}}%  %% <- here I've added the format
+        \end{flushright}
+      \quotation
+    \fi}
+    {\if@twocolumn\else\endquotation\fi}
+\makeatother
+%% end abstract format
+\begin{abstract}
+%\Blindtext
 
 Los benchmarks juegan un papel crucial en el desarrollo, evaluación y selección de modelos para su uso práctico. Los benchmarks y frameworks existentes presentan limitaciones. Diferentes benchmarks se compensan parcialmente entre sí, pero ninguno es universal: los problemas incluyen saturación, fuga de datos, métricas y resultados limitados, y altos costos energéticos y computacionales.
 
@@ -7,7 +25,8 @@ Proponemos un enfoque para extraer la máxima información útil de cada ejecuci
 
 
 
-\textbf{Palabras claves}: LLM, modelos de lenguaje grande, benchmarks, marco de evaluación, impacto ambiental, consumo de energía, saturación de benchmarks, fuga de datos, LLM-como-juez
+\bfseries{\large{Palabras Clave:}} LLM, modelos de lenguaje grande, benchmarks, marco de evaluación, impacto ambiental, consumo de energía, saturación de benchmarks, fuga de datos, LLM-como-juez
+
 
 \vspace{1cm}
 \begin{center}
@@ -15,15 +34,17 @@ Proponemos un enfoque para extraer la máxima información útil de cada ejecuci
 \end{center}
 \vspace{1cm}
 
+
+\newpage
 \textbf{Abstract}:
 
+\normalfont
 Benchmarks play a crucial role in developing, researching, and evaluating models for practical use. Existing benchmarks and frameworks have limitations. Different benchmarks partially compensate for each other, but none is universal: issues include saturation, data leakage, limited metrics and outputs, and high energy and computational costs.
-
 
 
 We propose an approach to extract the maximum useful information from each benchmark run, enhancing insights for researchers and practitioners while reducing environmental impact. By making benchmark executions more informative, redundant runs can be avoided, lowering energy consumption. The approach enables flexible task selection, fine-grained configuration, and integration of multiple evaluation criteria in a single execution. A prototype was implemented to demonstrate feasibility, validate functionality, and examine limitations.
 
+\bfseries{\large{Keywords:}} LLM, large language models, benchmarks, evaluation framework, environmental impact, energy consumption, benchmark saturation, data leakage,LLM-as-a-judge
 
-
-
-\textbf{Keywords}: LLM, large language models, benchmarks, evaluation framework, environmental impact, energy consumption, benchmark saturation, data leakage,LLM-as-a-judge
+\end{abstract}
+%\end{document}
