@@ -10,3 +10,22 @@
 \usepackage{listings}
 
 \def\verbatim@font{\linespread{1}\normalfont\ttfamily}
+
+
+% Важно: для minted требуется компиляция с флагом --shell-escape
+% pdflatex -shell-escape <file>.tex
+% For minted (method 1)
+\usepackage{minted}
+
+% For tcolorbox (method 2)
+%\usepackage[most]{tcolorbox}
+% \tcbuselibrary{listingsutf8}
+
+% For listings (method 3)
+% already included
+
+% For fancyvrb (method 4)
+%\usepackage{fancyvrb}
+
+% For file name headers
+\newcommand{\codefileheader}[1]{\vspace{1em}\noindent\textbf{File:}~\texttt{#1}\par\vspace{0.5em}}
