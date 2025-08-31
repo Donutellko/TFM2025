@@ -18,20 +18,17 @@
 
 \section{Introduction}
 
-% What is missing or should be improved:
-% Methodology Overview: There is no brief mention of the approach or methods used in the work. Add a short paragraph summarizing the methodology (e.g., system design, implementation, evaluation).
-% Нужно описать, что я нашёл и использовал уже существующие Critical Review по теме в качетсве базы для анализа существующей литературы, затем следовал ссылкам на статьи, которые мне нужны. Последний подходящий Critical Review был опубликован в середине 2024 года, так что затем я сделал поиск по статьям за 2025 года и вторую половину 2024 года по ключевым словам, связанным с Benchmarking и LLM, выбрав среди них актуальные, отвечая на вопросы исследования. Затем, на основании собранной информации, я добавил свои собственные идеи и предложения по улучшению бенчмарков.
 
-Large Language Models (LLMs) have revolutionized software development through AI-assisted programming tools like GitHub Copilot. However, evaluating and fine-tuning these models requires extensive benchmarking, which comes at significant computational, financial, and environmental costs. Current benchmarks often contain irrelevant tasks and provide limited customization options, making them inefficient for specific use cases.
+Large Language Models (LLMs) have significantly impacted software development through AI-assisted programming tools like GitHub Copilot.
+However, evaluating and fine-tuning these models requires extensive benchmarking, which comes with significant computational, financial, and environmental costs.
+Current benchmarks often include irrelevant tasks and offer limited customization, making them inefficient for specific use cases.
 
-This work explores existing benchmarks for code-generating LLMs and proposes a novel approach: an easily customizable benchmarks with detailed and conveniently explorable outputs that can be tailored to specific needs while remaining cost-effective and environmentally conscious.
+This work explores existing benchmarks for code-generating LLMs and proposes a novel approach: an easily customizable benchmark with detailed, easily analyzable outputs that can be tailored to specific needs while remaining cost-effective and environmentally conscious.
 
-% Methodology Overview
 This thesis began with a comprehensive literature review, using recent critical reviews as a foundation for analyzing the state of LLM benchmarking.
 The review was extended by following citations to relevant articles published in late 2024 and 2025, focusing on keywords related to benchmarking and LLMs.
 The findings from this literature analysis informed the design and implementation of a modular benchmarking system, which was then evaluated for efficiency, flexibility, and environmental impact.
 
-% Research Questions
 The literature review and further research were guided by the following questions:
 \begin{itemize}
     \item RQ1: What are the main limitations of current LLM benchmarks for code generation?
@@ -40,12 +37,11 @@ The literature review and further research were guided by the following question
     \item RQ4: What is the environmental impact of repeated benchmarking, and how can it be reduced?
 \end{itemize}
 
-% Contributions Summary
 \textbf{Main contributions of this work:}
 \begin{itemize}
     \item A critical analysis of existing LLM code generation benchmarks and their shortcomings.
     \item The design and implementation of a modular, customizable benchmarking framework.
-    \item Integration of environmental and cost considerations into the benchmarking process.
+    \item Consideration of environmental and cost factors in the benchmarking process.
     \item An interactive web interface for configuring benchmarks and analyzing results.
 \end{itemize}
 
@@ -56,23 +52,22 @@ Most benchmarks are fixed datasets, which leads to task saturation and data leak
 The lack of customization prevents researchers and practitioners from focusing on tasks relevant to their use cases.
 At the same time, running large benchmarks consumes significant computational resources, resulting in high costs and environmental impact. Furthermore, benchmark outputs are often limited to single numeric metrics, which fail to capture nuanced aspects of model performance such as efficiency, style, or error patterns.
 
-Therefore, the problem addressed in this thesis is the absence of a flexible, customizable, and sustainable benchmarking framework that can adapt to evolving LLM capabilities and user needs.
+Therefore, this thesis addresses the lack of a flexible, customizable, and sustainable benchmarking framework for evolving LLM capabilities and user needs.
 
 \subsection{Objectives}
 
 The main objectives of this work are:
 \begin{enumerate}
-    \item Analyze existing benchmarks and their limitations
+    \item Analyze existing benchmarks and their limitations.
     \item Design a modular benchmark system that allows:
     \begin{itemize}
-        % Badly written, TO-DO
-        \item Custom task selection and filtering
-        \item Configuration of testing criteria
-        \item Support for multiple programming languages and task types
-        \item Integration with CI/CD pipelines
+        \item Custom task selection and filtering.
+        \item Configuration of testing criteria.
+        \item Support for multiple programming languages and task types.
+        \item Integration with CI/CD pipelines.
     \end{itemize}
-    \item Implement an interactive web interface for benchmark configuration and result analysis
-    \item Develop a cost-efficient and environmentally conscious approach to benchmarking
+    \item Implement an interactive web interface for benchmark configuration and result analysis.
+    \item Develop a cost-efficient and environmentally conscious approach to benchmarking.
 \end{enumerate}
 
 The goal of this work is not to compete with large-scale frameworks, but to present a prototype that illustrates a different approach: a benchmarking tool for LLMs with a graphical user interface and configuration-driven design.
@@ -82,9 +77,7 @@ Instead of hard-coded pipelines, users can flexibly define tasks, parameters, an
 
 The relevance of this work lies in addressing the growing inefficiency and environmental cost of LLM benchmarks.
 By introducing a customizable framework, this thesis provides a practical solution for researchers and practitioners who need targeted, resource-efficient evaluations.
-The proposed system not only saves time and energy but also improves the usability of benchmarking results, making them more relevant for real-world applications.
-
-
+The proposed system not only reduces time and energy consumption but also enhances the practical relevance of benchmarking results.
 
 \section{State of the Art}
 
@@ -93,25 +86,26 @@ The proposed system not only saves time and energy but also improves the usabili
 The evolution of benchmarks for code generation has been driven by the need to evaluate the capabilities of Large Language Models (LLMs) in programming tasks.
 Early benchmarks focused on isolated tasks, but as LLMs became more sophisticated, the need for more comprehensive and realistic evaluation methods emerged.
 
-The first benchmarks were aimed at text comprehension and contained questions and expected answers, such as GLUE, SQuAD and GSM8K with grade-school math problems~(\cite{vendrow2025largelanguagemodelbenchmarks}).
+The first benchmarks were aimed at text comprehension and contained questions and expected answers, such as GLUE, SQuAD, and GSM8K with grade-school math problems~(\cite{vendrow2025largelanguagemodelbenchmarks}).
 
 As LLM capabilities expanded, benchmarks shifted towards programming tasks, with a focus on code generation and understanding.
-Some pioneers in LLM code benchmarking that are MBPP, HumanEval and APPS.
+Some pioneers in LLM code benchmarking are MBPP, HumanEval, and APPS.
+
 \begin{itemize}
-\item MBPP (Mostly Basic Python Problems) published by~\cite{austin2021program} contains $974$ crowdsourced Python programming problems with tests.
+\item MBPP (Mostly Basic Python Problems), published by~\cite{austin2021program}, contains $974$ crowdsourced Python programming problems with tests.
 
-\item HumanEval was developed in OpenAI by~\cite{chen2021evaluatinglargelanguagemodels} with $164$ hand-crafted problems, with a goal of avoiding data leakage (to ensure that the problems and golden solutions are not present in the training dataset).
+\item HumanEval was developed at OpenAI by~\cite{chen2021evaluatinglargelanguagemodels} with $164$ hand-crafted problems, aiming to avoid data leakage (ensuring that the problems and golden solutions are not present in the training dataset).
 
-\item APPS by ~\cite{hendrycksapps2021} features $10000$ Python tasks with $131777$ test cases, borrowed from open-access sites like Codewars and Codeforces.
+\item APPS by~\cite{hendrycksapps2021} features $10,000$ Python tasks with $131,777$ test cases, borrowed from open-access sites like Codewars and Codeforces.
 \end{itemize}
-These benchmarks are still used to this day for comparing performance of different models in scientific papers.
-Notably, APPS is a benchmark commonly used for fine-tuning LLMs for programming tasks, as it allows to use separate sets of problems for training and evaluation~(\cite{bigcode-evaluation-harness}).
+These benchmarks are still used today for comparing the performance of different models in scientific papers.
+Notably, APPS benchmark is commonly used for fine-tuning LLMs for programming tasks, as it allows the use of separate sets of problems for training and evaluation~(\cite{bigcode-evaluation-harness}).
 
-The mentioned benchmarks became less effective, as newer models were trained on the same tasks they are being evaluated on.
-This phenomenon is known as \textbf{data leakage} as described by~\cite{vendrow2025largelanguagemodelbenchmarks}.
+The mentioned benchmarks became less effective as newer models were trained on the same tasks they are being evaluated on.
+This phenomenon is known as \textbf{data leakage}, as described by~\cite{vendrow2025largelanguagemodelbenchmarks}.
 
-Amazon's Recode benchmark~\cite{recode_wang2022} addressed this issue by introducing perturbations on docstrings, function names, and codes, while staying semantically close to the original task.
-However, that is more of a way to test the robustness of the model, rather than a way to test its ability to solve brand-new problems.
+Amazon's Recode benchmark~\cite{recode_wang2022} addressed this issue by introducing perturbations on docstrings, function names, and code, while staying semantically close to the original task.
+However, this is more a way to test the robustness of the model rather than its ability to solve brand-new problems.
 
 More recent developments like HumanEval Pro and MBPP Pro~\cite{yu2024humanevalprombpppro} introduced more sophisticated testing approaches.
 Their multistep evaluation process tests an LLM's ability to work with its own generated code.
@@ -119,15 +113,15 @@ First, an LLM generates a solution to a known problem from HumanEval or MBPP dat
 Then, it is given a new task that requires calling a function generated in the first step.
 This approach revealed limitations in some models that perform well on simpler tasks.
 
-The mentioned academic benchmarks focus on controlled and isolated tasks, SWE-bench (\cite{jimenez2024swebenchlanguagemodelsresolve}) moved toward real-world scenarios.
-Software engineering tasks were taken from resolved Issues from GitHub repositories of open-source projects Python.
-SWE-bench is famous for its leaderboards, where laboratories and companies all over the world compete to achieve the higher percentage of solved tasks.
-But the benchmark is limited to tasks from only 12 open-source repositories, and only supports Python programming language.
+The mentioned academic benchmarks focus on controlled and isolated tasks, while SWE-bench (\cite{jimenez2024swebenchlanguagemodelsresolve}) moved toward real-world scenarios.
+Software engineering tasks were taken from resolved issues from GitHub repositories of open-source Python projects.
+SWE-bench is famous for its leaderboards, where laboratories and companies worldwide compete to achieve the highest percentage of solved tasks.
+However, the benchmark is limited to tasks from only 12 open-source repositories and supports only the Python programming language.
 
 Researchers~\cite{chi2025copilotarenaplatformcode} have found a different way to evaluate LLMs in real-world scenarios.
 Instead of using a fixed set of tasks, they developed a plugin called CopilotArena for an IDE.
-The plugin provides two code completion options from different LLMs, and allows a user to choose the one they prefer.
-This approach allows for a more realistic evaluation of LLMs in coding tasks, but it lacks the controlled environment and a solid numerical result for each model.
+The plugin provides two code completion options from different LLMs and allows a user to choose the one they prefer.
+This approach allows for a more realistic evaluation of LLMs in coding tasks, but it lacks a controlled environment and a solid numeric result for each model.
 Such an approach could be useful for A/B testing of LLMs in production, but it is not suitable for scientific research and repeated evaluations during fine-tuning.
 
 The benchmarks mentioned above perform in a static environment, where the model is given a task and expected to generate a solution.
@@ -135,11 +129,9 @@ The InterCode framework by~\cite{yang2023intercodestandardizingbenchmarkinginter
 This enables evaluation of LLMs in realistic and interactive development scenarios with compilation and runtime feedback.
 The environments and scenarios were prepared for Python, SQL, and BASH, but the framework allows introducing new environments and scenarios.
 This approach more closely mirrors actual developer workflows and allows for testing LLMs in the role of a partially independent agent.
-But this approach comes with increased computational overhead of running a Docker environment, a virtual operating system, and an instance of a database, which limits the overall speed and a number of scenarios that can be tested at once.
+However, this approach comes with increased computational overhead of running a Docker environment, a virtual operating system, and an instance of a database, which limits the overall speed and the number of scenarios that can be tested at once.
 
-Many of the mentioned benchmarks have inspired researchers to implement new benchmarks based on them.
-That could be their adaptations in other programming languages or refined datasets with verified and new hand-crafted tasks.
-Such as in the case of SWE-bench and following \textit{SWE-bench Verified} and \textit{Multi-swe-bench}.
+Many of the mentioned benchmarks have inspired researchers to implement new benchmarks based on them. These could be adaptations in other programming languages or refined datasets with verified and new hand-crafted tasks, such as in the case of SWE-bench and the following \textit{SWE-bench Verified} and \textit{Multi-swe-bench}.
 
 
 % \subsection{Classification of LLM Benchmarks}
@@ -194,13 +186,11 @@ There are several ways to avoid the consequences of data leakage:
 
 \subsubsection{High Cost and Environmental Impact}
 
-Repeated training and benchmarking of LLMs require significant computational resources, leading to significant electricity consumption and carbon emissions.
-This environmental impact is increasingly important in the context of global efforts to reduce carbon footprints.
+Repeated training and benchmarking of LLMs require significant computational resources, leading to significant electricity consumption and carbon emissions. This environmental impact is increasingly important in the context of global efforts to reduce carbon footprints.
 We will want for benchmarks to account for these factors and encourage more sustainable evaluation practices.
 % TO-DO: Добавить какое-то исследование на эту тему.
 
-There are leaderboards that account for $CO_2$ emissions, such as Hugging Face~\cite{huggingfaceCalculation}, which tracks the carbon footprint of using models.
-However, these metrics are often not integrated into traditional benchmarks, leading to a lack of awareness about the environmental impact of LLM evaluation practices.
+There are leaderboards that account for $CO_2$ emissions, such as Hugging Face~\cite{huggingfaceCalculation}, which tracks the carbon footprint of using models. However, these metrics are often not integrated into traditional benchmarks, leading to a lack of awareness about the environmental impact of LLM evaluation practices.
 
 The most common metric in benchmarks is pass@k that measures the percentage of correct solutions among the $k$ solutions generated by the model.
 This implies that for each task in the benchmark dataset, a model repeatedly generates a number of solutions, just to receive a single numeric result to use for a metric.
@@ -387,9 +377,6 @@ The scope of the prototype is limited to managing benchmark runs, collecting out
 It does not aim to provide large-scale distributed evaluation, advanced analytics, or integration with external benchmark platforms.
 These aspects remain outside the present work.
 
-
-
-
 \subsection{System Design}
 
 This section describes the architecture of the prototype, its main components, and the workflow of interactions between the user, the frontend, and the backend.
@@ -504,7 +491,7 @@ llms: [mistralai/devstral-small:free, ]
 In this case, the benchmark will run tasks of easy and medium difficulty in the math area.
 It will only select tasks that list Python in the list of supported languages, and provides a prompt for it.
 
-For each task, benchmark will build a prompt from a FreeMarker template using the task description and parameters.
+For each task, the benchmark will build a prompt from a FreeMarker template using the task description and parameters.
 Some parameters will be used in prompt building.
 For example, the \textit{all-tests-public} means when tests are divided into public and hidden, the LLM will receive all available tests anyway.
 And the prompt will mention that the solution doesn't have to contain comments.
@@ -793,16 +780,43 @@ Finally, before results produced by this benchmark can be used in scientific stu
 Feedback from experienced researchers and developers will also be critical for validating the approach and guiding its further development.
 
 
+% Рекомендации по дальнейшему улучшению текста:
+
+% 1. Проверьте единообразие терминологии (например, "benchmark", "framework", "criteria", "task source") по всему тексту.
+% 2. В некоторых местах встречаются неформальные выражения ("let's", "we dug through the literature") — их лучше заменить на более академичные ("the literature was reviewed", "the analysis showed").
+% 3. Проверьте оформление ссылок на литературу: убедитесь, что все цитаты корректно оформлены и соответствуют требованиям университета.
+% 4. В некоторых местах встречаются длинные предложения — их можно разбить для лучшей читаемости.
+% 5. Проверьте, чтобы все аббревиатуры были расшифрованы при первом упоминании.
+% 6. В разделе с таблицами и YAML-примерами можно добавить краткие пояснения для читателя, если они будут использоваться вне контекста.
+% 7. В разделе "Results and Evaluation" стоит добавить больше конкретных примеров или графиков, если это возможно.
+% 8. В Conclusion можно добавить краткое перечисление основных достижений работы.
+% 9. Проверьте, чтобы структура разделов соответствовала требованиям вашей кафедры/университета.
+% 10. Если есть повторяющаяся информация (например, о преимуществах подхода), оставьте её только в одном месте и дайте ссылку на соответствующий раздел.
+
 \section{Conclusion and Future Work}
 
-Benchmarks play a central role in the development of large language models and in guiding their use in real-world applications. In this work we analyzed existing benchmarks and harnesses, and found that each approach has its own limitations. Benchmarks saturate, suffer from data leakage, many support only a limited set of metrics or languages, and most consume significant energy and computational resources. Harnesses, in turn, often lack detailed analysis of results and do not provide convenient mechanisms for comparing models across multiple metrics. Different benchmarks partially compensate for each other, but none of them is universal.
+Benchmarks play a central role in the development of large language models and in guiding their use in real-world applications.
+In this work, we analyzed existing benchmarks and harnesses and found that each approach has its own limitations.
+Benchmarks become saturated, suffer from data leakage, support only a limited set of metrics or languages, and most consume significant energy and computational resources.
+Harnesses, in turn, often lack detailed analysis of results and do not provide convenient mechanisms for comparing models across multiple metrics.
+Different benchmarks partially compensate for each other, but none of them is universal.
 
-To address these issues, we proposed an approach that maximizes the insight gained from each benchmark run. By combining multiple evaluation criteria within a single execution, the framework increases the usefulness of results for researchers and practitioners, while at the same time reducing the environmental impact of benchmarking by limiting redundant runs. To demonstrate the feasibility of this idea, we implemented a prototype system and validated its basic functionality. The prototype confirms that it is possible to integrate traditional program analysis metrics with LLM-based evaluations, while also highlighting several challenges that need to be solved before such a tool can be used in practice.
+To address these issues, we proposed an approach that maximizes the insights gained from each benchmark run.
+By combining multiple evaluation criteria within a single execution, the framework increases the usefulness of results for researchers and practitioners, while at the same time reducing the environmental impact of benchmarking by limiting redundant runs.
+To demonstrate the feasibility of this idea, we implemented a prototype system and validated its basic functionality.
+The prototype confirms that it is possible to integrate traditional program analysis metrics with LLM-based evaluations, while also highlighting several challenges that need to be solved before such a tool can be used in practice.
 
-The system integrates a backend with a REST API, a frontend interface, and a configuration mechanism based on declarative YAML files. The prototype demonstrates that benchmarks can be executed with different combinations of task sources and execution settings, producing results that include both traditional metrics, such as unit tests and static analysis, and LLM-based evaluations.
+The system integrates a backend with a REST API, a frontend interface, and a configuration mechanism based on declarative YAML files.
+The prototype demonstrates that benchmarks can be executed with different combinations of task sources and execution settings, producing results that include both traditional metrics, such as unit tests and static analysis, and LLM-based evaluations.
 
-The experiments with the prototype illustrated the complete pipeline: uploading task sources and configurations, launching benchmarks, monitoring their progress, and inspecting results. Even with a small number of tasks and languages, the system proved that such a workflow is feasible and can support different benchmarking scenarios.
+The experiments with the prototype illustrated the complete pipeline: uploading task sources and configurations, launching benchmarks, monitoring their progress, and inspecting results.
+Even with a small number of tasks and languages, the system proved that such a workflow is feasible and can support different benchmarking scenarios.
 
-The current implementation remains a prototype. It lacks isolated execution environments, which makes performance-related metrics sensitive to the conditions of the host machine. Test execution is supported only for a subset of programming languages, and collaborative use on a shared server would require authentication and file locking. Datasets also need to be expanded and standardized before results could be reliably applied in research.
+The current implementation remains a prototype.
+It lacks isolated execution environments, which makes performance-related metrics sensitive to the conditions of the host machine.
+Test execution is supported only for a subset of programming languages, and collaborative use on a shared server would require authentication and file locking.
+Datasets also need to be expanded and standardized before results could be reliably applied in research.
 
-Future work should address these limitations by improving execution isolation, extending language support, and refining the user interface. Security and collaboration features will be necessary for real-world deployment. Finally, before the approach can be adopted more widely, it will be important to collect feedback from the research community and adjust the design accordingly.
+Future work should address these limitations by improving execution isolation, extending language support, and refining the user interface.
+Security and collaboration features will be necessary for real-world deployment.
+Finally, before the approach can be adopted more widely, it will be important to collect feedback from the research community and adjust the design accordingly.
