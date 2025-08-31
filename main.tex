@@ -18,7 +18,9 @@
 
 \thispagestyle{empty}
 
-\input{pages/01-etiqueta.tex}
+%\input{pages/01-etiqueta.tex}
+%% Cover
+\includepdf[noautoscale=true, width=\paperwidth]{portada.pdf}
 
 %\newpage\null\thispagestyle{empty}\newpage
 %\newpage\null\thispagestyle{empty}
@@ -68,10 +70,10 @@
     \setlength{\parindent}{10pt}
 }{}
 
-\setcounter{page}{1}
+%\setcounter{page}{1}
 \input{pages/05-cuerpo.tex}
 
-\newpage\null\thispagestyle{empty}
+%\newpage\null\thispagestyle{empty}
 
 \addcontentsline{toc}{section}{Bibliography}
 \label{section:references}
