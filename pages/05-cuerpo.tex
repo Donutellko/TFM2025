@@ -1,5 +1,7 @@
 % ESG -- environmental sustainability G ???
 
+% TO-DO: use longtable
+
 % Checklist and TO DOs
 % Describe metodology of the work with sources
 % Classification of Benchmarks
@@ -771,7 +773,7 @@ Table~\ref{tab:framework-comparison-with-proposed} compares the proposed framewo
 % Every user can access the same version of the benchmark, the same versions of datasets and configurations, ensuring consistency in experiments.
 % Secrets for APIs are managed in a centralized way, so there is no risk of leaking them by accident.
 
-\subsubsection{Future Work}
+\subsection{Results Discussion and Limitations}
 
 The current prototype demonstrates that the proposed approach is viable and already supports the core functionalities needed to run benchmarks and collect meaningful results.
 At the same time, it remains a prototype and lacks several features required for reliable use in real research and production settings.
@@ -791,7 +793,7 @@ Finally, before results produced by this benchmark can be used in scientific stu
 Feedback from experienced researchers and developers will also be critical for validating the approach and guiding its further development.
 
 
-\section{Conclusion}
+\section{Conclusion and Future Work}
 
 Benchmarks play a central role in the development of large language models and in guiding their use in real-world applications. In this work we analyzed existing benchmarks and harnesses, and found that each approach has its own limitations. Benchmarks saturate, suffer from data leakage, many support only a limited set of metrics or languages, and most consume significant energy and computational resources. Harnesses, in turn, often lack detailed analysis of results and do not provide convenient mechanisms for comparing models across multiple metrics. Different benchmarks partially compensate for each other, but none of them is universal.
 
