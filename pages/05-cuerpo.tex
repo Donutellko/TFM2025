@@ -494,6 +494,18 @@ At a high level, the workflow is as follows:
 The interaction described above is shown as a sequence diagram (Appendix~\ref{appendix:sequence}).
 % The diagram is generated using PlantUML, which can be integrated into \LaTeX{} by enabling the \texttt{plantuml} package.
 
+\subsection{Benchmark Data Storage and Processing}
+
+In this subsection, we describe how the task datasets, task configuration, and results are represented in the system.
+
+We use structured YAML files for all three types of data.
+This choice is motivated by the human-readability of YAML, its support for complex data structures, and its widespread use in configuration files.
+YAML files can be easily edited with any text editor, version-controlled, and shared.
+One of common alternatives is JSON, which is more compact and widely supported by programming languages.
+However, JSON is less human-friendly for complex structures and lacks support for comments, which are useful in configuration files.
+XML is another alternative, but it is more verbose and complex, and currently it falls out of fashion and is less commonly used for configuration compared to YAML and JSON.
+And the use of databases is not suitable for the prototype, as it would complicate sharing and editing files outside of the web interface.
+
 \subsubsection{Execution Configuration File}
 
 The execution configuration (\texttt{exec-config.yaml}) defines the parameters under which a benchmark run is executed.
@@ -655,7 +667,7 @@ Both public and hidden tests are supported, giving flexibility in how much refer
 Finally, each task may contain golden solutions, expressed in one or more programming languages or pseudocode.
 These serve as reference implementations and may be used for validation or as baseline solutions.
 
-\subsubsection{Benchmark Criteria and Metrics}
+\subsection{Benchmark Criteria and Metrics}
 
 The benchmark supports multiple criteria for evaluating generated solutions.
 Each criterion is implemented as a separate Spring Component, which allows for easy extension by adding new criteria classes.
@@ -711,11 +723,11 @@ For example, one can see how a particular model performed on a specific task acr
 For each test failure, the output includes the output and the exact code that was executed, making it easier to debug issues.
 
 
-\subsection{Results and Evaluation}
+\section{Results and Evaluation}
 
 After implementing the prototype, we compare it with existing frameworks and discuss its advantages, limitations, and future work.
 
-\subsubsection{Experimental Runs}
+\subsection{Experimental Runs}
 
 To demonstrate the functionality of the prototype, we conducted several experimental runs using different configurations and task sources.
 We selected a subset of tasks from the HumanEval dataset, focusing on easy and medium difficulty levels in Java.
@@ -772,7 +784,7 @@ This level of investigation would not be possible without having the rich output
 
 Thus, this example demonstrates its effectiveness of the benchmarking framework in providing detailed insights into model performance across multiple dimensions.
 
-\subsubsection{Comparison with Existing Frameworks}
+\subsection{Comparison with Existing Frameworks}
 
 Table~\ref{tab:framework-comparison-with-proposed} compares the proposed framework with bigcode-evaluation-harness and lm-evaluation-harness.
 
