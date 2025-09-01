@@ -1,7 +1,5 @@
 % ESG -- environmental sustainability G ???
 
-% TO-DO: use longtable
-
 % Checklist and TO DOs
 % Describe metodology of the work with sources
 % Classification of Benchmarks
@@ -84,7 +82,7 @@ The proposed system not only reduces time and energy consumption but also enhanc
 \subsection{Evolution of Code Generation Benchmarks}
 
 The evolution of benchmarks for code generation has been driven by the need to evaluate the capabilities of Large Language Models (LLMs) in programming tasks.
-Early benchmarks focused on isolated tasks, but as LLMs became more sophisticated, the need for more comprehensive and realistic evaluation methods emerged.
+Early benchmarks focused on isolated tasks, but as LLMs became more sophisticated, the need for more comprehensive and realistic evaluation methods emerged~(\cite{paul2024benchmarksmetricsevaluationscode}).
 
 The first benchmarks were aimed at text comprehension and contained questions and expected answers, such as GLUE, SQuAD, and GSM8K with grade-school math problems~(\cite{vendrow2025largelanguagemodelbenchmarks}).
 
@@ -204,9 +202,9 @@ This limitation is intertwined with the high cost.
 The output of most benchmarks is a single numeric metric, such as pass@k, which indicates the percentage of tasks solved correctly by the model.
 Compared to the amount of work and energy that was consumed to produce this result, and the amount of information that could be extracted from the model's responses and test runs, this approach is very limited.
 
-For example, SWE leaderboard~\cite{swebenchSWEbenchLeaderboards} is created based on a single number that does not reflect the types of tasks that the model is better or worse at solving~\cite{miah2024usercentricevaluationcode}.
+For example,~\cite{swebenchSWEbenchLeaderboards} is created based on a single number that does not reflect the types of tasks that the model is better or worse at solving~(\cite{miah2024usercentricevaluationcode}).
 Thus, a researcher or a user might choose a suboptimal model for their specific needs, resulting in lower performance or higher cost.
-This is partially countered by websites that aggregate results on several benchmarks~\cite{vellumLeaderboard2025} which can give a very high-level picture.
+This is partially countered by websites that aggregate results on several benchmarks like~\cite{vellumLeaderboard2025} which can give a very high-level picture.
 
 Some of the ways to gather more information from the model's responses are:
 \begin{itemize}
@@ -307,7 +305,7 @@ In the Table~\ref{tab:framework-comparison} we compare the two frameworks based 
         \hline
         Run interface & CLI-based, no GUI & CLI-based, no GUI, an API for training loops \\
         \hline
-        Result analysis & Overall numeric metric and LLM responses saved as a file &  \\
+        Result analysis & Overall numeric metric and LLM responses saved as a file & Overall numeric metric \\
         \hline
         Visualization & No visualization tools & No visualization tools \\
         \hline
@@ -364,17 +362,77 @@ These insights directly motivate the design of a new benchmarking framework, whi
 In the following sections, we describe the design and implementation of this framework, as well as its evaluation through selected experiments.
 
 
-\section{Design and Implementation of the Modular Benchmarking Framework}
+\section{Design of the Modular Benchmarking Framework}
 
-\subsection{Prototype Goal and Scope}
-
-The goal of the prototype is to provide a controlled environment for running benchmarks and analyzing their outputs.
+In this section, we describe the principles of the proposed modular benchmarking framework.
 
 The key idea is to separate three concerns:
 (1) definition of \textit{task sources} and \textit{execution configurations},
 (2) execution and tracking of benchmarks,
 (3) presentation and inspection of results.
+
 This separation enables the use of different combinations of task sources and execution configurations.
+
+In continuation, we describe how these concepts should be controlled, without specifying the technologies, file structures, or the way to interact with them.
+The actual implementation of the concepts is described in the next section.
+
+\subsection{Task Sources}
+A \textbf{task source} is a dataset containing a group of tasks.
+A tasks can be of different types, such as code generation, code completion, code explanation, logical tasks, or other tasks unrelated to writing code.
+For each task, we specify its definition and additional metadata.
+Task metadata can include but is not limited to: task name, its source (name of the original dataset), difficulty, additional metadata, supported criteria.
+Task definition contains a description (a prompt), and information for the results validation: it can be unit tests, a prompt for LLM-as-a-judge, a golden solution, etc.
+
+The dataset can be stored in a structured file format, such as YAML or JSON, which allows easy editing and sharing.
+The files can be version-controlled to track changes over time.
+
+\subsection{Execution Configurations}
+
+An \textbf{execution configuration} defines how a benchmark run is executed.
+It specifies the following parameters:
+\begin{itemize}
+    \item \textbf{Task selection}, which can be done by specifying a task source file and applying filters based on task metadata (e.g., difficulty, type, area).
+    \item \textbf{LLM selection}, which includes the choice of LLM provider, model name, and model parameters (e.g., temperature, max tokens).
+    \item \textbf{Evaluation criteria}, which define how the outputs are evaluated (e.g., unit tests, code quality metrics, LLM-as-a-judge).
+    \item \textbf{Resource constraints}, such as time limits, memory limits, and cost limits.
+    \item \textbf{Output options}, such as the level of detail in the results, logging options, and formats for exporting results.
+\end{itemize}
+
+The configuration can be stored in a structured file format, such as YAML or JSON, which allows easy editing and sharing.
+The files can be version-controlled to track changes over time.
+
+\subsection{Benchmark Execution and Tracking}
+A \textbf{benchmark execution} is the process of running a benchmark based on a selected task source and execution configuration.
+The execution process involves the following steps:
+\begin{enumerate}
+    \item Load the task source (or multiple sources) and apply filters to select relevant tasks.
+    \item For each task, send the prompt to the selected LLM (or multiple LLMs) and receive the generated output.
+    \item Evaluate the output based on the specified evaluation criteria.
+    \item Collect and store the results, including task details, LLM outputs, evaluation results, and resource usage.
+\end{enumerate}
+
+The execution process can be tracked in real-time, providing feedback on the progress of the benchmark run, such as the number of tasks completed, current task status, and allows for estimation of the remaining time.
+The approach allows the tasks to be processed in parallel to speed up the execution.
+The results can be stored in a structured file format, such as YAML or JSON, which allows easy sharing and loading of the data for visualisation.
+
+\subsection{Result Presentation and Inspection}
+The \textbf{result presentation} is the process of displaying and analyzing the results of a benchmark run.
+The presentation can include:
+\begin{itemize}
+    \item \textbf{Summary statistics}, such as overall pass rates, average scores, resource usage, and cost.
+    \item \textbf{Detailed results}, including individual task results, LLM outputs, and evaluation details.
+    \item \textbf{Visualizations}, such as charts and graphs to illustrate performance trends and comparisons.
+    \item \textbf{Export options}, allowing users to download results in various formats (e.g., CSV, JSON, PDF).
+    \item \textbf{Error analysis}, providing insights into common failure modes and patterns in LLM outputs.
+\end{itemize}
+
+In the following section, we describe the actual implementation of the proposed benchmarking framework.
+
+\section{Implementation of the Modular Benchmarking Framework}
+
+\subsection{Prototype Goal and Scope}
+
+The goal of the prototype is to provide a controlled environment for running benchmarks and analyzing their outputs.
 
 The scope of the prototype is limited to managing benchmark runs, collecting outputs, and exposing them through a simple interface.
 It does not aim to provide large-scale distributed evaluation, advanced analytics, or integration with external benchmark platforms.
