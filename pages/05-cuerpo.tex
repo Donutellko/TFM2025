@@ -456,8 +456,7 @@ The file contains the following top-level sections:
     \item \textbf{LLMs} --- a list of model identifiers to be benchmarked (including provider and model version).
 \end{itemize}
 
-Here's the brief example of how the file looks like:
-% TO-DO: add a full example to the appendix
+Here's the brief example of how the file looks like (see Appendix~\ref{appendix:exec-config-example} for the full version):
 
 \begin{minted}[linenos,breaklines,fontsize=\small]{yaml}
 version: 1.0
@@ -538,6 +537,8 @@ By keeping all execution settings in a declarative YAML file, users can:
 Task sources define the pool of tasks available for execution.
 Each source is represented as a YAML file that contains task definitions together with metadata, prompts, tests, and reference solutions.
 The system can combine multiple task sources with different execution configurations, enabling flexible benchmarking setups.
+
+Here's an example of a task source file (see Appendix~\ref{appendix:task-source-example} for the full version):
 
 \begin{minted}[linenos,breaklines,fontsize=\small]{yaml}
 version: 1.0
