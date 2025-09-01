@@ -326,6 +326,7 @@ In the Table~\ref{tab:framework-comparison} we compare the two frameworks based 
 \subsection{Research Questions Analysis}
 
 \textit{RQ1: What are the main limitations of current LLM benchmarks for code generation?}
+
 The literature analysis showS that the main limitations of current LLM benchmarks for code generation are:
 
 \begin{itemize}
@@ -339,12 +340,14 @@ The literature analysis showS that the main limitations of current LLM benchmark
 \end{itemize}
 
 \textit{RQ2: What metrics best reflect real-world usability and code quality?}
+
 Out of the commonly used code quality metrics (BLEU, CodeBLEU, RUBY, ROUGE-L, METEOR, ChrF), the ChrF turns out to be the best-suited for code generation tasks, as it takes into account the properties of source code.
 
 But an LLM-as-a-judge approach is considered a significant improvement over the mentioned metrics.
 When used with some of the modern models, an LLM can mimic closely a human evaluation.
 
 \textit{RQ3: How can benchmarks be made customizable for different user needs?}
+
 Existing frameworks like bigcode-evaluation-harness and lm-evaluation-harness provide a way to introduce new task datasets and metrics for specific user needs.
 However, they require source code modification and do not provide a user interface for configuring benchmarks.
 The reviewed frameworks also lack flexibility in task selection and filtering.
@@ -352,6 +355,7 @@ The reviewed frameworks also lack flexibility in task selection and filtering.
 A solution with a friendly user interface can allow users to easily configure benchmarks, select relevant task types, and visualize results.
 
 \textit{RQ4: What is the environmental impact of repeated benchmarking, and how can it be reduced?}
+
 Benchmarks consume significant resources, but environmental impact is rarely measured. Including runtime, energy, and CO$_2$ reporting makes evaluation more responsible.
 
 
@@ -455,9 +459,7 @@ The file contains the following top-level sections:
 Here's the brief example of how the file looks like:
 % TO-DO: add a full example to the appendix
 
-\begin{figure}[H]
-\centering
-\begin{verbatim}
+\begin{minted}[linenos,breaklines,fontsize=\small]{yaml}
 version: 1.0
 difficulties: [easy, medium, ]
 areas: [math, ]
@@ -484,8 +486,7 @@ criteria: # list of criteria to evaluate the solutions
   - name: sonarqube
     enabled: true
 llms: [mistralai/devstral-small:free, ]
-\end{verbatim}
-\end{figure}
+\end{minted}
 
 In this case, the benchmark will run tasks of easy and medium difficulty in the math area.
 It will only select tasks that list Python in the list of supported languages, and provides a prompt for it.
@@ -538,9 +539,7 @@ Task sources define the pool of tasks available for execution.
 Each source is represented as a YAML file that contains task definitions together with metadata, prompts, tests, and reference solutions.
 The system can combine multiple task sources with different execution configurations, enabling flexible benchmarking setups.
 
-\begin{figure}[H]
-\centering
-\begin{verbatim}
+\begin{minted}[linenos,breaklines,fontsize=\small]{yaml}
 version: 1.0
 name: task-source-example-1
 tasks:
@@ -576,8 +575,7 @@ tasks:
 
   llm_judge_prompt: |
     You are an experienced interviewer...
-\end{verbatim}
-\end{figure}
+\end{minted}
 
 The YAML structure starts with global metadata, including version and source name.
 Individual tasks are described with attributes such as task name, type, difficulty, area, and benchmark of origin.
