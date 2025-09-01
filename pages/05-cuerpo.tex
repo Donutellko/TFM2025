@@ -288,11 +288,10 @@ Both provide tools for running standardized benchmarks on LLMs, but they have no
 The lm-evaluation-harness is more general-purpose and supports a broader range of language tasks, yet it also relies on fixed task sets and lacks modularity for user-defined benchmarks.
 Neither framework provides built-in support for environmental metrics or fine-grained task selection, highlighting the need for more flexible and sustainable benchmarking solutions.
 
-In the Table\ref{tab:framework-comparison} we compare the two frameworks based on their features and limitations.
+In the Table~\ref{tab:framework-comparison} we compare the two frameworks based on their features and limitations.
 
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|p{4cm}|p{5cm}|p{5cm}|}
+\begin{longtable}{|p{4cm}|p{5cm}|p{5cm}|}
+%[H]
         \hline
         \textbf{Feature} & \textbf{bigcode-evaluation-harness} & \textbf{lm-evaluation-harness} \\
         \hline
@@ -318,10 +317,10 @@ In the Table\ref{tab:framework-comparison} we compare the two frameworks based o
         \hline
         Caching of LLM generations & No & Yes with an argument \\
         \hline
-    \end{tabular}
+%    \end{tabular}
     \caption{Comparison of bigcode-evaluation-harness and lm-evaluation-harness}
     \label{tab:framework-comparison}
-\end{table}
+\end{longtable}
 
 
 \subsection{Research Questions Analysis}
@@ -720,11 +719,17 @@ Thus, this example demonstrates its effectiveness of the benchmarking framework 
 
 Table~\ref{tab:framework-comparison-with-proposed} compares the proposed framework with bigcode-evaluation-harness and lm-evaluation-harness.
 
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|p{2.3cm}|p{4.3cm}|p{4.3cm}|p{4.3cm}|}
-        \hline
-        \textbf{Feature} & \textbf{bigcode-evaluation-harness} & \textbf{lm-evaluation-harness} & \textbf{proposed benchmarking framework} \\
+\begin{longtable}{|p{2.3cm}|p{4.3cm}|p{4.3cm}|p{4.3cm}|}
+
+% \hline \multicolumn{1}{|c|}{\textbf{Feature}}
+% & \multicolumn{1}{c|}{\textbf{bigcode-evaluation-harness}}
+% & \multicolumn{1}{c|}{\textbf{lm-evaluation-harness}}
+% & \multicolumn{1}{c|}{\textbf{proposed benchmarking framework}} \\
+% \hline
+% \endhead
+
+       \hline
+       \textbf{Feature} & \textbf{bigcode-evaluation-harness} & \textbf{lm-evaluation-harness} & \textbf{proposed benchmarking framework} \\
         \hline
         Specialization & Majorly, code writing tasks, but also allows for documentation generation tasks and natural language reasoning tasks & A universal harness supporting a wide range of tasks & Ecologically concious, taking the most information out of a test and a generated solution \\
         \hline
@@ -748,10 +753,10 @@ Table~\ref{tab:framework-comparison-with-proposed} compares the proposed framewo
         \hline
         Cache LLM responses & No & Yes with a flag & Yes, in run configuration \\
         \hline
-    \end{tabular}
-    \caption{Comparison of bigcode-evaluation-harness and lm-evaluation-harness}
-    \label{tab:framework-comparison-with-proposed}
-\end{table}
+
+\caption{Comparison of the proposed framework with bigcode-evaluation-harness and lm-evaluation-harness}
+\label{tab:framework-comparison-with-proposed}
+\end{longtable}
 
 % \subsubsection{Advantages}
 
