@@ -16,14 +16,14 @@
 
 \section{Introduction}
 
-
+% GLuque: Creo que haría falta poner algunas referencias en esta parte también.
 Large Language Models (LLMs) have significantly impacted software development through AI-assisted programming tools like GitHub Copilot.
 However, evaluating and fine-tuning these models requires extensive benchmarking, which comes with significant computational, financial, and environmental costs.
 Current benchmarks often include irrelevant tasks and offer limited customization, making them inefficient for specific use cases.
 
 This work explores existing benchmarks for code-generating LLMs and proposes a novel approach: an easily customizable benchmark with detailed, easily analyzable outputs that can be tailored to specific needs while remaining cost-effective and environmentally conscious.
 
-This thesis began with a comprehensive literature review, using recent critical reviews as a foundation for analyzing the state of LLM benchmarking.
+This master thesis began with a comprehensive literature review, using recent critical reviews as a foundation for analyzing the state of LLM benchmarking.
 The review was extended by following citations to relevant articles published in late 2024 and 2025, focusing on keywords related to benchmarking and LLMs.
 The findings from this literature analysis informed the design and implementation of a modular benchmarking system, which was then evaluated for efficiency, flexibility, and environmental impact.
 
@@ -36,6 +36,7 @@ The literature review and further research were guided by the following question
 \end{itemize}
 
 \textbf{Main contributions of this work:}
+% GLuque: En la versión final evita estos saltos de líneas entre este "título" y el texto siguiente. Quizás una forma simple es con \newpage, pero esto es para la versión final ya que si cambias cosas puede afectar y que esté bien.
 \begin{itemize}
     \item A critical analysis of existing LLM code generation benchmarks and their shortcomings.
     \item The design and implementation of a modular, customizable benchmarking framework.
@@ -77,7 +78,17 @@ The relevance of this work lies in addressing the growing inefficiency and envir
 By introducing a customizable framework, this thesis provides a practical solution for researchers and practitioners who need targeted, resource-efficient evaluations.
 The proposed system not only reduces time and energy consumption but also enhances the practical relevance of benchmarking results.
 
+% GLuque: Falta un apartado donde expliques la organización de la memoria:
+% 1.4 Organization of this document
+% This document is composed of X chapters and Y appendices. The content of each one is:
+%- In the Chapter 1, we introduce...
+%- The Chapter 2 describes....
+
+
 \section{State of the Art}
+
+% Gluque: Evita empezar directamente con subsecciones. Añade una breve introducción:
+% In this chapter, we analyze the existing benchmarks .... After this analyzis, we highlight the main limitations....
 
 \subsection{Evolution of Code Generation Benchmarks}
 
@@ -226,6 +237,9 @@ This will also allow the researcher to spot patterns in model's errors, and poss
 
 \subsection{Problems in LLM Benchmarking}
 
+% Gluque: No me queda claro es sentido de esta sección. Además repite varias cosas que se comentaron previamente.
+% No se si debe integrarse con 2.2 o explicar claramente qué es lo que quiere decirse.
+
 % Задачки в HumanEval уже общеизвестны, так что ЛЛМ натренированы на их решениях. Зато HumanEval Pro добавили дополнительный шаг в задачу, что продемонстрировало, что даже самые современные LLMs могут не справляться с незнакомыми задачами, или переиспользовать написанный ими же код, вызывая его в качестве функции. Таким образом, разработка новых задач важна, и нужно предоставить пользователю бенчмарка удобный способ добавлять и модифицировать задачи в бенчмарке.
 
 Benchmark saturation mentioned in the above sections is partially explained by advances in models, but it can also be attributed to information \textbf{leaking}: the popular and publicly available benchmarks appear in the training datasets accompanied by the golden solutions.
@@ -243,6 +257,8 @@ A paper by~\cite{crupi2025effectiveness} looks into an approach of using LLM to 
 As a result, they come to a conclusion that LLM-as-a-judge is a substantial improvement over mentioned metrics, and GPT-4-turbo can mimic closely a human evaluation.
 
 \subsection{Comparison of LLM Code Generation Benchmarks}
+
+% GLuque: No vale solo poner la tabla , al menos pon un párrafo explicando la tabla. In Table 1, we show .... For each benchmark we show its size (measured as ...)...
 
 \begin{table}[h!]
     \centering
@@ -276,7 +292,7 @@ As a result, they come to a conclusion that LLM-as-a-judge is a substantial impr
 
 
 
-\subsection{Existing Benchmarking Frameworks and Their Limitations}
+\subsection{Existing Benchmarking Frameworks and their Limitations}
 
 Apart from the benchmarks themselves, there are several frameworks that facilitate LLM evaluation.
 These frameworks provide tools for running benchmarks and collecting results.
@@ -323,10 +339,13 @@ In the Table~\ref{tab:framework-comparison} we compare the two frameworks based 
 
 \subsection{Research Questions Analysis}
 
+% GLuque: Demasiado directo, un primer párrafo corto indicando que basado en los análsis previo podemos contestar a las preguntas planteadas el inicio.
+
 \textit{RQ1: What are the main limitations of current LLM benchmarks for code generation?}
 
-The literature analysis showS that the main limitations of current LLM benchmarks for code generation are:
+The literature analysis shows that the main limitations of current LLM benchmarks for code generation are:
 
+% GLuque: creo que podrían incorporarse directamente en el texto como lista (no como itemize) ya que ya se mencionaron antes.
 \begin{itemize}
     \item Benchmark saturation,
     \item Data leakage,
@@ -364,13 +383,13 @@ In the following sections, we describe the design and implementation of this fra
 
 \section{Design of the Modular Benchmarking Framework}
 
-In this section, we describe the principles of the proposed modular benchmarking framework.
+% GLuque: De nuevo muy directo. Puedes empezar que basándote en la limitaciones detectadas en el estudio del estado del arte, se plantea la creación de un framework modular.
+In this chapter, we describe the principles of the proposed modular benchmarking framework.
 
 The key idea is to separate three concerns:
 (1) definition of \textit{task sources} and \textit{execution configurations},
 (2) execution and tracking of benchmarks,
 (3) presentation and inspection of results.
-
 This separation enables the use of different combinations of task sources and execution configurations.
 
 In continuation, we describe how these concepts should be controlled, without specifying the technologies, file structures, or the way to interact with them.
@@ -430,6 +449,8 @@ In the following section, we describe the actual implementation of the proposed 
 
 \section{Implementation of the Modular Benchmarking Framework}
 
+% GLuque: No empezar directamente con una subsección. Pon en contexto y dí que se va. a hacer: Once we have defined the design goals of the proposed framework, in this chapter, its implemtation details are described.
+
 \subsection{Prototype Goal and Scope}
 
 The goal of the prototype is to provide a controlled environment for running benchmarks and analyzing their outputs.
@@ -439,6 +460,8 @@ It does not aim to provide large-scale distributed evaluation, advanced analytic
 These aspects remain outside the present work.
 
 \subsection{System Design}
+
+% GLuque: Quizás Architecture en vez de Design que confunde con el capítulo previo
 
 This section describes the architecture of the prototype, its main components, and the workflow of interactions between the user, the frontend, and the backend.
 The focus is on modularity, extensibility, and clarity of responsibilities.
@@ -494,6 +517,8 @@ At a high level, the workflow is as follows:
 The interaction described above is shown as a sequence diagram (Appendix~\ref{appendix:sequence}).
 % The diagram is generated using PlantUML, which can be integrated into \LaTeX{} by enabling the \texttt{plantuml} package.
 
+% GLuque: Yo pondría directamente el diagrama aquí.
+
 \subsection{Benchmark Data Storage and Processing}
 
 In this subsection, we describe how the task datasets, task configuration, and results are represented in the system.
@@ -512,8 +537,9 @@ The execution configuration (\texttt{exec-config.yaml}) defines the parameters u
 It is a structured YAML file that provides a modular way to select tasks, models, and evaluation criteria without changing the core logic of the system.
 This design allows the user to combine different \emph{task sources} with different \emph{execution configurations}, enabling flexible experimentation.
 A full example of the file is provided in the Appendix, while here we describe its structure and purpose.
+% GLuque: Indica y cita el apéndice oportuno
 
-\paragraph{General structure.}
+\paragraph{General structure:}
 The file contains the following top-level sections:
 
 \begin{itemize}
@@ -589,6 +615,8 @@ This modular approach makes it easy to extend the benchmark with new metrics.
 Finally, the \texttt{llms} section lists one or more models to be benchmarked.
 Each entry corresponds to a model identifier, which may include provider-specific information and quota (e.g., free-tier models).
 Multiple models can be specified in one configuration file, allowing direct comparison under identical conditions.
+% GLuque: Tras leer esto, una duda que me surge es que valores soporta el sistema, cómo de abierto es y cuándo requiere de procesamiento manual para echarlo a andar. Quizás una mayor concreción estaría bien.
+
 
 \paragraph{Additional advantages of the approach.}
 By keeping all execution settings in a declarative YAML file, users can:
@@ -666,6 +694,8 @@ Both public and hidden tests are supported, giving flexibility in how much refer
 
 Finally, each task may contain golden solutions, expressed in one or more programming languages or pseudocode.
 These serve as reference implementations and may be used for validation or as baseline solutions.
+% GLuque: Mismo comentario sobre la concreción del apartado anterior.
+% > Tras leer esto, una duda que me surge es que valores soporta el sistema, cómo de abierto es y cuándo requiere de procesamiento manual para echarlo a andar. Quizás una mayor concreción estaría bien.
 
 \subsection{Benchmark Criteria and Metrics}
 
@@ -686,6 +716,8 @@ The supported criteria include:
 \end{itemize}
 
 Criteria to be implemented in the future include:
+% GLuque: queda un tanto raro comentar las futuras, si son interesantes ¿porqué no se han implementado?
+% Da algún detalle más sobre el motivo y porqué se priorizaron las anteriores.
 \begin{itemize}
     \item \textbf{Test Execution in Docker} --- runs the generated code in a Docker container to support multiple programming languages and isolate execution environments;
     \item \textbf{Code quality with SonarQube} --- analyzes the generated code using SonarQube and collects metrics such as code smells, bugs, vulnerabilities, and technical debt;
@@ -721,6 +753,7 @@ Each object is associated with a specific task and LLM response.
 This allows for detailed analysis of results across different dimensions.
 For example, one can see how a particular model performed on a specific task across multiple criteria, or compare the performance of different models on the same task.
 For each test failure, the output includes the output and the exact code that was executed, making it easier to debug issues.
+% GLuque: Quizás en algún sitio debe indicarse que (quizás cuando hablas de las formas de los puntos de acceso) del interfaz gráfico y que se capturas del mismo se pueden ver en el Apéndice X
 
 
 \section{Results and Evaluation}
@@ -744,6 +777,7 @@ We enabled the following criteria for evaluation:
 
 The benchmark was executed via the web interface, allowing us to monitor progress and view results in real-time.
 The results were collected in structured YAML files, which included detailed outputs for each task and criterion.
+% GLuque: De hecho creo que no has indicado que el desarrollo está disponible en el respositorio (quizás debes indicarlo en el capítulo de implementación).
 
 Table~\ref{tab:benchmark-results-summary} shows a summary of the results:
 
@@ -769,6 +803,7 @@ Table~\ref{tab:benchmark-results-summary} shows a summary of the results:
 \end{table}
 
 \textbf{TO-DO: more models and tasks, maybe also with other datasets and configurations}
+% GLuque: Sí, sería interesante
 
 So as we can see from this table, the smaller and newer model outperformed the larger and older one across code quality and the amount of tests passed.
 However, it used significantly more tokens and CPU time, indicating a trade-off between performance and efficiency.
@@ -779,6 +814,7 @@ For example, by clicking on the unit-test criterion, we can see which specific t
 For example, we can take a closer look at the task 1 in HumanEval for Java which caused an error for mistral-nemo model.
 We see that there is an AssertionError that occurred on line 20 of a unit-test.
 We can understand that the code was compiled and executed successfully, but the result was incorrect due to an error in logic, and can inspect the code closer if we wish so.
+% GLuque: Sería interesante tener una captura de pantalla para ver lo que comentas
 
 This level of investigation would not be possible without having the rich output, and would be more difficult without having a UI for browsing them.
 
@@ -787,6 +823,8 @@ Thus, this example demonstrates its effectiveness of the benchmarking framework 
 \subsection{Comparison with Existing Frameworks}
 
 Table~\ref{tab:framework-comparison-with-proposed} compares the proposed framework with bigcode-evaluation-harness and lm-evaluation-harness.
+
+% GLuque: Este tipo de tabla con tanto texto, quizás se ve mejor si la pones en una página apaisada (latex permite cambiar esto para páginas concretas). Pruébalo  para ver que tal queda y cómo interrumpe la memoria (si deja muchos huecos en blancos).
 
 \begin{longtable}{|p{2.3cm}|p{4.3cm}|p{4.3cm}|p{4.3cm}|}
 
@@ -826,6 +864,9 @@ Table~\ref{tab:framework-comparison-with-proposed} compares the proposed framewo
 \caption{Comparison of the proposed framework with bigcode-evaluation-harness and lm-evaluation-harness}
 \label{tab:framework-comparison-with-proposed}
 \end{longtable}
+
+% GLuque: Tras leer la siguiente creo que no es lo es mismo. Pon en texto también la comparación indicando en que aspectos mejora y en cuales aún requiere evolucionar el prototipo propuesto.
+
 
 % \subsubsection{Advantages}
 
@@ -886,3 +927,6 @@ Datasets also need to be expanded and standardized before results could be relia
 Future work should address these limitations by improving execution isolation, extending language support, and refining the user interface.
 Security and collaboration features will be necessary for real-world deployment.
 Finally, before the approach can be adopted more widely, it will be important to collect feedback from the research community and adjust the design accordingly.
+
+
+% GLuque: (sobre apendices de imagenes): Debes poner de forma textual una descripción de cada imagen y referenciarlas en el texto.
