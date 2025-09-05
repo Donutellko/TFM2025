@@ -14,12 +14,15 @@
 %
 % Focus more on the concept of benchmarks with UI, than in the implementation
 
+
+% TO-DO: create a table to calculate the CO2 emissions from executing some tasks from my benchmarks
+
 \section{Introduction}
 
 % GLuque: Creo que haría falta poner algunas referencias en esta parte también.
-Large Language Models (LLMs) have significantly impacted software development through AI-assisted programming tools like GitHub Copilot.
-However, evaluating and fine-tuning these models requires extensive benchmarking, which comes with significant computational, financial, and environmental costs.
-Current benchmarks often include irrelevant tasks and offer limited customization, making them inefficient for specific use cases.
+Large Language Models (LLMs) have significantly impacted software development through AI-assisted programming tools like GitHub Copilot and Cursor.
+However, evaluating and fine-tuning these models requires extensive benchmarking~(\cite{paul2024benchmarksmetricsevaluationscode}), which comes with significant computational, financial, and environmental costs.
+Current benchmarks often include irrelevant tasks (\cite{vendrow2025largelanguagemodelbenchmarks}) and offer limited customization, making them inefficient for specific use cases~(\cite{yang2023intercodestandardizingbenchmarkinginteractive}).
 
 This work explores existing benchmarks for code-generating LLMs and proposes a novel approach: an easily customizable benchmark with detailed, easily analyzable outputs that can be tailored to specific needs while remaining cost-effective and environmentally conscious.
 
@@ -47,9 +50,10 @@ The literature review and further research were guided by the following question
 \subsection{Problem Statement}
 
 Benchmarking LLMs for code generation is essential for both research and practice, but current approaches face critical limitations.
-Most benchmarks are fixed datasets, which leads to task saturation and data leakage as models are trained on their contents.
-The lack of customization prevents researchers and practitioners from focusing on tasks relevant to their use cases.
-At the same time, running large benchmarks consumes significant computational resources, resulting in high costs and environmental impact. Furthermore, benchmark outputs are often limited to single numeric metrics, which fail to capture nuanced aspects of model performance such as efficiency, style, or error patterns.
+Most benchmarks are fixed datasets, which leads to task saturation and data leakage as models are trained on their contents~(\cite{paul2024benchmarksmetricsevaluationscode}).
+The lack of customization prevents researchers and practitioners from focusing on tasks relevant to their use cases/ % (\cite{}) ?
+At the same time, running large benchmarks consumes significant computational resources, resulting in high costs and environmental impact.
+Furthermore, benchmark outputs are often limited to single numeric metrics, which fail to capture nuanced aspects of model performance such as efficiency, style, or error patterns.
 
 Therefore, this thesis addresses the lack of a flexible, customizable, and sustainable benchmarking framework for evolving LLM capabilities and user needs.
 
