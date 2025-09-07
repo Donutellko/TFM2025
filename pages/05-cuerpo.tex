@@ -248,7 +248,7 @@ This will also allow the researcher to spot patterns in model's errors, and poss
 
 Benchmark saturation mentioned in the above sections is partially explained by advances in models, but it can also be attributed to information \textbf{leaking}: the popular and publicly available benchmarks appear in the training datasets accompanied by the golden solutions.
 Even then, it doesn't mean that an LLM won't struggle when presented with the same task.
-When changing the task phrasing while keeping the semantic consistent, there is a 4.5-percent drop in solvability, showing that the models remember the phrasing of the descriptions in the original dataset~ \cite{uniyal2024one}.
+When changing the task phrasing while keeping the semantic consistent, there is a 4.5-percent drop in solvability, showing that the models remember the phrasing of the descriptions in the original dataset~\cite{uniyal2024one}.
 
 One of the important aspects of LLM evaluation is the choice of the metrics.
 For code quality, there are BLEU, CodeBLEU, RUBY, ROUGE-L, METEOR, ChrF\@.
@@ -262,7 +262,10 @@ As a result, they come to a conclusion that LLM-as-a-judge is a substantial impr
 
 \subsection{Comparison of LLM Code Generation Benchmarks}
 
-% GLuque: No vale solo poner la tabla , al menos pon un párrafo explicando la tabla. In Table 1, we show .... For each benchmark we show its size (measured as ...)...
+In Table~\ref{tab:bench-compare-table}, we summarize some of the most popular benchmarks, used in research papers.
+For each benchmark we show its size (measured as the number of unique tasks), its innovation (the approach it introduces or what advantage does it have), and its limitations (the problem or the downside it has to its use).
+
+This table is useful for getting insigths for combining their approaches in order to construct a new instrument, keeping the advantages while avoiding the shortcomings.
 
 \begin{table}[h!]
     \centering
@@ -343,22 +346,22 @@ In the Table~\ref{tab:framework-comparison} we compare the two frameworks based 
 
 \subsection{Research Questions Analysis}
 
-% GLuque: Demasiado directo, un primer párrafo corto indicando que basado en los análsis previo podemos contestar a las preguntas planteadas el inicio.
+Based on the conducted analysis of the sources and the State of the Art, we can now answer the research questions:
 
 \textit{RQ1: What are the main limitations of current LLM benchmarks for code generation?}
 
 The literature analysis shows that the main limitations of current LLM benchmarks for code generation are:
-
-% GLuque: creo que podrían incorporarse directamente en el texto como lista (no como itemize) ya que ya se mencionaron antes.
-\begin{itemize}
-    \item Benchmark saturation,
-    \item Data leakage,
-    \item Limited feedback,
-    \item High resources' consumption,
-    \item Environmental impact,
-    \item Error-proneness of tasks,
-    \item Limited feedback and output.
-\end{itemize}
+benchmark saturation, data leakage, limited feedback, high resources' consumption,
+environmental impact, error-proneness of tasks, limited feedback and output.
+%\begin{enumerate}
+%    \item Benchmark saturation,
+%    \item Data leakage,
+%    \item Limited feedback,
+%    \item High resources' consumption,
+%    \item Environmental impact,
+%    \item Error-proneness of tasks,
+%    \item Limited feedback and output.
+%\end{itemize}
 
 \textit{RQ2: What metrics best reflect real-world usability and code quality?}
 
@@ -387,7 +390,12 @@ In the following sections, we describe the design and implementation of this fra
 
 \section{Design of the Modular Benchmarking Framework}
 
-% GLuque: De nuevo muy directo. Puedes empezar que basándote en la limitaciones detectadas en el estudio del estado del arte, se plantea la creación de un framework modular.
+As we have completed the research of the State of the Art of LLM benchmarking and answered the research questions,
+analyzing the advantages and limitations of the existing benchmarks and benchmarking frameworks,
+we propose an approach that combines their advantages while avoiding the shortcomings,
+and potentially permits the researches and developers to get better insigths into the LLM behaviour,
+while minimizing the environmental impact of benchmarking.
+
 In this chapter, we describe the principles of the proposed modular benchmarking framework.
 
 The key idea is to separate three concerns:
@@ -453,7 +461,10 @@ In the following section, we describe the actual implementation of the proposed 
 
 \section{Implementation of the Modular Benchmarking Framework}
 
-% GLuque: No empezar directamente con una subsección. Pon en contexto y dí que se va. a hacer: Once we have defined the design goals of the proposed framework, in this chapter, its implemtation details are described.
+Once we have defined the design goals of the proposed framework, in this chapter, its implemtation details are described.
+We describe the prototype: first, we define the goals and scope of building it,
+then describe its architecture, choose the technolies to be used, model the user interactions,
+and the way that our solution stores the data: benchmark datasets and configuration, and results of the benchmark execution.
 
 \subsection{Prototype Goal and Scope}
 
@@ -463,9 +474,7 @@ The scope of the prototype is limited to managing benchmark runs, collecting out
 It does not aim to provide large-scale distributed evaluation, advanced analytics, or integration with external benchmark platforms.
 These aspects remain outside the present work.
 
-\subsection{System Design}
-
-% GLuque: Quizás Architecture en vez de Design que confunde con el capítulo previo
+\subsection{System Architecture}
 
 This section describes the architecture of the prototype, its main components, and the workflow of interactions between the user, the frontend, and the backend.
 The focus is on modularity, extensibility, and clarity of responsibilities.
@@ -540,8 +549,8 @@ And the use of databases is not suitable for the prototype, as it would complica
 The execution configuration (\texttt{exec-config.yaml}) defines the parameters under which a benchmark run is executed.
 It is a structured YAML file that provides a modular way to select tasks, models, and evaluation criteria without changing the core logic of the system.
 This design allows the user to combine different \emph{task sources} with different \emph{execution configurations}, enabling flexible experimentation.
-A full example of the file is provided in the Appendix, while here we describe its structure and purpose.
-% GLuque: Indica y cita el apéndice oportuno
+A full example of the file is provided in the Appendix~\ref{appendix:exec-config-example}, while here we describe its structure and purpose.
+The Appendix \ref{appendix:ui_exec_config} shows the user interface we developed for effortless editing of the configuration files.
 
 \paragraph{General structure:}
 The file contains the following top-level sections:
