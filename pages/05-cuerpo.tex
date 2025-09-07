@@ -701,6 +701,50 @@ These serve as reference implementations and may be used for validation or as ba
 % GLuque: Mismo comentario sobre la concreción del apartado anterior.
 % > Tras leer esto, una duda que me surge es que valores soporta el sistema, cómo de abierto es y cuándo requiere de procesamiento manual para echarlo a andar. Quizás una mayor concreción estaría bien.
 
+\subsection{User Interface}
+
+In order to facilitate the interaction with the benchmark, we introduce a Front End in form of Single Page Web Application using React Framework with Bootstrap library.
+For each type of the stored file, the application provides lists the available files on the left.
+The user can select the type of file they want to edit or view (Execution Configurations, Task Sources, or previous Benchmark Results).
+After choosing the file type, the list of available files will be retrieved and shown.
+Depending on the type of the file, above the list of the files, there are buttons for creating a new file, deleting or downloading the selected files, saving unsaved changes, and reloading (syncing with backend).
+
+For each file type, there is a separate editor or a browser.
+
+To edit or view the code snippets, YAML files or Unit test code, we use Monaco Editor (Visual Studio Code),
+a convenient editor that features syntax highlighting and can be incorporated into web applications and extended as needed.
+
+For the Execution Configuration and the Task Source files, there are two ways to edit them: using the Monaco code editor or with a form.
+On the top of the screen, there is a button for changing the mode of viewing and editing. Also, there are buttons for saving changes, viewing the change history.
+
+The form for editing the Execution Configuration files is demonstrated in Figure \ref{appendix:ui_exec_config}.
+As we can see, it allows us to customize the benchmark run using criteria and parameters described in the previous section, select the domains (areas) and difficulties for filtering the tasks, programming languages of the tasks, and a list of models that the user wants to test.
+There is also a button for running a benchmark that opens a screen that will be described in continuation.
+
+The form for editing the Task Sources is demonstrated in Figure \ref{appendix:ui_task_source_list}.
+In this screen, we can see the list of the tasks in the selected Task Source file, view details of a task, edit it, or add a new one.
+Figure \ref{appendix:ui_task_source_info} shows the first screen of the Task viewer and editor that features besic details of the task: its name, type, difficulty, area and source.
+On the top of the dialog, there is a button for showing the prompts and unit tests.
+Figure \ref{appendix:ui_task_source_prompts} shows the screen for viewing and editing prompts and test cases for each language.
+
+After introducing the tasks and configuring the execution, a user needs to open the Execution Configuration and click Run.
+This action will show a dialog that allows to enter a custom name for the run (a name of the benchmark result file), select the Task Sources, and click Run.
+The backend then starts the benchmark execution and create a status file.
+The frontend shows a new dialog with a status bar for each Task Source.
+
+After the benchmark is completed and the backend has stored the results in a Benchmark Result file, the user will be navigated to the results browser.
+An example of the results is demonstrated in Figure \ref{appendix:ui_results_multiple}.
+This page shows the summary for each tested model, and each criteria: a score and a unit of measure for it, an amount of successfully completed tasks, skipped (filtered out) and failed (execution errors, not assertion errors).
+
+The user can click on any criteria and open the detailed view of the execution. % TO-DO as shown in Figure \ref{appendix:?}.
+There we can see the list of the tasks.
+We can examine any task in more detail.
+By clicking on its name, we can see its prompts, and on the second tab there is the response from LLM, together with its evaluations for each available criteria, as shown in Figure \ref{appendix:ui_result_single_task}
+
+Also, we can examine each separate criteria and see its evaluations for each task.
+
+% TO-DO complete the description
+
 \subsection{Benchmark Criteria and Metrics}
 
 The benchmark supports multiple criteria for evaluating generated solutions.
