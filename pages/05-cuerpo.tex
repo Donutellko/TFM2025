@@ -20,7 +20,6 @@
 
 \section{Introduction}
 
-% GLuque: Creo que haría falta poner algunas referencias en esta parte también.
 Large Language Models (LLMs) have significantly impacted software development through AI-assisted programming tools like GitHub Copilot and Cursor.
 However, evaluating and fine-tuning these models requires extensive benchmarking~(\cite{paul2024benchmarksmetricsevaluationscode}), which comes with significant computational, financial, and environmental costs.
 Current benchmarks often include irrelevant tasks (\cite{vendrow2025largelanguagemodelbenchmarks}) and offer limited customization, making them inefficient for specific use cases~(\cite{yang2023intercodestandardizingbenchmarkinginteractive}).
@@ -187,6 +186,7 @@ Based on the analysis of existing benchmarks, we can identify several key limita
     \item Error-proneness of tasks,
 %: benchmarks contain up to 5 percent of mislabelled or erroneous tasks\cite{vendrow2025largelanguagemodelbenchmarks}.
     \item Limited feedback and output.
+    \item The choice of metrics.
 \end{itemize}
 
 In continuation, we will address each of these limitations one by one.
@@ -204,7 +204,9 @@ Some datasets contain \textbf{metadata} that allows filtering out tasks based on
 Benchmark saturation mentioned in the above sections is partially explained by advances in models, but it can also be attributed to information \textbf{leaking}: the popular and publicly available benchmarks appear in the training datasets accompanied by the golden solutions.
 This leads to a situation where the models are trained on the same tasks they are being evaluated on.
 
-There are several ways to avoid the consequences of data leakage:
+However, even when the task was present in the training dataset, it doesn't mean that an LLM won't struggle when presented with the same task.
+When changing the task phrasing while keeping the semantic consistent, there is a 4.5-percent drop in solvability, showing that the models remember the phrasing of the descriptions in the original dataset~\cite{uniyal2024one}.
+So there are several ways to avoid the consequences of data leakage:
 \begin{itemize}
     \item hand-crafting brand-new tasks without publishing them or using for in-house training;
     \item generating new tasks based on the existing ones as it was done with HumanEval Pro and MBPP Pro;
@@ -253,15 +255,7 @@ This can lead to incorrect evaluation results and misinterpretation of model cap
 To mitigate this issue, a researcher should be able to examine the failures and more easily spot the errors in the tasks.
 This will also allow the researcher to spot patterns in model's errors, and possibly mitigate them by improving training datasets, updating a system prompt, and adjusting temperature and other parameters.
 
-\subsection{Problems in LLM Benchmarking}
-
-% Gluque: No me queda claro es sentido de esta sección. Además repite varias cosas que se comentaron previamente.
-% No se si debe integrarse con 2.2 o explicar claramente qué es lo que quiere decirse.
-
-Benchmark saturation mentioned in the above sections is partially explained by advances in models, but it can also be attributed to information \textbf{leaking}: the popular and publicly available benchmarks appear in the training datasets accompanied by the golden solutions.
-Even then, it doesn't mean that an LLM won't struggle when presented with the same task.
-When changing the task phrasing while keeping the semantic consistent, there is a 4.5-percent drop in solvability, showing that the models remember the phrasing of the descriptions in the original dataset~\cite{uniyal2024one}.
-
+\subsubsection{Choice of Metrics}
 One of the important aspects of LLM evaluation is the choice of the metrics.
 For code quality, there are BLEU, CodeBLEU, RUBY, ROUGE-L, METEOR, ChrF\@.
 They assess the similarity of the generated code to the golden solution, taking into account the properties of source code.
@@ -545,6 +539,7 @@ The interaction described above is shown as a sequence diagram (Appendix~\ref{ap
 % The diagram is generated using PlantUML, which can be integrated into \LaTeX{} by enabling the \texttt{plantuml} package.
 
 % GLuque: Yo pondría directamente el diagrama aquí.
+% el diagrama es muy grande, no cabe en la página :(
 
 \subsection{Benchmark Data Storage and Processing}
 
