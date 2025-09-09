@@ -930,8 +930,15 @@ Table~\ref{tab:framework-comparison-with-proposed} compares the proposed framewo
 \label{tab:framework-comparison-with-proposed}
 \end{longtable}
 \end{landscape}
-% GLuque: Tras leer la siguiente creo que no es lo es mismo. Pon en texto también la comparación indicando en que aspectos mejora y en cuales aún requiere evolucionar el prototipo propuesto.
 
+As we can see from the table, the proposed framework offers several advantages over existing solutions.
+It supports multiple models per run, allowing for direct comparison under identical conditions.
+The web interface makes it accessible, and the detailed and visual output facilitates in-depth analysis of results.
+Moreover, the configuration is highly flexible, enabling researchers to tailor benchmarks to their specific needs.
+Unlike bigcode-evaluation-harness, the framework allows for caching LLM responses, making it more efficient and environmentally friendly for repeated experiments.
+
+As a downside, the proposed framework currently supports a more limited set of tasks and datasets compared to the other two.
+And it lacks the support for loading models via the \texttt{transformers} library, which may be a limitation for researchers who want to evaluate local models.
 
 \subsection{Results Discussion and Limitations}
 
@@ -943,11 +950,13 @@ Changes in the host machine may affect execution time and distort metrics such a
 A more robust sandboxing mechanism is needed to ensure reproducibility.
 Moreover, the system currently supports only a subset of programming languages.
 Extending test execution to other widely used languages would broaden applicability.
+To address these issues, the code and tests should be run in a Docker environment or using a specialized solution.
 
 Second, while the prototype allows shared use on a common server, it raises concerns about data consistency and security.
 Proper authorization, as well as locking mechanisms for files being edited, should be implemented to support collaborative scenarios safely.
 
 Third, although the user interface already covers the essential operations, further improvements are necessary to make it more convenient and user-friendly.
+Currently, in order to use the prototype, an in-depth understanding of the system is required.
 
 Finally, before results produced by this benchmark can be used in scientific studies, datasets need to be expanded and standardized.
 Feedback from experienced researchers and developers will also be critical for validating the approach and guiding its further development.
