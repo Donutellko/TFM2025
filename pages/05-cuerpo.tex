@@ -88,7 +88,7 @@ The proposed system not only reduces time and energy consumption but also enhanc
 This document is composed of 5 chapters and 3 appendices.
 The content of each one is:
 \begin{enumerate}
-    \item In the Chapter ``State of Art'', we introduce the existing benchmarks, and how they solved the problems of the ones before them.
+    \item In the Chapter ``State of Art'', we analyze the existing benchmarks, and how they solved the problems of the ones before them.
     Then we examine in detail the shortcomings and limitations of the existing benchmarks.
     In the same chapter, we also explore the existing LLM benchmarking frameworks.
     Based on the performed analysis of the State of the Art, we respond our Research Questions.
@@ -103,8 +103,10 @@ The content of each one is:
 
 \section{State of the Art}
 
-% Gluque: Evita empezar directamente con subsecciones. Añade una breve introducción:
-% In this chapter, we analyze the existing benchmarks .... After this analyzis, we highlight the main limitations....
+In this chapter, we analyze the existing benchmarks, and how they evolved and were developed to overcome the limitations of their predecessors.
+After this analysis, we highlight the main limitations and shortcomings of the existing benchmarks.
+Then, we explore the existing LLM benchmarking frameworks and their limitations.
+Finally, we respond to our Research Questions based on the performed analysis of the State of the Art.
 
 \subsection{Evolution of Code Generation Benchmarks}
 
@@ -256,8 +258,6 @@ This will also allow the researcher to spot patterns in model's errors, and poss
 % Gluque: No me queda claro es sentido de esta sección. Además repite varias cosas que se comentaron previamente.
 % No se si debe integrarse con 2.2 o explicar claramente qué es lo que quiere decirse.
 
-% Задачки в HumanEval уже общеизвестны, так что ЛЛМ натренированы на их решениях. Зато HumanEval Pro добавили дополнительный шаг в задачу, что продемонстрировало, что даже самые современные LLMs могут не справляться с незнакомыми задачами, или переиспользовать написанный ими же код, вызывая его в качестве функции. Таким образом, разработка новых задач важна, и нужно предоставить пользователю бенчмарка удобный способ добавлять и модифицировать задачи в бенчмарке.
-
 Benchmark saturation mentioned in the above sections is partially explained by advances in models, but it can also be attributed to information \textbf{leaking}: the popular and publicly available benchmarks appear in the training datasets accompanied by the golden solutions.
 Even then, it doesn't mean that an LLM won't struggle when presented with the same task.
 When changing the task phrasing while keeping the semantic consistent, there is a 4.5-percent drop in solvability, showing that the models remember the phrasing of the descriptions in the original dataset~\cite{uniyal2024one}.
@@ -323,8 +323,9 @@ Neither framework provides built-in support for environmental metrics or fine-gr
 
 In the Table~\ref{tab:framework-comparison} we compare the two frameworks based on their features and limitations.
 
+%\begin{landscape}\begin{longtable}{|p{5cm}|p{8.5cm}|p{8.5cm}|}
+%\begin{figure}
 \begin{longtable}{|p{4cm}|p{5cm}|p{5cm}|}
-%[H]
         \hline
         \textbf{Feature} & \textbf{bigcode-evaluation-harness} & \textbf{lm-evaluation-harness} \\
         \hline
@@ -336,7 +337,7 @@ In the Table~\ref{tab:framework-comparison} we compare the two frameworks based 
         \hline
         Available configuration & Task dataset name, Number of tasks, Temperature, Saving LLM responses, Limits of LLM response, etc. & Task datasets list (other parameters are is defined on task level), Limits of LLM response, System prompt, etc.  \\
         \hline
-        Extended output & LLM response or references as JSON & Prompt, LLM response, and metrics results as JSON \\
+        Extended output & LLM response or references as JSON & Prompt, LLM response, metrics results as JSON \\
         \hline
         Run interface & CLI-based, no GUI & CLI-based, no GUI, an API for training loops \\
         \hline
@@ -346,7 +347,7 @@ In the Table~\ref{tab:framework-comparison} we compare the two frameworks based 
         \hline
         Evaluation of multiple LLMs & One model per run & One model per run \\
         \hline
-        Supports model loading via transformers & Yes & Yes \\
+        Load model via transformers & Yes & Yes \\
         \hline
         Caching of LLM generations & No & Yes with an argument \\
         \hline
@@ -354,7 +355,8 @@ In the Table~\ref{tab:framework-comparison} we compare the two frameworks based 
     \caption{Comparison of bigcode-evaluation-harness and lm-evaluation-harness}
     \label{tab:framework-comparison}
 \end{longtable}
-
+%\end{figure}
+%\end{landscape}
 
 \subsection{Research Questions Analysis}
 
@@ -462,10 +464,10 @@ The results can be stored in a structured file format, such as YAML or JSON, whi
 The \textbf{result presentation} is the process of displaying and analyzing the results of a benchmark run.
 The presentation can include:
 \begin{itemize}
-    \item \textbf{Summary statistics}, such as overall pass rates, average scores, resource usage, and cost.
+    \item \textbf{Summary statistics}, such as pass rates, average scores, resource usage, and cost.
     \item \textbf{Detailed results}, including individual task results, LLM outputs, and evaluation details.
     \item \textbf{Visualizations}, such as charts and graphs to illustrate performance trends and comparisons.
-    \item \textbf{Export options}, allowing users to download results in various formats (e.g., CSV, JSON, PDF).
+    \item \textbf{Export options}, allowing exporting results in various formats (e.g., CSV, JSON, PDF).
     \item \textbf{Error analysis}, providing insights into common failure modes and patterns in LLM outputs.
 \end{itemize}
 
@@ -595,11 +597,9 @@ parameters:
     # if we want the solution to contain comments
     enabled: false
 criteria: # list of criteria to evaluate the solutions
-  - name: unit-test
-    # only for languages that we can run in a sandbox
+  - name: unit-test # only for sandbox runs
     enabled: true
-  - name: ram-usage
-    # works only if unit_test criteria is enabled
+  - name: ram-usage # only if unit_test criteria is enabled
     enabled: true
   - name: llm-judge-code-quality
     enabled: true
@@ -616,9 +616,7 @@ Some parameters will be used in prompt building.
 For example, the \textit{all-tests-public} means when tests are divided into public and hidden, the LLM will receive all available tests anyway.
 And the prompt will mention that the solution doesn't have to contain comments.
 
-The prompt will be sent to all the mentioned LLMs.
-
-After receiving a solution from the LLM, the benchmark will evaluate it using unit tests, measure RAM usage during test execution, analyze code quality with SonarQube, and use an LLM-as-a-judge to assess code quality.
+The prompt will be sent to all the mentioned LLMs. After receiving a solution from the LLM, the benchmark will evaluate it using unit tests, measure RAM usage during test execution, analyze code quality with SonarQube, and use an LLM-as-a-judge to assess code quality.
 The unit-tests themselves can use the list of parameters to adjust their behavior.
 For example, if the \textit{should-write-comments} parameter is enabled, the tests can check for the presence of comments in the code.
 
@@ -849,7 +847,6 @@ The results were collected in structured YAML files, which included detailed out
 % GLuque: De hecho creo que no has indicado que el desarrollo está disponible en el respositorio (quizás debes indicarlo en el capítulo de implementación).
 
 Table~\ref{tab:benchmark-results-summary} shows a summary of the results:
-
 \begin{table}[H]
     \centering
     \begin{tabular}{|l|l|l|l|}
@@ -870,10 +867,8 @@ Table~\ref{tab:benchmark-results-summary} shows a summary of the results:
     \caption{Summary of benchmark results for two LLMs on selected tasks}
     \label{tab:benchmark-results-summary}
 \end{table}
-
-\textbf{TO-DO: more models and tasks, maybe also with other datasets and configurations}
+%\textbf{TO-DO: more models and tasks, maybe also with other datasets and configurations}
 % GLuque: Sí, sería interesante
-
 So as we can see from this table, the smaller and newer model outperformed the larger and older one across code quality and the amount of tests passed.
 However, it used significantly more tokens and CPU time, indicating a trade-off between performance and efficiency.
 In general, the results are consistent with expectations based on the models descriptions in~\cite{mistralModelsBenchmarks}.
@@ -894,8 +889,8 @@ Thus, this example demonstrates its effectiveness of the benchmarking framework 
 Table~\ref{tab:framework-comparison-with-proposed} compares the proposed framework with bigcode-evaluation-harness and lm-evaluation-harness.
 
 % GLuque: Este tipo de tabla con tanto texto, quizás se ve mejor si la pones en una página apaisada (latex permite cambiar esto para páginas concretas). Pruébalo  para ver que tal queda y cómo interrumpe la memoria (si deja muchos huecos en blancos).
-
-\begin{longtable}{|p{2.3cm}|p{4.3cm}|p{4.3cm}|p{4.3cm}|}
+\begin{landscape}
+\begin{longtable}{|p{4cm}|p{5cm}|p{5cm}|p{5cm}|}
 
 % \hline \multicolumn{1}{|c|}{\textbf{Feature}}
 % & \multicolumn{1}{c|}{\textbf{bigcode-evaluation-harness}}
@@ -919,13 +914,13 @@ Table~\ref{tab:framework-comparison-with-proposed} compares the proposed framewo
         \hline
         Run interface & CLI-based, no GUI & CLI-based, no GUI, an API for training loops & Web UI and CLI \\
         \hline
-        Result analysis & Overall numeric metric and LLM responses saved as a file & Overall numeric metric & Detailed for each metric: with evaluation details and generated solutions  \\
+        Result analysis & Overall numeric metric, LLM responses saved in files & Overall numeric metric & Detailed for each metric: with evaluation details and generated solutions  \\
         \hline
         Visualization & No visualization tools & No visualization tools & An UI to edit datasets, configure runs, browse its results \\
         \hline
         Multiple LLMs & One model per run & One model per run & Multiple models per run\\
         \hline
-        Model loading via transformers & Yes & Yes & No \\
+        Load model via transformers & Yes & Yes & No \\
         \hline
         Cache LLM responses & No & Yes with a flag & Yes, in run configuration \\
         \hline
@@ -933,7 +928,7 @@ Table~\ref{tab:framework-comparison-with-proposed} compares the proposed framewo
 \caption{Comparison of the proposed framework with bigcode-evaluation-harness and lm-evaluation-harness}
 \label{tab:framework-comparison-with-proposed}
 \end{longtable}
-
+\end{landscape}
 % GLuque: Tras leer la siguiente creo que no es lo es mismo. Pon en texto también la comparación indicando en que aspectos mejora y en cuales aún requiere evolucionar el prototipo propuesto.
 
 
