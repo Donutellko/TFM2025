@@ -638,8 +638,6 @@ This modular approach makes it easy to extend the benchmark with new metrics.
 Finally, the \texttt{llms} section lists one or more models to be benchmarked.
 Each entry corresponds to a model identifier, which may include provider-specific information and quota (e.g., free-tier models).
 Multiple models can be specified in one configuration file, allowing direct comparison under identical conditions.
-% GLuque: Tras leer esto, una duda que me surge es que valores soporta el sistema, cómo de abierto es y cuándo requiere de procesamiento manual para echarlo a andar. Quizás una mayor concreción estaría bien.
-
 
 \paragraph{Additional advantages of the approach.}
 By keeping all execution settings in a declarative YAML file, users can:
@@ -652,6 +650,14 @@ By keeping all execution settings in a declarative YAML file, users can:
     \item Secrets for APIs are managed in a centralized way, so there is no risk of leaking them by accident.
 \end{enumerate}
 
+So the Configurations and Task sources are stored in a way that makes them easy to share, version-control, and edit.
+At the same time, similar to the other benchmarks, the source code of the framework itself is open and available in GitHub:
+
+
+\texttt{https://github.com/Donutellko/modular-ai-benchmark}.
+
+
+The source code is constructed in a way that permits easy modification and extension (introduction of new language interpreters, unit test executors, metrics, and other components) into the system.
 
 \subsubsection{Task Source File}
 
@@ -717,8 +723,6 @@ Both public and hidden tests are supported, giving flexibility in how much refer
 
 Finally, each task may contain golden solutions, expressed in one or more programming languages or pseudocode.
 These serve as reference implementations and may be used for validation or as baseline solutions.
-% GLuque: Mismo comentario sobre la concreción del apartado anterior.
-% > Tras leer esto, una duda que me surge es que valores soporta el sistema, cómo de abierto es y cuándo requiere de procesamiento manual para echarlo a andar. Quizás una mayor concreción estaría bien.
 
 \subsection{User Interface}
 
@@ -762,7 +766,8 @@ By clicking on its name, we can see its prompts, and on the second tab there is 
 
 Also, we can examine each separate criteria and see its evaluations for each task.
 
-% TO-DO complete the description
+The use of the web interface makes it easy to start using the benchmark without complicated setup process.
+Right after introducing the API Tokens and launching the application, the user can launch one of the benchmarks, provided by default with the app distribution.
 
 \subsection{Benchmark Criteria and Metrics}
 
@@ -782,9 +787,8 @@ The supported criteria include:
     \item \textbf{Checkstyle} --- analyzes the generated code for JVM languages using Checkstyle and collects metrics such as style violations and formatting issues, with different weights assigned to different types of issues, and normalized to a 0-1 scale.
 \end{itemize}
 
-Criteria to be implemented in the future include:
-% GLuque: queda un tanto raro comentar las futuras, si son interesantes ¿porqué no se han implementado?
-% Da algún detalle más sobre el motivo y porqué se priorizaron las anteriores.
+The list criteria above is a basic list, selected for the implementation of a prototype.
+The following list contains some additional features that are not necessary for the demonstration purposes, but would be useful in a full-featured benchmark:
 \begin{itemize}
     \item \textbf{Test Execution in Docker} --- runs the generated code in a Docker container to support multiple programming languages and isolate execution environments;
     \item \textbf{Code quality with SonarQube} --- analyzes the generated code using SonarQube and collects metrics such as code smells, bugs, vulnerabilities, and technical debt;
@@ -820,7 +824,6 @@ Each object is associated with a specific task and LLM response.
 This allows for detailed analysis of results across different dimensions.
 For example, one can see how a particular model performed on a specific task across multiple criteria, or compare the performance of different models on the same task.
 For each test failure, the output includes the output and the exact code that was executed, making it easier to debug issues.
-% GLuque: Quizás en algún sitio debe indicarse que (quizás cuando hablas de las formas de los puntos de acceso) del interfaz gráfico y que se capturas del mismo se pueden ver en el Apéndice X
 
 
 \section{Results and Evaluation}
@@ -844,7 +847,6 @@ We enabled the following criteria for evaluation:
 
 The benchmark was executed via the web interface, allowing us to monitor progress and view results in real-time.
 The results were collected in structured YAML files, which included detailed outputs for each task and criterion.
-% GLuque: De hecho creo que no has indicado que el desarrollo está disponible en el respositorio (quizás debes indicarlo en el capítulo de implementación).
 
 Table~\ref{tab:benchmark-results-summary} shows a summary of the results:
 \begin{table}[H]
@@ -888,7 +890,6 @@ Thus, this example demonstrates its effectiveness of the benchmarking framework 
 
 Table~\ref{tab:framework-comparison-with-proposed} compares the proposed framework with bigcode-evaluation-harness and lm-evaluation-harness.
 
-% GLuque: Este tipo de tabla con tanto texto, quizás se ve mejor si la pones en una página apaisada (latex permite cambiar esto para páginas concretas). Pruébalo  para ver que tal queda y cómo interrumpe la memoria (si deja muchos huecos en blancos).
 \begin{landscape}
 \begin{longtable}{|p{4cm}|p{5cm}|p{5cm}|p{5cm}|}
 
@@ -932,13 +933,6 @@ Table~\ref{tab:framework-comparison-with-proposed} compares the proposed framewo
 % GLuque: Tras leer la siguiente creo que no es lo es mismo. Pon en texto también la comparación indicando en que aspectos mejora y en cuales aún requiere evolucionar el prototipo propuesto.
 
 
-% \subsubsection{Advantages}
-
-% Shared environment means that the researchers use the resources more optimally.
-% There is no need to set up the benchmarking in each workstation, as they can be used as thin clients.
-% Every user can access the same version of the benchmark, the same versions of datasets and configurations, ensuring consistency in experiments.
-% Secrets for APIs are managed in a centralized way, so there is no risk of leaking them by accident.
-
 \subsection{Results Discussion and Limitations}
 
 The current prototype demonstrates that the proposed approach is viable and already supports the core functionalities needed to run benchmarks and collect meaningful results.
@@ -957,12 +951,6 @@ Third, although the user interface already covers the essential operations, furt
 
 Finally, before results produced by this benchmark can be used in scientific studies, datasets need to be expanded and standardized.
 Feedback from experienced researchers and developers will also be critical for validating the approach and guiding its further development.
-
-
-% 5. Проверьте, чтобы все аббревиатуры были расшифрованы при первом упоминании.
-% 7. В разделе "Results and Evaluation" стоит добавить больше конкретных примеров или графиков, если это возможно.
-% 8. В Conclusion можно добавить краткое перечисление основных достижений работы.
-% 10. Если есть повторяющаяся информация (например, о преимуществах подхода), оставьте её только в одном месте и дайте ссылку на соответствующий раздел.
 
 \section{Conclusion and Future Work}
 
@@ -991,6 +979,3 @@ Datasets also need to be expanded and standardized before results could be relia
 Future work should address these limitations by improving execution isolation, extending language support, and refining the user interface.
 Security and collaboration features will be necessary for real-world deployment.
 Finally, before the approach can be adopted more widely, it will be important to collect feedback from the research community and adjust the design accordingly.
-
-
-% GLuque: (sobre apendices de imagenes): Debes poner de forma textual una descripción de cada imagen y referenciarlas en el texto.
